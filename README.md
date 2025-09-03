@@ -106,7 +106,7 @@ make stop
 
 #### Architecture
 
-- **Application**: Node.js 20.11.1 with ES modules support
+- **Application**: Invoice Ninja 5.x (Laravel-based invoicing platform)
 - **Nginx**: Reverse proxy with SSL termination (only external port)
 - **MariaDB**: Primary database (11.6.2) with UTF8MB4 support
 - **Redis**: Caching and session storage (7.4.2)

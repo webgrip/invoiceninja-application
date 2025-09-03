@@ -1,9 +1,7 @@
 {
-  "name": "application-template",
+  "name": "invoiceninja-application",
   "version": "1.0.0",
-  "description": "A comprehensive application template with automated template file synchronization, modern development workflows, and comprehensive tooling infrastructure",
-  "main": "src/index.js",
-  "type": "module",
+  "description": "Containerized deployment solution for Invoice Ninja invoicing and billing application",
   "directories": {
     "doc": "docs",
     "test": "tests"
@@ -18,23 +16,16 @@
     "docker:logs": "make logs",
     "helm:init": "make init-helm",
     "secrets:encrypt": "make secrets:encrypt",
-    "secrets:decrypt": "make secrets:decrypt",
-    "dev": "echo \"Development server not configured\" && exit 1",
-    "build": "echo \"Build process not configured\" && exit 1",
-    "lint": "echo \"Linting not configured\" && exit 1",
-    "format": "echo \"Formatting not configured\" && exit 1",
-    "clean": "rm -rf node_modules/.cache"
+    "secrets:decrypt": "make secrets:decrypt"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webgrip/application-template.git"
+    "url": "git+https://github.com/webgrip/invoiceninja-application.git"
   },
   "keywords": [
-    "template",
-    "application",
-    "github-actions",
-    "automation",
-    "devops",
+    "invoice-ninja",
+    "invoicing",
+    "billing",
     "docker",
     "helm",
     "sops",
@@ -43,17 +34,7 @@
   "author": "WebGrip",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/webgrip/application-template/issues"
+    "url": "https://github.com/webgrip/invoiceninja-application/issues"
   },
-  "homepage": "https://github.com/webgrip/application-template#readme",
-  "engines": {
-    "node": ">=20.10.0",
-    "npm": ">=10.2.5"
-  },
-  "devDependencies": {},
-  "dependencies": {},
-  "volta": {
-    "node": "20.10.0",
-    "npm": "10.2.5"
-  }
+  "homepage": "https://github.com/webgrip/invoiceninja-application#readme"
 }

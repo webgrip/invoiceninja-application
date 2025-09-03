@@ -1,41 +1,18 @@
 # Invoice Ninja Application Dockerfile
-# Node.js application with minimal overlay on official upstream
+# Minimal overlay on official Invoice Ninja upstream image
 
-# Use latest LTS minor version of Node.js Alpine
-FROM node:20.11.1-alpine AS base
+# Use latest stable Invoice Ninja image
+FROM invoiceninja/invoiceninja:5
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install curl for health checks (minimal overlay)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
+# Expose port (Invoice Ninja runs on port 80)
+EXPOSE 80
 
-# Add application user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S app -u 1001
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies (handle case where no lockfile exists)
-RUN if [ -f package-lock.json ]; then \
-      npm ci --omit=dev && npm cache clean --force; \
-    else \
-      npm install --omit=dev && npm cache clean --force; \
-    fi
-
-# Copy application source
-COPY --chown=app:nodejs src/ ./src/
-
-# Set user
-USER app
-
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
-
-# Start application
-CMD ["node", "src/index.js"]
+# Health check using Invoice Ninja's built-in health endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:80/health || exit 1

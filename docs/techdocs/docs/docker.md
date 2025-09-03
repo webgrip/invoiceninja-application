@@ -6,7 +6,7 @@ This document describes the complete Docker infrastructure setup for the invoice
 
 The application uses a multi-service Docker architecture with the following components:
 
-- **Application**: Node.js application server
+- **Application**: Invoice Ninja v5.x (Laravel-based invoicing and billing platform)
 - **Nginx**: Reverse proxy with SSL termination
 - **MariaDB**: Primary database service
 - **Redis**: Caching and session storage
@@ -37,34 +37,23 @@ All services follow the **own every image** policy:
 
 ### Application Service
 
-**Base Image**: `node:20.11.1-alpine`
-**Port**: 8080 (internal only)
-**Health Check**: `curl -f http://localhost:8080/health`
+**Base Image**: `invoiceninja/invoiceninja:5`
+**Port**: 80 (internal only)
+**Health Check**: `curl -f http://localhost:80/health`
 
 ```dockerfile
-FROM node:20.11.1-alpine
+FROM invoiceninja/invoiceninja:5
 
-# Add curl for health checks
-RUN apk add --no-cache curl
+# Add curl for health checks (minimal overlay)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+EXPOSE 80
 
-WORKDIR /app
-
-# Copy package files first for better caching
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy application source
-COPY --chown=nodejs:nodejs src/ ./src/
-
-# Switch to non-root user
-USER nodejs
-
-EXPOSE 8080
-CMD ["node", "src/index.js"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:80/health || exit 1
 ```
 
 ### Nginx Reverse Proxy
@@ -74,9 +63,9 @@ CMD ["node", "src/index.js"]
 **Configuration**: Custom reverse proxy setup
 
 Key features:
-- Reverse proxy to Node.js application
+- Reverse proxy to Invoice Ninja application
 - Health check endpoint forwarding
-- Optimized nginx configuration for Node.js backends
+- Optimized nginx configuration for Laravel/PHP-FPM backends
 
 ### Database Services
 
