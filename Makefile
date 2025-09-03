@@ -8,8 +8,8 @@
 SHELL := /usr/bin/bash
 .ONESHELL:
 .DEFAULT_GOAL := help
-#   make expose NAMESPACE=application-application SERVICE_NAME=application-application REMOTE_PORT=80
-APP_NAME      ?= application-application
+#   make expose NAMESPACE=invoiceninja-application SERVICE_NAME=invoiceninja-application REMOTE_PORT=80
+APP_NAME      ?= invoiceninja-application
 NAMESPACE     ?= $(APP_NAME)
 SERVICE_NAME  ?= $(APP_NAME)
 APP_SERVICE   ?= $(APP_NAME).application

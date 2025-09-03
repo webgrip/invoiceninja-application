@@ -1,4 +1,4 @@
-# application-application
+# invoiceninja-application
 
 ## Badges
 
@@ -70,13 +70,13 @@ Creates:
 Add plaintext secrets to:
 
 ```bash
-ops/secrets/application-application-secrets/values.dec.yaml
+ops/secrets/invoiceninja-application-secrets/values.dec.yaml
 ```
 
 Encrypt them:
 
 ```bash
-make encrypt-secrets SECRETS_DIR=./ops/secrets/application-application-secrets
+make encrypt-secrets SECRETS_DIR=./ops/secrets/invoiceninja-application-secrets
 ```
 
 This produces `values.sops.yaml` (commit this).

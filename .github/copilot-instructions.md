@@ -1,6 +1,6 @@
-# application-application AI directives
+# invoiceninja-application AI directives
 
-This repository contains the code and infrastructure for the application-application service. The following directives outline the key practices and standards for working with this codebase.
+This repository contains the code and infrastructure for the invoiceninja-application service. The following directives outline the key practices and standards for working with this codebase.
 
 ## Conventions
 - Follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.

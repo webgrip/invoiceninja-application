@@ -1,5 +1,5 @@
 <!--
-This is the authoritative Architecture Decision Record (ADR) template for the Codex organisation.
+This is the authoritative Architecture Decision Record (ADR) template for the Codex webgrip.
 It follows **MADR v3+** conventions (see https://adr.github.io/madr/) and augments them with
 Codex corporate‑tier compliance, security and lifecycle fields.
 Delete all guidance in angle brackets (<>) after filling in.

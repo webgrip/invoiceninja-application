@@ -1,24 +1,24 @@
 services:
-  application-application.application:
-    container_name: application-application.application
-    image: organisation/application-application.application:latest
+  invoiceninja-application.application:
+    container_name: invoiceninja-application.application
+    image: webgrip/invoiceninja-application.application:latest
     pull_policy: never
     build:
       context: .
       dockerfile: ops/docker/application/Dockerfile
     restart: always
     depends_on:
-      application-application.postgres:
+      invoiceninja-application.postgres:
         condition: service_healthy
-      application-application.redis:
+      invoiceninja-application.redis:
         condition: service_healthy
     ports:
       - "127.0.0.1:8080:8080"
     env_file:
       - .env
     environment:
-      - SUBDOMAIN=${SUBDOMAIN:-application-application}
-      - DOMAIN_NAME=${DOMAIN_NAME:-organisation.test}
+      - SUBDOMAIN=${SUBDOMAIN:-invoiceninja-application}
+      - DOMAIN_NAME=${DOMAIN_NAME:-webgrip.test}
       - TZ=${TZ:-UTC}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -27,11 +27,11 @@ services:
       retries: 10
       start_period: 20s
     volumes:
-      - application-application-application-data:/data
+      - invoiceninja-application-application-data:/data
 
-  application-application.postgres:
-    container_name: application-application.postgres
-    image: organisation/application-application.postgres:latest
+  invoiceninja-application.postgres:
+    container_name: invoiceninja-application.postgres
+    image: webgrip/invoiceninja-application.postgres:latest
     pull_policy: never
     build:
       context: .
@@ -47,16 +47,16 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-}
     volumes:
-      - application-application-postgres-data:/var/lib/postgresql/data
+      - invoiceninja-application-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 5s
       timeout: 3s
       retries: 20
 
-  # application-application.mariadb:
-  #   container_name: application-application.mariadb
-  #   image: organisation/application-application.mariadb:latest
+  # invoiceninja-application.mariadb:
+  #   container_name: invoiceninja-application.mariadb
+  #   image: webgrip/invoiceninja-application.mariadb:latest
   #   build:
   #     context: .
   #     dockerfile: ops/docker/mariadb/Dockerfile
@@ -77,7 +77,7 @@ services:
   #     MARIADB_CHARACTER_SET_SERVER: utf8mb4
   #     MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
   #   volumes:
-  #     - application-application-mariadb-data:/var/lib/mysql
+  #     - invoiceninja-application-mariadb-data:/var/lib/mysql
   #   healthcheck:
   #     test:
   #       [
@@ -93,16 +93,16 @@ services:
   #     retries: 10
   #     start_period: 30s
 
-  application-application.redis:
-    container_name: application-application.redis
-    image: organisation/application-application.redis:latest
+  invoiceninja-application.redis:
+    container_name: invoiceninja-application.redis
+    image: webgrip/invoiceninja-application.redis:latest
     pull_policy: never
     build:
       context: .
       dockerfile: ops/docker/redis/Dockerfile
     restart: always
     volumes:
-      - application-application-redis-data:/data
+      - invoiceninja-application-redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -111,12 +111,12 @@ services:
       start_period: 5s
 
 volumes:
-  application-application-application-data:
-  application-application-postgres-data:
-  # application-application-mariadb-data:
-  application-application-redis-data:
+  invoiceninja-application-application-data:
+  invoiceninja-application-postgres-data:
+  # invoiceninja-application-mariadb-data:
+  invoiceninja-application-redis-data:
 
 networks:
   default:
     external: true
-    name: organisation
+    name: webgrip

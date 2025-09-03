@@ -1,50 +1,50 @@
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  name: application-application-system
-  namespace: organisation
-  title: application-application System
+  name: invoiceninja-application-system
+  namespace: webgrip
+  title: invoiceninja-application System
   description: |
     Placeholder description
   labels:
     tier: "3"
   annotations:
-    github.com/project-slug: organisation/application-application
+    github.com/project-slug: webgrip/invoiceninja-application
     backstage.io/adr-location: docs/adrs
     backstage.io/techdocs-ref: dir:./docs/techdocs
     simpleicons.org/icon-slug: n8n
   tags:
-    - application-application
+    - invoiceninja-application
   links:
-    - url: https://application-application.organisation.test/
+    - url: https://invoiceninja-application.webgrip.test/
       title: Development URL
       icon: dashboard
       type: website
-    - url: https://application-application.staging.k8s.organisation.nl/
+    - url: https://invoiceninja-application.staging.k8s.webgrip.nl/
       title: Staging URL
       icon: dashboard
       type: website
-    - url: https://github.com/organisation/application-application
+    - url: https://github.com/webgrip/invoiceninja-application
       title: Source Code
       icon: github
       type: source
 spec:
-  owner: group:organisation/infrastructure
-  domain: organisation/operations-domain
+  owner: group:webgrip/infrastructure
+  domain: webgrip/operations-domain
   type: product
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: application-application
-  namespace: organisation
+  name: invoiceninja-application
+  namespace: webgrip
   title: application
   description: |
     Placeholder description
   labels:
     tier: "3"
   annotations:
-    github.com/project-slug: organisation/application-application
+    github.com/project-slug: webgrip/invoiceninja-application
     backstage.io/techdocs-ref: dir:./docs/techdocs
     simpleicons.org/icon-slug: n8n
   tags:
@@ -52,20 +52,20 @@ metadata:
     - nodejs
     - automation
   links:
-    - url: https://application-application.organisation.test/
+    - url: https://invoiceninja-application.webgrip.test/
       title: Development URL
       icon: dashboard
       type: website
-    - url: https://application-application.staging.k8s.organisation.nl/
+    - url: https://invoiceninja-application.staging.k8s.webgrip.nl/
       title: Staging URL
       icon: dashboard
       type: website
-    - url: https://github.com/organisation/application-application
+    - url: https://github.com/webgrip/invoiceninja-application
       title: Source Code
       icon: github
       type: source
 spec:
   type: service
   lifecycle: development
-  owner: group:organisation/infrastructure
-  system: application-application-system
+  owner: group:webgrip/infrastructure
+  system: invoiceninja-application-system
