@@ -1,7 +1,7 @@
 // Application Template Entry Point
 // Replace this with your actual application code
 
-const http = require('http');
+import http from 'http';
 
 const port = process.env.PORT || 8080;
 
@@ -16,8 +16,8 @@ const server = http.createServer((req, res) => {
   } else if (req.url === '/') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
-      <h1>Application Template</h1>
-      <p>Replace this with your application logic.</p>
+      <h1>Invoice Ninja Application</h1>
+      <p>Application template for Invoice Ninja service.</p>
       <p>Health check: <a href="/health">/health</a></p>
     `);
   } else {
@@ -27,7 +27,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Application template server running on port ${port}`);
+  console.log(`Invoice Ninja application server running on port ${port}`);
   console.log(`Health check: http://localhost:${port}/health`);
 });
 

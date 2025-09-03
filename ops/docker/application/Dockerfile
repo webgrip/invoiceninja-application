@@ -1,8 +1,11 @@
-# Application Dockerfile Template
-# Customize this file based on your application's technology stack
+# Invoice Ninja Application Dockerfile
+# Node.js application with minimal overlay on official upstream
 
-# Example for Node.js application
-FROM node:20.10.0-alpine AS base
+# Use latest LTS minor version of Node.js Alpine
+FROM node:20.11.1-alpine AS base
+
+# Install curl for health checks
+RUN apk add --no-cache curl
 
 # Set working directory
 WORKDIR /app
@@ -14,8 +17,12 @@ RUN adduser -S app -u 1001
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install dependencies (handle case where no lockfile exists)
+RUN if [ -f package-lock.json ]; then \
+      npm ci --omit=dev && npm cache clean --force; \
+    else \
+      npm install --omit=dev && npm cache clean --force; \
+    fi
 
 # Copy application source
 COPY --chown=app:nodejs src/ ./src/
