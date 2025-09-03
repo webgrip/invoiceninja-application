@@ -1,34 +1,18 @@
-# Application Dockerfile Template
-# Customize this file based on your application's technology stack
+# Invoice Ninja Application Dockerfile
+# Minimal overlay on official Invoice Ninja upstream image
 
-# Example for Node.js application
-FROM node:20.10.0-alpine AS base
+# Use latest stable Invoice Ninja image
+FROM invoiceninja/invoiceninja:5
 
-# Set working directory
-WORKDIR /app
+# Install curl for health checks (minimal overlay)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Add application user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S app -u 1001
+# Expose port (Invoice Ninja runs on port 80)
+EXPOSE 80
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy application source
-COPY --chown=app:nodejs src/ ./src/
-
-# Set user
-USER app
-
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
-
-# Start application
-CMD ["node", "src/index.js"]
+# Health check using Invoice Ninja's built-in health endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:80/health || exit 1

@@ -30,6 +30,7 @@ nav:
   - Home: index.md
   - Project Overview: project-overview.md
   - Upstream Application: upstream-application.md
+  - Docker Infrastructure: docker.md
   - Configuration: configuration.md
   - Deployment: deployment.md
   - Operations: operations.md

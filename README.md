@@ -85,10 +85,43 @@ This produces `values.sops.yaml` (commit this).
 
 ### Docker
 
+The application uses a complete multi-service Docker architecture with self-maintained images and containerization best practices.
+
+#### Quick Start
+
 ```bash
-docker compose up --build
-docker compose down --remove-orphans --volumes
+# Start all services
+make start
+
+# Verify services are healthy
+docker compose ps
+
+# Check application
+curl http://localhost:8080/
+curl http://localhost:8080/health
+
+# Stop services
+make stop
 ```
+
+#### Architecture
+
+- **Application**: Invoice Ninja 5.x (Laravel-based invoicing platform)
+- **Nginx**: Reverse proxy with SSL termination (only external port)
+- **MariaDB**: Primary database (11.6.2) with UTF8MB4 support
+- **Redis**: Caching and session storage (7.4.2)
+- **PostgreSQL**: Alternative database option (17.2, disabled by default)
+- **mkcert**: Local SSL certificate generation
+
+#### Key Features
+
+- ✅ **Self-maintained images**: All services use `webgrip/invoiceninja-application.{service}` naming
+- ✅ **Security**: Non-root users, internal networking, comprehensive health checks
+- ✅ **Minimal overlay**: Only essential additions to upstream images
+- ✅ **Port hygiene**: Only nginx publishes to host (127.0.0.1:8080)
+- ✅ **Reproducibility**: Clean clone → make start → working stack
+
+For detailed Docker documentation, see [Docker Infrastructure](docs/techdocs/docs/docker.md).
 
 ---
 
