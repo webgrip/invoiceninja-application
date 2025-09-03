@@ -1,0 +1,15 @@
+apiVersion: v2
+name: invoiceninja-application
+description: "Helm Chart for deploying Invoice Ninja application on Kubernetes"
+type: application
+version: 0.1.0
+appVersion: "5.0.52"
+dependencies:
+  - name: invoiceninja
+    version: 0.1.0
+  - name: common-helpers
+    repository: oci://ghcr.io/webgrip/common-charts
+    version: 1.0.13
+  - name: redis
+    repository: https://charts.bitnami.com/bitnami
+    version: 22.0.7

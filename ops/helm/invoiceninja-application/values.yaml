@@ -1,0 +1,171 @@
+# Values for Invoice Ninja Application Helm Chart
+# This chart uses the community Invoice Ninja chart from: https://github.com/Saddamus/invoiceninja-helm
+# All configuration keys match the upstream chart structure and defaults
+
+namespace: invoiceninja-application
+
+_shared_config:
+  hostname: &hostname "" # REQUIRED: Set the FQDN for your Invoice Ninja instance (e.g., invoice.yourdomain.com)
+  url: &url "" # REQUIRED: Set the full URL for your Invoice Ninja instance (e.g., https://invoice.yourdomain.com)
+
+# Invoice Ninja application configuration
+# This section mirrors the upstream chart structure from https://github.com/Saddamus/invoiceninja-helm
+invoiceninja:
+  # Database configuration - these values are used by the upstream chart
+  dbpass: &dbpass ""  # REQUIRED: Set a strong database password
+  dbname: &dbname "invoiceninja"
+  
+  # Replica count for the Invoice Ninja deployment
+  replicaCount: 1
+
+  # Image configuration - using our organization image
+  image:
+    repository: webgrip/invoiceninja-application  # Our organization image
+    tag: "latest"  # Latest tag for Helm values - CI/ops will pin specific versions
+    pullPolicy: Always
+
+  # Environment configuration for Invoice Ninja
+  # These are passed directly to the Invoice Ninja container
+  envconfig:
+    APP_ENV: 'production'
+    APP_DEBUG: 'false'
+    APP_URL: ""  # REQUIRED: Set the full URL for your Invoice Ninja instance
+    APP_KEY: ""  # REQUIRED: Generate with: php artisan key:generate --show (base64: format)
+    APP_CIPHER: 'AES-256-CBC'
+    TRUSTED_PROXIES: '*'
+    
+    # Database configuration
+    DB_TYPE: 'mysql'
+    DB_STRICT: 'false'
+    # DB_HOST1: Automatically set by chart to MySQL service name
+    DB_USERNAME1: 'invoiceninja'
+    DB_DATABASE1: *dbname
+    DB_PASSWORD1: ""  # REQUIRED: Must match dbpass value above
+    
+    # Mail configuration - all REQUIRED for email functionality
+    MAIL_FROM_NAME: ''  # REQUIRED: Set the sender name for emails (e.g., "Your Company Name")
+    MAIL_FROM_ADDRESS: ''  # REQUIRED: Set the sender email address (e.g., "noreply@yourdomain.com")
+    MAIL_MAILER: 'smtp'
+    MAIL_PORT: '587'
+    MAIL_ENCRYPTION: 'TLS'
+    MAIL_HOST: ''  # REQUIRED: Set the SMTP host (e.g., "smtp.mailgun.org")
+    MAIL_USERNAME: ''  # REQUIRED: Set the SMTP username
+    MAIL_PASSWORD: ''  # REQUIRED: Set the SMTP password
+
+  # Persistence configuration
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass: "do-block-storage"  # Our standard storage class
+
+  # Image pull secrets (empty by default)
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  # Pod annotations and security context
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 1000
+    
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+      - ALL
+    # readOnlyRootFilesystem: false  # Invoice Ninja needs write access to storage
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+
+  # Ingress configuration using our standard Traefik setup
+  ingress:
+    enabled: true
+    className: "ingress-traefik"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-traefik"
+    hosts:
+      - host: ""  # REQUIRED: Set from _shared_config.hostname
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: "letsencrypt-invoiceninja-application"
+        hosts:
+          - ""  # REQUIRED: Set from _shared_config.hostname
+
+  # Resource limits and requests
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+  # Autoscaling configuration
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  # Node selection, tolerations, and affinity
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # MySQL subchart configuration
+  mysql:
+    enabled: true
+    auth:
+      rootPassword: *dbpass  # REQUIRED: Set a strong root password
+      database: *dbname
+      username: "invoiceninja"
+      password: *dbpass  # REQUIRED: Set a strong database password (same as rootPassword for simplicity)
+    primary:
+      persistence:
+        enabled: true
+        storageClass: "do-block-storage"
+        size: 8Gi
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+
+# Redis configuration for caching and sessions (optional but recommended)
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false  # Simplified for internal cluster communication
+  master:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage"
+      size: 2Gi
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+
+# Common helpers configuration
+common-helpers:
+  enabled: true

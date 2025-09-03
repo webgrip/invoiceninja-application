@@ -1,0 +1,12 @@
+dependencies:
+- name: invoiceninja
+  repository: ""
+  version: 0.1.0
+- name: common-helpers
+  repository: oci://ghcr.io/webgrip/common-charts
+  version: 1.0.13
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 22.0.7
+digest: sha256:4235104d46e539a27c004fec887dd44c3c9fa7a993d699e02034f6551bd4b496
+generated: "2025-09-03T09:39:59.383360137Z"
