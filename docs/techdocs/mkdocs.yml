@@ -1,5 +1,5 @@
-site_name: "invoiceninja-application TechDocs"
-site_description: ""
+site_name: "Invoice Ninja Application TechDocs"
+site_description: "Comprehensive documentation for the containerized Invoice Ninja application deployment maintained by webgrip"
 
 theme:
   name: "material"
@@ -28,6 +28,13 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Project Overview: project-overview.md
+  - Upstream Application: upstream-application.md
+  - Configuration: configuration.md
+  - Deployment: deployment.md
+  - Operations: operations.md
+  - Troubleshooting: troubleshooting.md
+  - Development: development.md
   - Template Sync: template-sync.md
 
 # https://www.mkdocs.org/user-guide/configuration
