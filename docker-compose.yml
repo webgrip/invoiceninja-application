@@ -1,0 +1,122 @@
+services:
+  application-application.application:
+    container_name: application-application.application
+    image: organisation/application-application.application:latest
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: ops/docker/application/Dockerfile
+    restart: always
+    depends_on:
+      application-application.postgres:
+        condition: service_healthy
+      application-application.redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SUBDOMAIN=${SUBDOMAIN:-application-application}
+      - DOMAIN_NAME=${DOMAIN_NAME:-organisation.test}
+      - TZ=${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    volumes:
+      - application-application-application-data:/data
+
+  application-application.postgres:
+    container_name: application-application.postgres
+    image: organisation/application-application.postgres:latest
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: ops/docker/postgres/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    logging:
+      options:
+        max-size: 10m
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-}
+      POSTGRES_USER: ${DB_USERNAME:-}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-}
+    volumes:
+      - application-application-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # application-application.mariadb:
+  #   container_name: application-application.mariadb
+  #   image: organisation/application-application.mariadb:latest
+  #   build:
+  #     context: .
+  #     dockerfile: ops/docker/mariadb/Dockerfile
+  #   pull_policy: never
+  #   restart: unless-stopped
+  #   ports:
+  #     - "127.0.0.1:3306:3306"
+  #   logging:
+  #     options:
+  #       max-size: 10m
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     MARIADB_DATABASE: ${DB_DATABASE:-}
+  #     MARIADB_USER: ${DB_USERNAME:-}
+  #     MARIADB_PASSWORD: ${DB_PASSWORD:-}
+  #     MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
+  #     MARIADB_CHARACTER_SET_SERVER: utf8mb4
+  #     MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+  #   volumes:
+  #     - application-application-mariadb-data:/var/lib/mysql
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "mariadb",
+  #         "--socket=/var/run/mysqld/mysqld.sock",
+  #         "--user=${DB_USERNAME:-}",
+  #         "--password=${DB_PASSWORD:-}",
+  #         "--execute=SELECT 1",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #     start_period: 30s
+
+  application-application.redis:
+    container_name: application-application.redis
+    image: organisation/application-application.redis:latest
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: ops/docker/redis/Dockerfile
+    restart: always
+    volumes:
+      - application-application-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  application-application-application-data:
+  application-application-postgres-data:
+  # application-application-mariadb-data:
+  application-application-redis-data:
+
+networks:
+  default:
+    external: true
+    name: organisation

@@ -1,0 +1,15 @@
+dependencies:
+- name: common-helpers
+  repository: oci://ghcr.io/webgrip/common-charts
+  version: 1.0.13
+- name: app-template
+  repository: https://bjw-s-labs.github.io/helm-charts
+  version: 4.2.0
+- name: mariadb
+  repository: https://charts.bitnami.com/bitnami
+  version: 21.0.8
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 22.0.7
+digest: sha256:5762a14fc0913bbe7a0ce38de80c411384ef8d865298d64cea4eb9ff788136dc
+generated: "2025-09-02T12:07:11.978575313+02:00"
