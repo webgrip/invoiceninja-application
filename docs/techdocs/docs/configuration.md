@@ -20,9 +20,9 @@ All configuration follows Laravel convention with `.env` file or environment var
 |----------|---------|---------|-------------|
 | `APP_KEY` | Laravel application encryption key | *Must be generated* | 32-character base64 string |
 | `APP_URL` | Base URL for the application | `http://localhost` | Must include protocol |
-| `DB_HOST` | Database server hostname | `invoiceninja-application.postgres` | Resolvable hostname |
-| `DB_DATABASE` | Database name | `postgres` | Must exist or be creatable |
-| `DB_USERNAME` | Database username | `postgres` | Must have full privileges |
+| `DB_HOST` | Database server hostname | `invoiceninja-application.mariadb` | Resolvable hostname |
+| `DB_DATABASE` | Database name | `invoiceninja` | Must exist or be creatable |
+| `DB_USERNAME` | Database username | `invoiceninja` | Must have full privileges |
 | `DB_PASSWORD` | Database password | *Required* | Strong password recommended |
 
 ### Application Configuration
@@ -40,8 +40,8 @@ All configuration follows Laravel convention with `.env` file or environment var
 
 | Variable | Purpose | Default | Constraints |
 |----------|---------|---------|-------------|
-| `DB_CONNECTION` | Database driver | `pgsql` | `mysql`, `pgsql`, `mariadb` |
-| `DB_PORT` | Database port | `5432` | 1-65535 |
+| `DB_CONNECTION` | Database driver | `mysql` | `mysql`, `pgsql`, `mariadb` |
+| `DB_PORT` | Database port | `3306` | 1-65535 |
 | `DB_ROOT_PASSWORD` | Root database password | *Required for initialization* | MariaDB/MySQL only |
 
 ### Cache and Session Configuration
@@ -96,8 +96,8 @@ All configuration follows Laravel convention with `.env` file or environment var
 
 | Container Path | Volume Name | Purpose | Backup Required |
 |----------------|-------------|---------|-----------------|
-| `/var/lib/postgresql/data` | `invoiceninja-application-postgres-data` | PostgreSQL database files | **Critical** |
-| `/var/lib/mysql` | `invoiceninja-application-mariadb-data` | MariaDB database files (alternative) | **Critical** |
+| `/var/lib/mysql` | `invoiceninja-application-mariadb-data` | MariaDB database files | **Critical** |
+| `/var/lib/postgresql/data` | `invoiceninja-application-postgres-data` | PostgreSQL database files (alternative) | **Critical** |
 
 ### Cache Data Volumes
 
@@ -121,7 +121,7 @@ Container: invoiceninja-application.application
 Image: webgrip/invoiceninja-application.application:latest
 Ports: 8080:8080 (HTTP)
 Health Check: curl -f http://localhost:8080/health
-Dependencies: postgres, redis
+Dependencies: mariadb, redis
 Restart Policy: always
 ```
 
@@ -132,20 +132,20 @@ Restart Policy: always
 - **Retries:** 10
 - **Start Period:** 20 seconds
 
-### PostgreSQL Service
+### MariaDB Service
 
 ```yaml
-Container: invoiceninja-application.postgres
-Image: webgrip/invoiceninja-application.postgres:latest
-Ports: 5432:5432 (Internal)
-Health Check: pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}
+Container: invoiceninja-application.mariadb
+Image: webgrip/invoiceninja-application.mariadb:latest
+Ports: 3306:3306 (Internal)
+Health Check: mariadb --socket=/var/run/mysqld/mysqld.sock --user=${DB_USERNAME} --password=${DB_PASSWORD} --execute=SELECT 1
 Restart Policy: unless-stopped
 Logging: 10MB max file size
 ```
 
-**PostgreSQL Configuration:**
-- **Character Set:** UTF8
-- **Collation:** C
+**MariaDB Configuration:**
+- **Character Set:** utf8mb4
+- **Collation:** utf8mb4_unicode_ci
 - **Timezone:** UTC
 - **Max Connections:** 100 (default)
 - **Shared Buffers:** 25% of available RAM
@@ -192,17 +192,17 @@ Collation: utf8mb4_unicode_ci
 | Service | Internal Port | External Port | Access |
 |---------|---------------|---------------|--------|
 | Application | 8080 | 8080 | localhost:8080 |
-| PostgreSQL | 5432 | 5432 | localhost:5432 (development) |
 | MariaDB | 3306 | 3306 | localhost:3306 (development) |
+| PostgreSQL | 5432 | 5432 | localhost:5432 (development) |
 | Redis | 6379 | None | Internal only |
 
 ### Service Discovery
 
 Services communicate using Docker Compose service names:
 - `invoiceninja-application.application`
-- `invoiceninja-application.postgres`
-- `invoiceninja-application.redis`
 - `invoiceninja-application.mariadb`
+- `invoiceninja-application.redis`
+- `invoiceninja-application.postgres`
 
 ## Security Configuration
 
@@ -242,4 +242,5 @@ Configuration details are derived from and consistent with official upstream doc
 - **Laravel Configuration Documentation**, https://laravel.com/docs/10.x/configuration, Retrieved 2025-01-09
 - **Docker Compose File Reference**, https://docs.docker.com/compose/compose-file/, Retrieved 2025-01-09
 - **PostgreSQL Docker Documentation**, https://hub.docker.com/_/postgres, Retrieved 2025-01-09
+- **MariaDB Docker Documentation**, https://hub.docker.com/_/mariadb, Retrieved 2025-01-09
 - **Redis Configuration Reference**, https://redis.io/topics/config, Retrieved 2025-01-09

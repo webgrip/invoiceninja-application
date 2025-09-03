@@ -215,16 +215,28 @@ docker-compose logs invoiceninja-application.application | grep ERROR
 
 ```bash
 # Monitor database queries
-docker-compose exec invoiceninja-application.postgres psql -U dev_user -d invoiceninja_dev -c "
-SELECT query, calls, total_time, mean_time 
-FROM pg_stat_statements 
-ORDER BY total_time DESC 
-LIMIT 10;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
+SELECT 
+    sql_text,
+    count_star,
+    avg_timer_wait/1000000000 as avg_seconds
+FROM performance_schema.events_statements_summary_by_digest 
+ORDER BY avg_timer_wait DESC 
+LIMIT 10;
+"
 
-# Enable query logging
-docker-compose exec invoiceninja-application.postgres psql -U postgres -c "
-ALTER SYSTEM SET log_statement = 'all';
-SELECT pg_reload_conf();"
+# Enable general query logging
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=root --password=root \
+  --execute="
+SET GLOBAL general_log = 'ON';
+SET GLOBAL general_log_file = '/var/log/mysql/queries.log';
+"
 ```
 
 ## Customization Guidelines

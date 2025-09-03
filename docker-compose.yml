@@ -8,7 +8,7 @@ services:
       dockerfile: ops/docker/application/Dockerfile
     restart: always
     depends_on:
-      invoiceninja-application.postgres:
+      invoiceninja-application.mariadb:
         condition: service_healthy
       invoiceninja-application.redis:
         condition: service_healthy
@@ -29,69 +29,69 @@ services:
     volumes:
       - invoiceninja-application-application-data:/data
 
-  invoiceninja-application.postgres:
-    container_name: invoiceninja-application.postgres
-    image: webgrip/invoiceninja-application.postgres:latest
-    pull_policy: never
-    build:
-      context: .
-      dockerfile: ops/docker/postgres/Dockerfile
-    restart: unless-stopped
-    ports:
-      - "127.0.0.1:5432:5432"
-    logging:
-      options:
-        max-size: 10m
-    environment:
-      POSTGRES_DB: ${DB_DATABASE:-}
-      POSTGRES_USER: ${DB_USERNAME:-}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-}
-    volumes:
-      - invoiceninja-application-postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
-  # invoiceninja-application.mariadb:
-  #   container_name: invoiceninja-application.mariadb
-  #   image: webgrip/invoiceninja-application.mariadb:latest
+  # invoiceninja-application.postgres:
+  #   container_name: invoiceninja-application.postgres
+  #   image: webgrip/invoiceninja-application.postgres:latest
+  #   pull_policy: never
   #   build:
   #     context: .
-  #     dockerfile: ops/docker/mariadb/Dockerfile
-  #   pull_policy: never
+  #     dockerfile: ops/docker/postgres/Dockerfile
   #   restart: unless-stopped
   #   ports:
-  #     - "127.0.0.1:3306:3306"
+  #     - "127.0.0.1:5432:5432"
   #   logging:
   #     options:
   #       max-size: 10m
-  #   env_file:
-  #     - ./.env
   #   environment:
-  #     MARIADB_DATABASE: ${DB_DATABASE:-}
-  #     MARIADB_USER: ${DB_USERNAME:-}
-  #     MARIADB_PASSWORD: ${DB_PASSWORD:-}
-  #     MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
-  #     MARIADB_CHARACTER_SET_SERVER: utf8mb4
-  #     MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+  #     POSTGRES_DB: ${DB_DATABASE:-}
+  #     POSTGRES_USER: ${DB_USERNAME:-}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-}
   #   volumes:
-  #     - invoiceninja-application-mariadb-data:/var/lib/mysql
+  #     - invoiceninja-application-postgres-data:/var/lib/postgresql/data
   #   healthcheck:
-  #     test:
-  #       [
-  #         "CMD",
-  #         "mariadb",
-  #         "--socket=/var/run/mysqld/mysqld.sock",
-  #         "--user=${DB_USERNAME:-}",
-  #         "--password=${DB_PASSWORD:-}",
-  #         "--execute=SELECT 1",
-  #       ]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 10
-  #     start_period: 30s
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 20
+
+  invoiceninja-application.mariadb:
+    container_name: invoiceninja-application.mariadb
+    image: webgrip/invoiceninja-application.mariadb:latest
+    build:
+      context: .
+      dockerfile: ops/docker/mariadb/Dockerfile
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3306:3306"
+    logging:
+      options:
+        max-size: 10m
+    env_file:
+      - ./.env
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-}
+      MARIADB_USER: ${DB_USERNAME:-}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
+      MARIADB_CHARACTER_SET_SERVER: utf8mb4
+      MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - invoiceninja-application-mariadb-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mariadb",
+          "--socket=/var/run/mysqld/mysqld.sock",
+          "--user=${DB_USERNAME:-}",
+          "--password=${DB_PASSWORD:-}",
+          "--execute=SELECT 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   invoiceninja-application.redis:
     container_name: invoiceninja-application.redis
@@ -112,8 +112,8 @@ services:
 
 volumes:
   invoiceninja-application-application-data:
-  invoiceninja-application-postgres-data:
-  # invoiceninja-application-mariadb-data:
+  # invoiceninja-application-postgres-data:
+  invoiceninja-application-mariadb-data:
   invoiceninja-application-redis-data:
 
 networks:

@@ -30,18 +30,18 @@ This deployment consists of the following components:
 ### Core Services
 
 - **Invoice Ninja Application** - Laravel-based web application
-- **PostgreSQL Database** - Primary data storage
+- **MariaDB Database** - Primary data storage
 - **Redis Cache** - Session storage and caching
-- **Alternative Database Support** - MariaDB (configurable)
+- **Alternative Database Support** - PostgreSQL (configurable)
 
 ### Container Images
 
 All images are built and maintained by webgrip organization:
 
 - `webgrip/invoiceninja-application.application:latest` - Main Invoice Ninja application
-- `webgrip/invoiceninja-application.postgres:latest` - PostgreSQL database with optimizations
+- `webgrip/invoiceninja-application.mariadb:latest` - MariaDB database with optimizations
 - `webgrip/invoiceninja-application.redis:latest` - Redis cache server
-- `webgrip/invoiceninja-application.mariadb:latest` - MariaDB alternative (optional)
+- `webgrip/invoiceninja-application.postgres:latest` - PostgreSQL alternative (optional)
 
 ## Image Policy
 

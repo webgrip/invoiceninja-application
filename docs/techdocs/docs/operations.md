@@ -45,7 +45,10 @@ curl -s http://localhost:8080/health | jq '.'
 docker-compose ps
 
 # Check individual service health
-docker-compose exec invoiceninja-application.postgres pg_isready -U invoiceninja_user -d invoiceninja
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --execute="SELECT 1"
 docker-compose exec invoiceninja-application.redis redis-cli ping
 
 # Monitor resource usage
@@ -84,10 +87,19 @@ Monitor key performance indicators:
 
 ```bash
 # Database performance
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
 SELECT 
-    query,
-    calls,
+    sql_text,
+    count_star,
+    avg_timer_wait/1000000000 as avg_seconds
+FROM performance_schema.events_statements_summary_by_digest 
+ORDER BY avg_timer_wait DESC 
+LIMIT 10;
+"
     total_time,
     mean_time,
     rows
@@ -201,8 +213,10 @@ echo "Starting backup at $(date)"
 
 # Database backup with compression
 echo "Backing up database..."
-docker-compose exec -T invoiceninja-application.postgres pg_dump \
-  -U invoiceninja_user invoiceninja | gzip > "$BACKUP_DIR/database.sql.gz"
+docker-compose exec -T invoiceninja-application.mariadb mariadb-dump \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  invoiceninja | gzip > "$BACKUP_DIR/database.sql.gz"
 
 # Application data backup
 echo "Backing up application data..."
@@ -251,15 +265,18 @@ echo "0 2 * * * /path/to/invoiceninja-application/enhanced-backup.sh >> /var/log
 For PostgreSQL, enable point-in-time recovery:
 
 ```bash
-# Enable WAL archiving (add to PostgreSQL configuration)
-docker-compose exec invoiceninja-application.postgres psql -U postgres -c "
-ALTER SYSTEM SET wal_level = replica;
-ALTER SYSTEM SET archive_mode = on;
-ALTER SYSTEM SET archive_command = 'cp %p /var/lib/postgresql/data/pg_wal_archive/%f';
+# Enable binary logging (add to MariaDB configuration)
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=root --password=root \
+  --execute="
+SET GLOBAL log_bin = ON;
+SET GLOBAL binlog_format = 'ROW';
+SET GLOBAL expire_logs_days = 7;
 "
 
-# Restart PostgreSQL to apply changes
-docker-compose restart invoiceninja-application.postgres
+# Restart MariaDB to apply changes
+docker-compose restart invoiceninja-application.mariadb
 ```
 
 ### Recovery Testing
@@ -286,20 +303,23 @@ docker volume create test-db-data || true
 docker volume create test-app-data || true
 
 # Start test database
-docker run -d --name test-postgres \
+docker run -d --name test-mariadb \
   --network test-network \
-  -e POSTGRES_DB=invoiceninja \
-  -e POSTGRES_USER=invoiceninja_user \
-  -e POSTGRES_PASSWORD=test_password \
-  -v test-db-data:/var/lib/postgresql/data \
-  postgres:13
+  -e MARIADB_DATABASE=invoiceninja \
+  -e MARIADB_USER=invoiceninja \
+  -e MARIADB_PASSWORD=test_password \
+  -e MARIADB_ROOT_PASSWORD=root \
+  -v test-db-data:/var/lib/mysql \
+  mariadb:12.0.2-noble
 
 # Wait for database
-sleep 10
+sleep 15
 
 # Restore database
 gunzip -c "$BACKUP_DIR/database.sql.gz" | \
-  docker exec -i test-postgres psql -U invoiceninja_user invoiceninja
+  docker exec -i test-mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=test_password invoiceninja
 
 # Restore application data
 docker run --rm \
@@ -310,7 +330,7 @@ docker run --rm \
 echo "Recovery test completed successfully"
 
 # Cleanup
-docker stop test-postgres && docker rm test-postgres
+docker stop test-mariadb && docker rm test-mariadb
 docker volume rm test-db-data test-app-data
 docker network rm test-network
 EOF
@@ -327,23 +347,43 @@ echo "0 3 1 * * /path/to/invoiceninja-application/test-recovery.sh /path/to/rece
 
 ```bash
 # Analyze database performance
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
-SELECT schemaname, tablename, attname, n_distinct, correlation 
-FROM pg_stats 
-WHERE schemaname = 'public' 
-ORDER BY n_distinct DESC;
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
+SELECT 
+    table_schema, 
+    table_name, 
+    cardinality,
+    table_rows
+FROM information_schema.statistics 
+WHERE table_schema = 'invoiceninja'
+GROUP BY table_schema, table_name
+ORDER BY cardinality DESC;
 "
 
 # Update database statistics
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "ANALYZE;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="ANALYZE TABLE invoices, clients, products;"
 
 # Check for missing indexes
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
-SELECT schemaname, tablename, attname, n_distinct, correlation 
-FROM pg_stats 
-WHERE schemaname = 'public' 
-AND n_distinct > 100 
-AND correlation < 0.1;
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
+SELECT 
+    table_name,
+    non_unique,
+    index_name,
+    column_name
+FROM information_schema.statistics 
+WHERE table_schema = 'invoiceninja'
+ORDER BY table_name, index_name;
 "
 ```
 
@@ -438,7 +478,11 @@ docker-compose exec -T invoiceninja-application.application php artisan cache:cl
 
 # Optimize database
 echo "Optimizing database..."
-docker-compose exec -T invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "VACUUM ANALYZE;"
+docker-compose exec -T invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="OPTIMIZE TABLE invoices, clients, products;"
 
 # Clean up old files
 echo "Cleaning up temporary files..."
@@ -503,16 +547,24 @@ cat > emergency-db-fix.sh << 'EOF'
 echo "Emergency database fix initiated at $(date)"
 
 # Restart database
-docker-compose restart invoiceninja-application.postgres
+docker-compose restart invoiceninja-application.mariadb
 
 # Wait for database
 sleep 15
 
 # Check database integrity
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "SELECT 1;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="SELECT 1;"
 
 # Run database maintenance
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "REINDEX DATABASE invoiceninja;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="CHECK TABLE invoices, clients, products; REPAIR TABLE invoices, clients, products;"
 
 echo "Emergency database fix completed at $(date)"
 EOF
@@ -526,5 +578,6 @@ Operational procedures are based on Docker best practices and Invoice Ninja main
 
 - **Docker Production Operations**, https://docs.docker.com/config/containers/logging/, Retrieved 2025-01-09
 - **PostgreSQL Maintenance Documentation**, https://www.postgresql.org/docs/13/maintenance.html, Retrieved 2025-01-09
+- **MariaDB Administration Guide**, https://mariadb.com/kb/en/administration/, Retrieved 2025-01-09
 - **Laravel Optimization Guide**, https://laravel.com/docs/10.x/deployment#optimization, Retrieved 2025-01-09
 - **Redis Administration Guide**, https://redis.io/topics/admin, Retrieved 2025-01-09

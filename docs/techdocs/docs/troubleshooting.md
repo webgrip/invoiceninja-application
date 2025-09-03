@@ -52,10 +52,13 @@ grep APP_KEY .env
 
 ```bash
 # Verify database is running
-docker-compose ps invoiceninja-application.postgres
+docker-compose ps invoiceninja-application.mariadb
 
 # Test database connectivity
-docker-compose exec invoiceninja-application.postgres pg_isready -U invoiceninja_user -d invoiceninja
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --execute="SELECT 1;"
 
 # Check database credentials in .env
 grep DB_ .env
@@ -89,11 +92,19 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8080/
 make run CMD="php artisan queue:work --once"
 
 # Review slow queries
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
-SELECT query, calls, total_time, mean_time 
-FROM pg_stat_statements 
-ORDER BY total_time DESC 
-LIMIT 10;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
+SELECT 
+    sql_text,
+    count_star,
+    avg_timer_wait/1000000000 as avg_seconds
+FROM performance_schema.events_statements_summary_by_digest 
+ORDER BY avg_timer_wait DESC 
+LIMIT 10;
+"
 ```
 
 **Solutions:**
@@ -193,13 +204,13 @@ docker-compose restart invoiceninja-application.application
 
 ```bash
 # Check database container status
-docker-compose ps invoiceninja-application.postgres
+docker-compose ps invoiceninja-application.mariadb
 
 # Check database logs
-make logs SERVICE=invoiceninja-application.postgres
+make logs SERVICE=invoiceninja-application.mariadb
 
 # Test connection from application container
-docker-compose exec invoiceninja-application.application nc -zv invoiceninja-application.postgres 5432
+docker-compose exec invoiceninja-application.application nc -zv invoiceninja-application.mariadb 3306
 ```
 
 **Solutions:**
@@ -207,11 +218,14 @@ docker-compose exec invoiceninja-application.application nc -zv invoiceninja-app
 1. **Restart Database Service**
 
 ```bash
-docker-compose restart invoiceninja-application.postgres
+docker-compose restart invoiceninja-application.mariadb
 
 # Wait for database to be ready
 sleep 15
-docker-compose exec invoiceninja-application.postgres pg_isready -U invoiceninja_user -d invoiceninja
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --execute="SELECT 1;"
 ```
 
 2. **Check Network Connectivity**
@@ -231,7 +245,11 @@ docker network create webgrip
 grep DB_ .env
 
 # Test manual connection
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "SELECT version();"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="SELECT VERSION();"
 ```
 
 ### Database Performance Issues
@@ -245,23 +263,28 @@ docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user 
 
 ```bash
 # Check database performance
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="
 SELECT 
-    schemaname,
-    tablename,
-    seq_scan,
-    seq_tup_read,
-    idx_scan,
-    idx_tup_fetch
-FROM pg_stat_user_tables 
-ORDER BY seq_tup_read DESC;
+    table_schema,
+    table_name,
+    table_rows,
+    data_length,
+    index_length
+FROM information_schema.tables 
+WHERE table_schema = 'invoiceninja'
+ORDER BY data_length DESC;
 "
 
 # Monitor active connections
-docker-compose exec invoiceninja-application.postgres psql -U postgres -c "
-SELECT count(*) as active_connections 
-FROM pg_stat_activity 
-WHERE state = 'active';
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="SHOW PROCESSLIST;"
 "
 ```
 
@@ -271,10 +294,18 @@ WHERE state = 'active';
 
 ```bash
 # Analyze tables
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "ANALYZE;"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="ANALYZE TABLE invoices, clients, products;"
 
-# Vacuum database
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "VACUUM ANALYZE;"
+# Optimize database
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="OPTIMIZE TABLE invoices, clients, products;"
 ```
 
 2. **Add Missing Indexes**
@@ -293,10 +324,10 @@ Edit `docker-compose.yml`:
 
 ```yaml
 services:
-  invoiceninja-application.postgres:
+  invoiceninja-application.mariadb:
     environment:
-      - POSTGRES_SHARED_BUFFERS=256MB
-      - POSTGRES_EFFECTIVE_CACHE_SIZE=1GB
+      - MARIADB_INNODB_BUFFER_POOL_SIZE=256M
+      - MARIADB_INNODB_LOG_FILE_SIZE=64M
     deploy:
       resources:
         limits:
@@ -314,17 +345,17 @@ services:
 
 ```bash
 # Check database logs for corruption
-make logs SERVICE=invoiceninja-application.postgres | grep -i corrupt
+make logs SERVICE=invoiceninja-application.mariadb | grep -i corrupt
 
 # Check filesystem
-docker run --rm -v invoiceninja-application-postgres-data:/data busybox ls -la /data
+docker run --rm -v invoiceninja-application-mariadb-data:/data busybox ls -la /data
 
 # Verify database integrity
-docker-compose exec invoiceninja-application.postgres psql -U invoiceninja_user -d invoiceninja -c "
-SELECT datname, pg_database_size(datname) 
-FROM pg_database 
-WHERE datistemplate = false;
-"
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --database=invoiceninja \
+  --execute="CHECK TABLE invoices, clients, products;"
 ```
 
 **Recovery Steps:**
@@ -338,33 +369,38 @@ make stop
 2. **Attempt Database Repair**
 
 ```bash
-# Start database in single-user mode
+# Start database in recovery mode
 docker run --rm -it \
-  -v invoiceninja-application-postgres-data:/var/lib/postgresql/data \
-  postgres:13 postgres --single -D /var/lib/postgresql/data invoiceninja
+  -v invoiceninja-application-mariadb-data:/var/lib/mysql \
+  mariadb:12.0.2-noble mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=root --password=root \
+  invoiceninja
 
-# Check for corruption
-# In postgres shell:
-# REINDEX DATABASE invoiceninja;
+# Check for corruption and repair
+# In MariaDB shell:
+# CHECK TABLE invoices, clients, products;
+# REPAIR TABLE invoices, clients, products;
 ```
 
 3. **Restore from Backup**
 
 ```bash
 # Remove corrupted data
-docker volume rm invoiceninja-application-postgres-data
+docker volume rm invoiceninja-application-mariadb-data
 
 # Create new volume
-docker volume create invoiceninja-application-postgres-data
+docker volume create invoiceninja-application-mariadb-data
 
 # Start database
-docker-compose up -d invoiceninja-application.postgres
+docker-compose up -d invoiceninja-application.mariadb
 sleep 15
 
 # Restore from backup
 gunzip -c backups/latest/database.sql.gz | \
-  docker-compose exec -T invoiceninja-application.postgres \
-  psql -U invoiceninja_user invoiceninja
+  docker-compose exec -T invoiceninja-application.mariadb \
+  mariadb --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja invoiceninja
 ```
 
 ## Network and Connectivity Issues
@@ -741,7 +777,7 @@ make stop
 
 # 2. Backup current state
 mkdir -p emergency-backup
-docker run --rm -v invoiceninja-application-postgres-data:/data -v $(pwd)/emergency-backup:/backup busybox cp -a /data/. /backup/
+docker run --rm -v invoiceninja-application-mariadb-data:/data -v $(pwd)/emergency-backup:/backup busybox cp -a /data/. /backup/
 
 # 3. Reset to known good state
 git checkout HEAD~1 -- docker-compose.yml .env
@@ -767,14 +803,15 @@ echo "Restoring from: $LATEST_BACKUP"
 make stop
 
 # Restore database
-docker volume rm invoiceninja-application-postgres-data
-docker volume create invoiceninja-application-postgres-data
-docker-compose up -d invoiceninja-application.postgres
+docker volume rm invoiceninja-application-mariadb-data
+docker volume create invoiceninja-application-mariadb-data
+docker-compose up -d invoiceninja-application.mariadb
 sleep 15
 
 gunzip -c "backups/$LATEST_BACKUP/database.sql.gz" | \
-  docker-compose exec -T invoiceninja-application.postgres \
-  psql -U invoiceninja_user invoiceninja
+  docker-compose exec -T invoiceninja-application.mariadb \
+  mariadb --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja invoiceninja
 
 # Restore application data
 docker volume rm invoiceninja-application-application-data
@@ -795,3 +832,4 @@ Troubleshooting procedures are based on common issues and solutions from Invoice
 - **Laravel Debugging Documentation**, https://laravel.com/docs/10.x/errors, Retrieved 2025-01-09
 - **Docker Troubleshooting Guide**, https://docs.docker.com/config/containers/troubleshoot/, Retrieved 2025-01-09
 - **PostgreSQL Common Problems**, https://www.postgresql.org/docs/13/problems.html, Retrieved 2025-01-09
+- **MariaDB Troubleshooting Guide**, https://mariadb.com/kb/en/troubleshooting/, Retrieved 2025-01-09

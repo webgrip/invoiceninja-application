@@ -159,13 +159,16 @@ docker network inspect webgrip
 
 ```bash
 # Start database first
-docker-compose up -d invoiceninja-application.postgres
+docker-compose up -d invoiceninja-application.mariadb
 
 # Wait for database to be ready
-make wait-ready URL=http://localhost:5432
+make wait-ready URL=http://localhost:3306
 
 # Verify database connectivity
-docker-compose exec invoiceninja-application.postgres pg_isready -U invoiceninja_user -d invoiceninja
+docker-compose exec invoiceninja-application.mariadb mariadb \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  --execute="SELECT 1"
 ```
 
 3. **Application Deployment**
@@ -232,8 +235,10 @@ curl -f http://localhost:8080/health
 mkdir -p backups/$(date +%Y%m%d_%H%M%S)
 
 # Backup database
-docker-compose exec invoiceninja-application.postgres pg_dump \
-  -U invoiceninja_user invoiceninja > backups/$(date +%Y%m%d_%H%M%S)/database.sql
+docker-compose exec invoiceninja-application.mariadb mariadb-dump \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  invoiceninja > backups/$(date +%Y%m%d_%H%M%S)/database.sql
 
 # Backup application data volume
 docker run --rm -v invoiceninja-application-application-data:/data \
@@ -329,21 +334,22 @@ make stop
 
 ```bash
 # Remove corrupted data
-docker volume rm invoiceninja-application-postgres-data
+docker volume rm invoiceninja-application-mariadb-data
 
 # Recreate volume
-docker volume create invoiceninja-application-postgres-data
+docker volume create invoiceninja-application-mariadb-data
 
 # Start database service
-docker-compose up -d invoiceninja-application.postgres
+docker-compose up -d invoiceninja-application.mariadb
 
 # Wait for database ready
 sleep 30
 
 # Restore from backup
 cat backups/20250109_140000/database.sql | \
-  docker-compose exec -T invoiceninja-application.postgres \
-  psql -U invoiceninja_user invoiceninja
+  docker-compose exec -T invoiceninja-application.mariadb \
+  mariadb --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja invoiceninja
 ```
 
 3. **Restore Application Data**
@@ -455,8 +461,10 @@ BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
 # Database backup
-docker-compose exec invoiceninja-application.postgres pg_dump \
-  -U invoiceninja_user invoiceninja > "$BACKUP_DIR/database.sql"
+docker-compose exec invoiceninja-application.mariadb mariadb-dump \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=invoiceninja \
+  invoiceninja > "$BACKUP_DIR/database.sql"
 
 # Application data backup
 docker run --rm -v invoiceninja-application-application-data:/data \
