@@ -1,28 +1,185 @@
+# =============================================================================
+# Invoice Ninja Application - Complete Helm Values
+# =============================================================================
+# This file contains ALL configurable values from upstream charts with defaults
+# and REQUIRED placeholders where operator input is needed.
+#
+# Source dependencies and versions:
+# - bjw-s/app-template v4.2.0 (alias: application)
+# - bitnami/redis v22.0.7
+# - bitnami/mariadb v22.0.0
+# - webgrip/common-helpers v1.0.13
+# =============================================================================
+
 namespace: invoiceninja-application
 
+# =============================================================================
+# SHARED CONFIGURATION
+# =============================================================================
 _shared_config:
-  hostname: &hostname invoiceninja-application.staging.k8s.webgrip.nl
-  url: &url https://invoiceninja-application.staging.k8s.webgrip.nl
+  hostname: &hostname invoiceninja-application.staging.k8s.webgrip.nl  # REQUIRED: Replace with your FQDN
+  url: &url https://invoiceninja-application.staging.k8s.webgrip.nl     # REQUIRED: Replace with your URL
   image: &image
     repository: docker.io/webgrip/invoiceninja-application
     tag: "latest"
     pullPolicy: Always
 
+# =============================================================================
+# APPLICATION (bjw-s/app-template v4.2.0)
+# =============================================================================
 application:
   enabled: true
 
+  # Global values from common chart
+  global:
+    # -- Set an override for the prefix of the fullname
+    nameOverride:
+    # -- Set the entire name definition
+    fullnameOverride:
+    # -- Propagate global metadata to Pod labels.
+    propagateGlobalMetadataToPods: false
+    # -- Set additional global labels. Helm templates can be used.
+    labels: {}
+    # -- Set additional global annotations. Helm templates can be used.
+    annotations: {}
+
+  # -- Set the strategy for the default pod options. Defaults to
+  #    overwrite: If pod-level options are set, use those instead of the defaults.
+  #    merge: If pod-level options are set, merge them with the defaults
+  # @default -- overwrite
+  defaultPodOptionsStrategy: overwrite
+
+  # -- Set default options for all controllers / pods here
+  # Each of these options can be overridden on a Controller level
+  defaultPodOptions:
+    # -- Defines affinity constraint rules. Helm templates can be used.
+    # [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+    affinity: {}
+
+    # -- Set annotations on the Pod. Pod-specific values will be merged with this.
+    annotations: {}
+
+    # -- Specifies whether a service account token should be automatically mounted.
+    automountServiceAccountToken: true
+
+    # -- Configuring the ndots option may resolve nslookup issues on some Kubernetes setups.
+    dnsConfig: {}
+
+    # -- Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true.
+    dnsPolicy: ""
+
+    # -- Enable/disable the generation of environment variables for services.
+    # [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service)
+    enableServiceLinks: false
+
+    # -- Allows specifying explicit hostname setting
+    hostname: ""
+
+    # -- Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames.
+    # [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/)
+    hostAliases: []
+
+    # -- Use the host's ipc namespace
+    hostIPC: false
+
+    # -- Use the host's network namespace
+    hostNetwork: false
+
+    # -- Use the host's pid namespace
+    hostPID: false
+
+    # -- Share a single process namespace between all of the containers in a pod.
+    # When this is set containers will be able to view and signal processes from other containers
+    # in the same pod, and the first process in each container will not be assigned PID 1.
+    shareProcessNamespace: false
+
+    # -- Configure the Security Context for the Pod
+    securityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+
+    # -- Restart policy for all containers within the pod
+    # One of Always, OnFailure, Never
+    restartPolicy: Always
+
+    # -- Set the pod schedulerName
+    schedulerName: ""
+
+    # -- Node labels for Pod assignment. Evaluated as template.
+    # Ref: https://kubernetes.io/docs/user-guide/node-selection/
+    nodeSelector: {}
+
+    # -- Priority class name for the pod
+    priorityClassName: ""
+
+    # -- Pod/Node affinities. Evaluated as template.
+    # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+    # Note: podAffinityPreset, podAntiAffinityPreset, and nodeAffinityPreset will be ignored when it's set
+    affinity: {}
+
+    # -- Node tolerations for pod assignment. Evaluated as template.
+    # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    tolerations: []
+
+    # -- Defines topologySpreadConstraint rules.
+    # [[ref]](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/)
+    topologySpreadConstraints: []
+
   controllers:
     main:
+      # -- enable the controller.
+      enabled: true
+
+      # -- Set the controller type.
+      # Valid options are deployment, daemonset, statefulset, cronjob or job
+      type: deployment
+      # -- Set annotations on the deployment/statefulset/daemonset/cronjob/job
+      annotations: {}
+      # -- Set labels on the deployment/statefulset/daemonset/cronjob/job
+      labels: {}
+      # -- Number of desired pods. When using a HorizontalPodAutoscaler, set this to `null`.
+      replicas: 1
+      # -- Set the controller upgrade strategy
+      # For Deployments, valid values are Recreate (default) and RollingUpdate.
+      # For StatefulSets, valid values are OnDelete and RollingUpdate (default).
+      # DaemonSets/CronJobs/Jobs ignore this.
+      strategy: RollingUpdate
+
+      rollingUpdate:
+        # -- Set deployment RollingUpdate max unavailable
+        unavailable: 25%
+        # -- Set deployment RollingUpdate max surge
+        surge: 25%
+        # -- Set statefulset RollingUpdate partition
+        partition:
+      # -- ReplicaSet revision history limit
+      revisionHistoryLimit: 3
+
       pod:
         securityContext:
           fsGroup: 1000
           fsGroupChangePolicy: OnRootMismatch
+
+      # -- Whether to apply defaultContainerOptions to initContainers
+      applyDefaultContainerOptionsToInitContainers: true
+      # -- Set the strategy for the default container options. Defaults to
+      #    overwrite: If container-level options are set, use those instead of the defaults.
+      #    merge: If container-level options are set, merge them with the defaults
+      # @default -- overwrite
+      defaultContainerOptionsStrategy: overwrite
+
       containers:
         app:
           image: *image
+          
           resources:
-            requests: { cpu: "250m", memory: "256Mi" }
-            limits: { cpu: "500m", memory: "512Mi" }
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          
           probes:
             readiness:
               enabled: true
@@ -30,13 +187,12 @@ application:
               spec:
                 exec:
                   command:
-                    [
-                      "sh",
-                      "-c",
-                      "php -v >/dev/null && nc -z invoiceninja-application-mariadb 3306",
-                    ]
+                    - "sh"
+                    - "-c"
+                    - "php -v >/dev/null && nc -z invoiceninja-application-mariadb 3306"
                 initialDelaySeconds: 10
                 periodSeconds: 10
+          
           env:
             - name: APP_ENV
               value: production
@@ -101,30 +257,43 @@ application:
             - name: http
               containerPort: 80
           resources:
-            requests: { cpu: "100m", memory: "128Mi" }
-            limits: { cpu: "300m", memory: "256Mi" }
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
           probes:
             liveness:
               enabled: true
               custom: true
               spec:
-                httpGet: { path: /health, port: http }
+                httpGet:
+                  path: /health
+                  port: http
                 initialDelaySeconds: 5
                 periodSeconds: 10
             readiness:
               enabled: true
               custom: true
               spec:
-                httpGet: { path: /health, port: http }
+                httpGet:
+                  path: /health
+                  port: http
                 initialDelaySeconds: 2
                 periodSeconds: 5
 
   service:
     main:
       controller: main
+      type: ClusterIP
+      annotations: {}
+      labels: {}
       ports:
         http:
           port: 80
+          targetPort: http
+          protocol: TCP
 
   ingress:
     main:
@@ -137,6 +306,7 @@ application:
         - host: *hostname
           paths:
             - path: /
+              pathType: Prefix
               service:
                 identifier: main
                 port: http
@@ -189,30 +359,594 @@ application:
             }
           }
 
+# =============================================================================
+# REDIS (bitnami/redis v22.0.7)
+# =============================================================================
 redis:
+  # -- Global Docker image parameters
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+    defaultStorageClass: ""
+    storageClass: ""
+    security:
+      allowInsecureImages: false
+    redis:
+      password: ""
+    compatibility:
+      openshift:
+        adaptSecurityContext: auto
+
+  # -- Override Kubernetes version
+  kubeVersion: ""
+  # -- String to partially override common.names.fullname
+  nameOverride: ""
+  # -- String to fully override common.names.fullname
+  fullnameOverride: ""
+  # -- String to fully override common.names.namespace
+  namespaceOverride: ""
+  # -- Add labels to all the deployed resources
+  commonLabels: {}
+  # -- Add annotations to all the deployed resources
+  commonAnnotations: {}
+  # -- Enable diagnostic mode in the deployment
+  diagnosticMode:
+    enabled: false
+    command:
+      - sleep
+    args:
+      - infinity
+
+  # Redis(R) Image parameters
+  image:
+    registry: docker.io
+    repository: bitnami/redis
+    tag: 8.2.1-debian-12-r7
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    debug: false
+
+  # Redis(R) common configuration
   architecture: replication
   auth:
     enabled: false
+    sentinel: true
+    password: ""
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+    usePasswordFiles: false
+
+  # Redis(R) Common configuration (applicable for all modes)
+  commonConfiguration: |-
+    # Enable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+
+  # Redis(R) Master parameters
   master:
+    count: 1
+    configuration: ""
+    disableCommands:
+      - FLUSHDB
+      - FLUSHALL
+    command: []
+    args: []
+    enableServiceLinks: true
+    preExecCmds: []
+    extraFlags: []
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    containerPorts:
+      redis: 6379
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 5
+    customStartupProbe: {}
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    resources:
+      limits: {}
+      requests: {}
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      fsGroupChangePolicy: Always
+      supplementalGroups: []
+      sysctls: []
+    containerSecurityContext:
+      enabled: true
+      seLinuxOptions: {}
+      windowsOptions: {}
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: "RuntimeDefault"
+    schedulerName: ""
+    updateStrategy:
+      type: RollingUpdate
+    minReadySeconds: 0
+    priorityClassName: ""
+    podManagementPolicy: ""
+    automountServiceAccountToken: false
+    hostAliases: []
+    podLabels: {}
+    podAnnotations: {}
+    shareProcessNamespace: false
+    podAffinityPreset: ""
+    podAntiAffinityPreset: soft
+    nodeAffinityPreset:
+      type: ""
+      key: ""
+      values: []
+    affinity: {}
+    nodeSelector: {}
+    tolerations: []
+    topologySpreadConstraints: []
+    dnsPolicy: ""
+    dnsConfig: {}
+    lifecycleHooks: {}
+    extraVolumes: []
+    extraVolumeMounts: []
+    sidecars: []
+    initContainers: []
     persistence:
       enabled: true
+      medium: ""
+      sizeLimit: ""
+      path: /data
+      subPath: ""
+      subPathExpr: ""
+      storageClass: ""
+      accessModes:
+        - ReadWriteOnce
       size: 1Gi
+      annotations: {}
+      selector: {}
+      dataSource: {}
+      existingClaim: ""
+    persistentVolumeClaimRetentionPolicy:
+      enabled: false
+      whenScaled: Retain
+      whenDeleted: Retain
+    service:
+      type: ClusterIP
+      ports:
+        redis: 6379
+      nodePorts:
+        redis: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      internalTrafficPolicy: Cluster
+      clusterIP: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations: {}
+      sessionAffinity: None
+      sessionAffinityConfig: {}
+    terminationGracePeriodSeconds: 30
+
+  # Redis(R) Replica parameters
   replica:
     replicaCount: 0
+    configuration: ""
+    disableCommands:
+      - FLUSHDB
+      - FLUSHALL
+    command: []
+    args: []
+    enableServiceLinks: true
+    preExecCmds: []
+    extraFlags: []
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    externalMaster:
+      enabled: false
+      host: ""
+      port: 6379
+    containerPorts:
+      redis: 6379
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 22
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 5
+    customStartupProbe: {}
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    resources:
+      limits: {}
+      requests: {}
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      fsGroupChangePolicy: Always
+      supplementalGroups: []
+      sysctls: []
+    containerSecurityContext:
+      enabled: true
+      seLinuxOptions: {}
+      windowsOptions: {}
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: "RuntimeDefault"
+    schedulerName: ""
+    updateStrategy:
+      type: RollingUpdate
+    minReadySeconds: 0
+    priorityClassName: ""
+    podManagementPolicy: ""
+    automountServiceAccountToken: false
+    hostAliases: []
+    podLabels: {}
+    podAnnotations: {}
+    shareProcessNamespace: false
+    podAffinityPreset: ""
+    podAntiAffinityPreset: soft
+    nodeAffinityPreset:
+      type: ""
+      key: ""
+      values: []
+    affinity: {}
+    nodeSelector: {}
+    tolerations: []
+    topologySpreadConstraints: []
+    dnsPolicy: ""
+    dnsConfig: {}
+    lifecycleHooks: {}
+    extraVolumes: []
+    extraVolumeMounts: []
+    sidecars: []
+    initContainers: []
+    persistence:
+      enabled: true
+      medium: ""
+      sizeLimit: ""
+      path: /data
+      subPath: ""
+      subPathExpr: ""
+      storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      selector: {}
+      dataSource: {}
+      existingClaim: ""
+    service:
+      type: ClusterIP
+      ports:
+        redis: 6379
+      nodePorts:
+        redis: ""
+      externalTrafficPolicy: Cluster
+      extraPorts: []
+      internalTrafficPolicy: Cluster
+      clusterIP: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations: {}
+      sessionAffinity: None
+      sessionAffinityConfig: {}
+    terminationGracePeriodSeconds: 30
 
+  # Redis(R) Sentinel configuration parameters
+  sentinel:
+    enabled: false
+
+  # Other parameters
+  networkPolicy:
+    enabled: true
+    allowExternal: true
+    allowExternalEgress: true
+    extraIngress: []
+    extraEgress: []
+    ingressNSMatchLabels: {}
+    ingressNSPodMatchLabels: {}
+
+  # Pod Disruption Budget configuration
+  pdb:
+    create: true
+    minAvailable: ""
+    maxUnavailable: ""
+
+  # TLS configuration
+  tls:
+    enabled: false
+
+  # Metrics configuration
+  metrics:
+    enabled: false
+
+  # Init containers parameters
+  volumePermissions:
+    enabled: false
+
+  # kubectl configuration
+  kubectl:
+    image:
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: 1.31.4-debian-12-r3
+      digest: ""
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+  # Sysctl configuration
+  sysctl:
+    enabled: false
+
+# =============================================================================
+# MARIADB (bitnami/mariadb v22.0.0)
+# =============================================================================
 mariadb:
   enabled: true
+
+  # Global Docker image parameters
+  global:
+    imageRegistry: ""
+    imagePullSecrets: []
+    defaultStorageClass: ""
+    storageClass: ""
+    compatibility:
+      openshift:
+        adaptSecurityContext: auto
+
+  # -- Override Kubernetes version
+  kubeVersion: ""
+  # -- String to partially override common.names.fullname
+  nameOverride: ""
+  # -- String to fully override common.names.fullname
+  fullnameOverride: ""
+  # -- String to fully override common.names.namespace
+  namespaceOverride: ""
+  # -- Add labels to all the deployed resources
+  commonLabels: {}
+  # -- Add annotations to all the deployed resources
+  commonAnnotations: {}
+  # -- Enable diagnostic mode in the deployment
+  diagnosticMode:
+    enabled: false
+    command:
+      - sleep
+    args:
+      - infinity
+
+  # MariaDB Image parameters
+  image:
+    registry: docker.io
+    repository: bitnami/mariadb
+    tag: 12.0.2-debian-12-r3
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    debug: false
+
+  # MariaDB architecture
+  architecture: standalone
+
+  # MariaDB Authentication parameters
   auth:
-    # rootPassword: ""
+    # -- MariaDB root password
+    # rootPassword: ""  # REQUIRED: Set via secrets
+    # -- MariaDB custom user and database
     database: invoiceninja-application
     username: invoiceninja-application
-    # password: ""
+    # password: ""  # REQUIRED: Set via secrets
+    # -- Use existing secret for password details
     existingSecret: invoiceninja-application-secrets
     secretKeys:
       adminPasswordKey: mariadb-root-password
       userPasswordKey: mariadb-password
+      replicationPasswordKey: replication-password
+    # -- Force users to specify required passwords
+    forcePassword: false
+    # -- Use password files instead of environment variable
+    usePasswordFiles: false
+    # -- Mount credentials as files instead of using environment variables
+    customPasswordFiles: {}
+
+  # MariaDB Primary configuration
   primary:
+    # -- MariaDB Primary server configuration to be injected as ConfigMap
+    configuration: ""
+    # -- Name of existing ConfigMap with MariaDB Primary configuration
+    existingConfigmap: ""
+    command: []
+    args: []
+    hostAliases: []
+    extraFlags: ""
+    extraEnvVars: []
+    extraEnvVarsCM: ""
+    extraEnvVarsSecret: ""
+    replicaCount: 1
+    updateStrategy:
+      type: RollingUpdate
+    rollingUpdatePartition: ""
+    podManagementPolicy: ""
+    podLabels: {}
+    podAnnotations: {}
+    affinity: {}
+    nodeSelector: {}
+    tolerations: []
+    topologySpreadConstraints: []
+    priorityClassName: ""
+    schedulerName: ""
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      fsGroupChangePolicy: Always
+    containerSecurityContext:
+      enabled: true
+      seLinuxOptions: {}
+      windowsOptions: {}
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: "RuntimeDefault"
+    resources:
+      limits: {}
+      requests: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+      successThreshold: 1
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+      successThreshold: 1
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 120
+      periodSeconds: 15
+      timeoutSeconds: 1
+      failureThreshold: 10
+      successThreshold: 1
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    customStartupProbe: {}
+    extraVolumes: []
+    extraVolumeMounts: []
+    initContainers: []
+    sidecars: []
+    service:
+      type: ClusterIP
+      ports:
+        mysql: 3306
+      nodePorts:
+        mysql: ""
+      clusterIP: ""
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      extraPorts: []
+      annotations: {}
+      sessionAffinity: None
+      sessionAffinityConfig: {}
     persistence:
       enabled: true
+      existingClaim: ""
       storageClass: do-block-storage
+      accessModes:
+        - ReadWriteOnce
       size: 2Gi
+      annotations: {}
+      selector: {}
+      subPath: ""
+    persistentVolumeClaimRetentionPolicy:
+      enabled: false
+      whenScaled: Retain
+      whenDeleted: Retain
+
+  # MariaDB Secondary configuration (only when architecture is 'replication')
+  secondary:
+    replicaCount: 1
+
+  # RBAC configuration
+  rbac:
+    create: false
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    name: ""
+    annotations: {}
+    automountServiceAccountToken: false
+
+  # Pod Disruption Budget configuration
+  pdb:
+    create: true
+    minAvailable: ""
+    maxUnavailable: ""
+
+  # Network Policies
+  networkPolicy:
+    enabled: true
+    allowExternal: true
+    allowExternalEgress: true
+    extraIngress: []
+    extraEgress: []
+
+  # Volume Permissions
+  volumePermissions:
+    enabled: false
+
+  # Init DB scripts
+  initdbScripts: {}
+
+  # MariaDB Galera configuration
+  galera:
+    enabled: false
+
+  # LDAP configuration
+  ldap:
+    enabled: false
+
+  # TLS configuration
+  tls:
+    enabled: false
+
+  # Metrics configuration
+  metrics:
+    enabled: false
