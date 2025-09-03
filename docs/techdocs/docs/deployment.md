@@ -1,6 +1,21 @@
+---
+title: "Deployment"
+description: "Deployment procedures for the Invoice Ninja application"
+tags:
+  - deployment
+  - overview
+search:
+  boost: 4
+  exclude: false
+icon: material/rocket-launch-outline
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+redirect: /deployment/
+---
+
 # Deployment
 
-**Purpose Statement:** This document describes how to deploy and manage the Invoice Ninja application using the provided Makefile and Docker Compose configuration.
+Please see the [Deployment section](deployment/) for detailed deployment information.
 
 ## Table of Contents
 

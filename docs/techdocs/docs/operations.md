@@ -1,3 +1,20 @@
+---
+title: "Operations"
+description: "Day-to-day operational procedures for managing the Invoice Ninja application deployment"
+tags:
+  - operations
+  - monitoring
+  - maintenance
+  - backup
+  - performance
+search:
+  boost: 4
+  exclude: false
+icon: material/monitor-dashboard
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+---
+
 # Operations
 
 **Purpose Statement:** This document covers day-to-day operational procedures for managing the Invoice Ninja application deployment.

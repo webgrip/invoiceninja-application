@@ -1,3 +1,20 @@
+---
+title: "Development"
+description: "Development workflow and customization procedures for the Invoice Ninja application deployment"
+tags:
+  - development
+  - workflow
+  - customization
+  - testing
+  - contributing
+search:
+  boost: 3
+  exclude: false
+icon: material/code-tags
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+---
+
 # Development
 
 **Purpose Statement:** This document describes the development workflow and customization procedures for the Invoice Ninja application deployment.

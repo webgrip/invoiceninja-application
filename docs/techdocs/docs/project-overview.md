@@ -1,3 +1,19 @@
+---
+title: "Project Overview"
+description: "Description of what the invoiceninja-application project is and which upstream applications it packages"
+tags:
+  - project
+  - overview
+  - architecture
+  - upstream
+search:
+  boost: 4
+  exclude: false
+icon: material/information-outline
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+---
+
 # Project Overview
 
 **Purpose Statement:** This document describes what the invoiceninja-application project is and which upstream applications it packages.

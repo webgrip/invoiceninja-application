@@ -1,3 +1,19 @@
+---
+title: "Upstream Application"
+description: "Facts about Invoice Ninja derived from official sources and upstream documentation"
+tags:
+  - invoice-ninja
+  - upstream
+  - reference
+  - laravel
+search:
+  boost: 3
+  exclude: false
+icon: material/source-branch
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+---
+
 # Upstream Application Facts
 
 **Purpose Statement:** This document provides comprehensive facts about Invoice Ninja derived from official upstream documentation sources.

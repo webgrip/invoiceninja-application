@@ -1,3 +1,20 @@
+---
+title: "Troubleshooting"
+description: "Common issues and solutions for the Invoice Ninja application stack"
+tags:
+  - troubleshooting
+  - issues
+  - solutions
+  - debugging
+  - error-handling
+search:
+  boost: 4
+  exclude: false
+icon: material/tools
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
+---
+
 # Troubleshooting
 
 **Purpose Statement:** This document covers the most frequent operational issues in the Invoice Ninja application stack and their solutions.

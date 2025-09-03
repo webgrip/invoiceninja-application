@@ -1,9 +1,20 @@
 ---
+title: "Invoice Ninja Application Documentation"
+description: "Comprehensive documentation for the containerized Invoice Ninja application deployment maintained by webgrip"
+tags:
+  - invoice-ninja
+  - documentation
+  - overview
+  - getting-started
 hide:
   - navigation
   - toc
 search:
-  boost: 2 
+  boost: 5
+  exclude: false
+icon: material/book-open-page-variant
+author: "WebGrip Infrastructure Team"
+date: 2025-01-09
 ---
 
 # Invoice Ninja Application Documentation
@@ -18,8 +29,8 @@ This documentation enables any engineer to understand what we built, why we buil
 
 - [Project Overview](project-overview.md) - What this project is and which upstream applications it packages
 - [Upstream Application](upstream-application.md) - Facts about Invoice Ninja derived from official sources
-- [Configuration](configuration.md) - Environment variables, volumes, and service settings
-- [Deployment](deployment.md) - How to deploy and manage the application
+- [Configuration](configuration/) - Environment variables, volumes, and service settings
+- [Deployment](deployment/) - How to deploy and manage the application
 - [Operations](operations.md) - Day-to-day operational procedures
 - [Troubleshooting](troubleshooting.md) - Common issues and solutions
 - [Development](development.md) - Development workflow and customization
