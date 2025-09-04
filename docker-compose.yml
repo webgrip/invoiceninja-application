@@ -1,7 +1,7 @@
 services:
   invoiceninja-application.application:
-    container_name: invoiceninja-application.application
-    image: webgrip/invoiceninja-application.application:latest
+    container_name: invoiceninja-application
+    image: webgrip/invoiceninja-application:latest
     pull_policy: never
     build:
       context: .
@@ -12,91 +12,54 @@ services:
         condition: service_healthy
       invoiceninja-application.redis:
         condition: service_healthy
-    # Internal port only - no host mapping
-    expose:
-      - "80"
-    env_file:
-      - .env
+    ports:
+      - "127.0.0.1:9000:9000"
+    env_file: ./.env
     environment:
-      - SUBDOMAIN=${SUBDOMAIN:-invoiceninja-application}
-      - DOMAIN_NAME=${DOMAIN_NAME:-webgrip.test}
-      - TZ=${TZ:-UTC}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
+      DB_TYPE: ${DB_CONNECTION:-}
+      DB_STRICT: "false"
+      LOG_CHANNEL: stack
+      REQUIRE_HTTPS: "false"
     volumes:
-      - invoiceninja-application-application-data:/data
+      - ./.env:/var/www/app/.env
+      - invoiceninja-application-application-public-data:/var/www/app/public
+      - invoiceninja-application-application-storage-data:/var/www/app/storage
 
   invoiceninja-application.nginx:
-    container_name: invoiceninja-application.nginx
-    image: webgrip/invoiceninja-application.nginx:latest
+    container_name: invoiceninja-application-nginx
+    image: webgrip/invoiceninja-application-nginx:latest
     pull_policy: never
     build:
       context: .
       dockerfile: ops/docker/nginx/Dockerfile
     restart: always
     depends_on:
-      invoiceninja-application.application:
-        condition: service_healthy
-    # Only nginx publishes to host
+      - invoiceninja-application.application
     ports:
       - "127.0.0.1:8080:80"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-
-  # invoiceninja-application.postgres:
-  #   container_name: invoiceninja-application.postgres
-  #   image: webgrip/invoiceninja-application.postgres:latest
-  #   pull_policy: never
-  #   build:
-  #     context: .
-  #     dockerfile: ops/docker/postgres/Dockerfile
-  #   restart: unless-stopped
-  #   expose:
-  #     - "5432"
-  #   logging:
-  #     options:
-  #       max-size: 10m
-  #   environment:
-  #     POSTGRES_DB: ${DB_DATABASE:-}
-  #     POSTGRES_USER: ${DB_USERNAME:-}
-  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-}
-  #   volumes:
-  #     - invoiceninja-application-postgres-data:/var/lib/postgresql/data
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
-  #     interval: 5s
-  #     timeout: 3s
-  #     retries: 20
+    volumes:
+      - invoiceninja-application-application-public-data:/var/www/app/public:ro
 
   invoiceninja-application.mariadb:
-    container_name: invoiceninja-application.mariadb
-    image: webgrip/invoiceninja-application.mariadb:latest
+    container_name: invoiceninja-application-mariadb
+    image: webgrip/invoiceninja-application-mariadb:latest
     build:
       context: .
       dockerfile: ops/docker/mariadb/Dockerfile
     pull_policy: never
     restart: unless-stopped
-    # Internal port only - no host mapping
-    expose:
-      - "3306"
+    ports:
+      - "127.0.0.1:3306:3306"
     logging:
       options:
         max-size: 10m
     env_file:
       - ./.env
     environment:
-      MARIADB_DATABASE: ${DB_DATABASE:-}
-      MARIADB_USER: ${DB_USERNAME:-}
-      MARIADB_PASSWORD: ${DB_PASSWORD:-}
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
+      MARIADB_DATABASE: ${DB_DATABASE:-ninja}
+      MARIADB_USER: ${DB_USERNAME:-ninja}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-ninja}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
       MARIADB_CHARACTER_SET_SERVER: utf8mb4
       MARIADB_COLLATION_SERVER: utf8mb4_unicode_ci
     volumes:
@@ -106,9 +69,8 @@ services:
         [
           "CMD",
           "mariadb",
-          "--socket=/var/run/mysqld/mysqld.sock",
-          "--user=${DB_USERNAME:-}",
-          "--password=${DB_PASSWORD:-}",
+          "--user=${DB_USERNAME:-ninja}",
+          "--password=${DB_PASSWORD:-ninja}",
           "--execute=SELECT 1",
         ]
       interval: 10s
@@ -117,16 +79,13 @@ services:
       start_period: 30s
 
   invoiceninja-application.redis:
-    container_name: invoiceninja-application.redis
-    image: webgrip/invoiceninja-application.redis:latest
+    container_name: invoiceninja-application-redis
+    image: webgrip/invoiceninja-application-redis:latest
     pull_policy: never
     build:
       context: .
       dockerfile: ops/docker/redis/Dockerfile
     restart: always
-    # Internal port only - no host mapping
-    expose:
-      - "6379"
     volumes:
       - invoiceninja-application-redis-data:/data
     healthcheck:
@@ -136,25 +95,14 @@ services:
       retries: 5
       start_period: 5s
 
-  invoiceninja-application.mkcert:
-    container_name: invoiceninja-application.mkcert
-    image: webgrip/invoiceninja-application.mkcert:latest
-    pull_policy: never
-    build:
-      context: .
-      dockerfile: ops/docker/mkcert/Dockerfile
-    restart: "no"
-    environment:
-      - DOMAIN=${SUBDOMAIN:-invoiceninja-application}.${DOMAIN_NAME:-webgrip.test}
-    volumes:
-      - invoiceninja-application-mkcert-data:/root/.local/share/mkcert
-
 volumes:
-  invoiceninja-application-application-data:
-  # invoiceninja-application-postgres-data:
+  invoiceninja-application-application-storage-data:
+  invoiceninja-application-application-public-data:
+
   invoiceninja-application-mariadb-data:
   invoiceninja-application-redis-data:
-  invoiceninja-application-mkcert-data:
+  certificate-data:
+    external: true
 
 networks:
   default:

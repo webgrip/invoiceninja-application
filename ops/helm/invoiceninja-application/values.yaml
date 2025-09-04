@@ -95,7 +95,7 @@ application:
         web:
           image:
             repository: nginx
-            tag: 1.27-alpine
+            tag: 1.29.1-alpine
             pullPolicy: IfNotPresent
           ports:
             - name: http
@@ -190,6 +190,10 @@ application:
           }
 
 redis:
+  image:
+    repository: docker.io/bitnamilegacy/redis
+    tag: "8.2.1"
+    pullPolicy: IfNotPresent
   architecture: replication
   auth:
     enabled: false
@@ -201,6 +205,10 @@ redis:
     replicaCount: 0
 
 mariadb:
+  image:
+    repository: docker.io/bitnamilegacy/mariadb
+    tag: "12.0.2"
+    pullPolicy: IfNotPresent
   enabled: true
   auth:
     # rootPassword: ""
