@@ -67,6 +67,7 @@ jobs:
     if: >
       always()
       && needs.build.result == 'success'
+      && needs.deploy-changed-secrets.result != 'failure'
     uses: webgrip/workflows/.github/workflows/helm-chart-deploy.yml@main
     secrets:
       DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
