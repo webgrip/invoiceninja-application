@@ -1,14 +1,4 @@
-# Invoice Ninja Application Dockerfile
-# Minimal overlay on official Invoice Ninja upstream image
-
-# Use latest stable Invoice Ninja image
-FROM invoiceninja/invoiceninja:5
-
-# Install curl for health checks (minimal overlay)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+FROM invoiceninja/invoiceninja:5.12.26
 
 # Expose port (Invoice Ninja runs on port 80)
 EXPOSE 80

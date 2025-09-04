@@ -14,14 +14,14 @@ NAMESPACE     ?= $(APP_NAME)
 SERVICE_NAME  ?= $(APP_NAME)
 APP_SERVICE   ?= $(APP_NAME).application
 ENV_FILE      ?= .env
-COMPOSE       ?= docker-compose
+COMPOSE       ?= docker compose
 HELMFILE      ?= helmfile
 HELMFILE_FILE ?= helmfile.yaml
 HELMFILE_ENV  ?=
 
 # Secrets management
-AGE_KEY       ?= .age.key
-AGE_PUB       ?= .age.pub
+AGE_KEY       ?= age.agekey
+AGE_PUB       ?= age.pubkey
 DECRYPT_FILE  ?= values.dec.yaml
 SOPS_FILE     ?= values.yaml
 
@@ -409,9 +409,8 @@ user\:create: ## Create user (override EMAIL=user@example.com PASS=pass)
 	: $${EMAIL:=admin@example.com}; \
 	: $${PASS:=password}; \
 	printf "$(C_INFO)Creating user %s...$(C_RESET)\n" "$$EMAIL"; \
-	echo "TODO: Customize this command for your application framework"; \
-	# $(COMPOSE) exec $(APP_SERVICE) your-user-creation-command --email="$$EMAIL" --password="$$PASS"; \
-	printf "$(C_OK)User creation template - implement for your app$(C_RESET)\n"
+	$(COMPOSE) exec $(APP_SERVICE) php artisan ninja:create-account --email="$$EMAIL" --password="$$PASS"; \
+	printf "$(C_OK)User creation complete.$(C_RESET)\n"
 
 # --- Phony list ---------------------------------------------------------------
 
