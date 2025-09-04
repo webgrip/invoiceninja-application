@@ -191,7 +191,7 @@ application:
 
 redis:
   image:
-    repository: docker.io/bitnamilegacy/redis
+    repository: bitnamilegacy/redis
     tag: "8.2.1"
     pullPolicy: IfNotPresent
   architecture: replication
@@ -206,7 +206,7 @@ redis:
 
 mariadb:
   image:
-    repository: docker.io/bitnamilegacy/mariadb
+    repository: bitnamilegacy/mariadb
     tag: "12.0.2"
     pullPolicy: IfNotPresent
   enabled: true
