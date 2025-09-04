@@ -23,7 +23,7 @@ HELMFILE_ENV  ?=
 AGE_KEY       ?= age.agekey
 AGE_PUB       ?= age.pubkey
 DECRYPT_FILE  ?= values.dec.yaml
-SOPS_FILE     ?= values.yaml
+SOPS_FILE     ?= values.sops.yaml
 
 # Helm configuration
 HELM_CHART_DIR ?= ops/helm/$(APP_NAME)
