@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/webgrip/invoiceninja-application/compare/1.0.7...1.0.8) (2025-09-04)
+
+
+### Bug Fixes
+
+* fixed redis and mariadb image repositories ([d4561e8](https://github.com/webgrip/invoiceninja-application/commit/d4561e8e69adf6a25dae4828eb40fc7ca51d9c1b))
+
 ## [1.0.7](https://github.com/webgrip/invoiceninja-application/compare/1.0.6...1.0.7) (2025-09-04)
 
 
