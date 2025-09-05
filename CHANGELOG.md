@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/webgrip/invoiceninja-application/compare/1.0.14...1.0.15) (2025-09-05)
+
+
+### Bug Fixes
+
+* forward https ([2f03b20](https://github.com/webgrip/invoiceninja-application/commit/2f03b20b051a09739640384aefb1b0ce97b07f22))
+
 ## [1.0.14](https://github.com/webgrip/invoiceninja-application/compare/1.0.13...1.0.14) (2025-09-05)
 
 
