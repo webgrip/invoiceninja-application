@@ -1,3 +1,10 @@
+## [1.0.16](https://github.com/webgrip/invoiceninja-application/compare/1.0.15...1.0.16) (2025-09-05)
+
+
+### Bug Fixes
+
+* proper env config ([1876540](https://github.com/webgrip/invoiceninja-application/commit/1876540fd7fcc1776b63201c699ae521c9388c53))
+
 ## [1.0.15](https://github.com/webgrip/invoiceninja-application/compare/1.0.14...1.0.15) (2025-09-05)
 
 
