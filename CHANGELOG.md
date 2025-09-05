@@ -1,3 +1,10 @@
+## [1.0.19](https://github.com/webgrip/invoiceninja-application/compare/1.0.18...1.0.19) (2025-09-05)
+
+
+### Bug Fixes
+
+* deploy ([181b18f](https://github.com/webgrip/invoiceninja-application/commit/181b18ff82361a2ef1a1c079eae0403780b3b2d6))
+
 ## [1.0.18](https://github.com/webgrip/invoiceninja-application/compare/1.0.17...1.0.18) (2025-09-05)
 
 
