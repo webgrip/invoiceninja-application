@@ -92,6 +92,8 @@ application:
               value: invoiceninja-application_
             - name: TRUSTED_PROXIES
               value: "**"
+            - name: FORCE_HTTPS
+              value: "true"
 
         web:
           image:
