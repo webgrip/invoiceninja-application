@@ -91,6 +91,8 @@ application:
               value: phpredis
             - name: REDIS_PREFIX
               value: invoiceninja-application_
+            - name: TRUSTED_PROXIES
+              value: "**"
 
         web:
           image:
