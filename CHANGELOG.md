@@ -1,3 +1,11 @@
+## [1.0.13](https://github.com/webgrip/invoiceninja-application/compare/1.0.12...1.0.13) (2025-09-05)
+
+
+### Bug Fixes
+
+* also deploy secrets ([6f4470b](https://github.com/webgrip/invoiceninja-application/commit/6f4470b63873fb71c1b1fa5a97f68880d4fb0cc6))
+* removed secretKeys from mariadb, that does not exist. ([7a6dd70](https://github.com/webgrip/invoiceninja-application/commit/7a6dd701df8af109851cddb1ef94869b88e4e06b))
+
 ## [1.0.12](https://github.com/webgrip/invoiceninja-application/compare/1.0.11...1.0.12) (2025-09-05)
 
 
