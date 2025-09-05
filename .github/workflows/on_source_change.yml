@@ -59,10 +59,6 @@ jobs:
       environment: 'staging'
 
   deploy-secrets:
-    needs: [ release ]
-    if: >
-      always()
-      && needs.release.result != 'failure'
     name: 'Deploy Secrets'
     uses: webgrip/workflows/.github/workflows/application-deploy-secrets.yml@main
     secrets:
