@@ -211,14 +211,11 @@ mariadb:
     pullPolicy: IfNotPresent
   enabled: true
   auth:
-    # rootPassword: ""
+    # rootPassword: "" # ignored when existingSecret is set
     database: invoiceninja-application
     username: invoiceninja-application
-    # password: ""
+    # password: "" # ignored when existingSecret is set
     existingSecret: invoiceninja-application-secrets
-    secretKeys:
-      adminPasswordKey: mariadb-root-password
-      userPasswordKey: mariadb-password
   primary:
     persistence:
       enabled: true
