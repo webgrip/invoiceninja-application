@@ -1,3 +1,14 @@
+## [1.0.17](https://github.com/webgrip/invoiceninja-application/compare/1.0.16...1.0.17) (2025-09-05)
+
+
+### Bug Fixes
+
+* deploy ([2daba44](https://github.com/webgrip/invoiceninja-application/commit/2daba44132753c81268a0cc4dbfda0ae9cbc265b))
+* deploy ([e40eedd](https://github.com/webgrip/invoiceninja-application/commit/e40eeddab4cabb415e26c5eacfdedda0ba8804d3))
+* full release again after changing upstream workflows ([abad1c6](https://github.com/webgrip/invoiceninja-application/commit/abad1c65d94b9d8cb8e3aeced577d4b8e069b054))
+* moved image to where it's actually supposed to be again, what I wanted to do isn't gonna work, and actually isn't even needed anymore ([7b460ad](https://github.com/webgrip/invoiceninja-application/commit/7b460ad59c9b3f50441c89d3e0d18b9561ce1211))
+* redeploy ([aba1bf5](https://github.com/webgrip/invoiceninja-application/commit/aba1bf5dbdaf40c13721484d22d68e83dcfc0c7b))
+
 ## [1.0.16](https://github.com/webgrip/invoiceninja-application/compare/1.0.15...1.0.16) (2025-09-05)
 
 
