@@ -3,10 +3,6 @@ namespace: invoiceninja-application
 _shared_config:
   hostname: &hostname invoiceninja-application.staging.k8s.webgrip.nl
   url: &url https://invoiceninja-application.staging.k8s.webgrip.nl
-  image: &image
-    repository: docker.io/webgrip/invoiceninja-application
-    tag: "latest"
-    pullPolicy: Always
 
 application:
   enabled: true
@@ -19,7 +15,10 @@ application:
           fsGroupChangePolicy: OnRootMismatch
       containers:
         app:
-          image: *image
+          image:
+            repository: docker.io/webgrip/invoiceninja-application
+            tag: "latest"
+            pullPolicy: Always
           resources:
             requests: { cpu: "250m", memory: "256Mi" }
             limits: { cpu: "500m", memory: "512Mi" }
