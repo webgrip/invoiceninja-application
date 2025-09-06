@@ -11,6 +11,9 @@ application:
     main:
       pod:
         securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
           fsGroup: 1000
           fsGroupChangePolicy: OnRootMismatch
       containers:
@@ -32,7 +35,7 @@ application:
                     [
                       "sh",
                       "-c",
-                      "php -v >/dev/null && nc -z invoiceninja-application-mariadb 3306",
+                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306",
                     ]
                 initialDelaySeconds: 10
                 periodSeconds: 10
@@ -102,6 +105,10 @@ application:
               value: sync
             - name: MAIL_MAILER
               value: log
+            - name: LOG_CHANNEL
+              value: stderr
+            - name: LOG_LEVEL
+              value: info
 
         web:
           image:
@@ -186,6 +193,10 @@ application:
             listen 80;
             root /var/www/app/public;
             index index.php index.html;
+            client_max_body_size 25m;
+            fastcgi_connect_timeout 5s;
+            fastcgi_send_timeout 120s;
+            fastcgi_read_timeout 120s;
             location /health { return 200 'ok'; add_header Content-Type text/plain; }
             location / {
               try_files $uri /index.php?$query_string;
