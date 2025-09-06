@@ -94,6 +94,14 @@ application:
               value: "**"
             - name: FORCE_HTTPS
               value: "true"
+            - name: SESSION_DRIVER
+              value: file
+            - name: CACHE_DRIVER
+              value: file
+            - name: QUEUE_CONNECTION
+              value: sync
+            - name: MAIL_MAILER
+              value: log
 
         web:
           image:
