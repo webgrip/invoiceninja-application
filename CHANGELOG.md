@@ -1,3 +1,10 @@
+## [1.0.20](https://github.com/webgrip/invoiceninja-application/compare/1.0.19...1.0.20) (2025-09-06)
+
+
+### Bug Fixes
+
+* having another go at the nginx configmap ([91b6225](https://github.com/webgrip/invoiceninja-application/commit/91b6225a8a23cbf17f35a6e20220767f0879797d))
+
 ## [1.0.19](https://github.com/webgrip/invoiceninja-application/compare/1.0.18...1.0.19) (2025-09-05)
 
 
