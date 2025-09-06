@@ -1,3 +1,10 @@
+## [1.0.26](https://github.com/webgrip/invoiceninja-application/compare/1.0.25...1.0.26) (2025-09-06)
+
+
+### Bug Fixes
+
+* don't use redis to rule out issue ([71806f8](https://github.com/webgrip/invoiceninja-application/commit/71806f8c2d1c25df1321f4c38f7f851542859e53))
+
 ## [1.0.25](https://github.com/webgrip/invoiceninja-application/compare/1.0.24...1.0.25) (2025-09-06)
 
 
