@@ -157,14 +157,6 @@ application:
           secretName: letsencrypt-invoiceninja-application
 
   persistence:
-    public:
-      type: persistentVolumeClaim
-      enabled: true
-      accessMode: ReadWriteOnce
-      size: 1Gi
-      storageClass: do-block-storage
-      globalMounts:
-        - path: /var/www/app/public
     storage:
       type: persistentVolumeClaim
       enabled: true
