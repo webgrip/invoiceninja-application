@@ -1,3 +1,10 @@
+## [1.0.23](https://github.com/webgrip/invoiceninja-application/compare/1.0.22...1.0.23) (2025-09-06)
+
+
+### Bug Fixes
+
+* **k8s:** set higher resource limits ([9641f1d](https://github.com/webgrip/invoiceninja-application/commit/9641f1d6e5f34b45d219259c3b6c58d7cacf9d27))
+
 ## [1.0.22](https://github.com/webgrip/invoiceninja-application/compare/1.0.21...1.0.22) (2025-09-06)
 
 
