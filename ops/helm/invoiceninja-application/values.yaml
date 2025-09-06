@@ -20,8 +20,8 @@ application:
             tag: "latest"
             pullPolicy: Always
           resources:
-            requests: { cpu: "250m", memory: "256Mi" }
-            limits: { cpu: "500m", memory: "512Mi" }
+            requests: { cpu: "250m", memory: "512Mi" }
+            limits: { cpu: "1000m", memory: "1Gi" }
           probes:
             readiness:
               enabled: true
