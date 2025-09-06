@@ -86,11 +86,12 @@ application:
             - name: REDIS_HOST
               value: invoiceninja-application-redis-master
             - name: REDIS_PASSWORD
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: invoiceninja-application-secrets
+                  key: redis-password
             - name: REDIS_PORT
               value: "6379"
-            - name: REDIS_CLIENT
-              value: phpredis
             - name: REDIS_PREFIX
               value: invoiceninja-application_
             - name: TRUSTED_PROXIES
@@ -98,9 +99,11 @@ application:
             - name: FORCE_HTTPS
               value: "true"
             - name: SESSION_DRIVER
-              value: file
+              value: redis
             - name: CACHE_DRIVER
-              value: file
+              value: redis
+            - name: QUEUE_DRIVER
+              value: redis
             - name: QUEUE_CONNECTION
               value: sync
             - name: MAIL_MAILER
@@ -217,13 +220,20 @@ redis:
     repository: bitnamilegacy/redis
     tag: "8.2.1"
     pullPolicy: IfNotPresent
-  architecture: replication
   auth:
-    enabled: false
+    enabled: true
+    existingSecret: invoiceninja-application-secrets
+    passwordKey: redis-password
+  architecture: replication
   master:
     persistence:
       enabled: true
       size: 1Gi
+    disableCommands:
+      - FLUSHDB
+      - FLUSHALL
+      - CONFIG
+      - KEYS
   replica:
     replicaCount: 0
 
