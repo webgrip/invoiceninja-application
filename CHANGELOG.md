@@ -1,3 +1,12 @@
+## [1.0.28](https://github.com/webgrip/invoiceninja-application/compare/1.0.27...1.0.28) (2025-09-06)
+
+
+### Bug Fixes
+
+* docker for local environment runs properly again again ([4d8c3ff](https://github.com/webgrip/invoiceninja-application/commit/4d8c3ff963d8409622b38a3fb74245c5391178e4))
+* **security:** tightened up a bit and added more health checks ([34d52c9](https://github.com/webgrip/invoiceninja-application/commit/34d52c94c55287cb008d12d95abace3a5f9a2adb))
+* **security:** use redis password ([9fae0e7](https://github.com/webgrip/invoiceninja-application/commit/9fae0e784b165bc3f6ea7182a12fc899bad4fe48))
+
 ## [1.0.27](https://github.com/webgrip/invoiceninja-application/compare/1.0.26...1.0.27) (2025-09-06)
 
 
