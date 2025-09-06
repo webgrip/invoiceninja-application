@@ -1,5 +1,8 @@
 FROM invoiceninja/invoiceninja:5.12.26
 
+# Copy custom PHP configuration for better memory management
+COPY ops/docker/application/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
+
 # Expose port (Invoice Ninja runs on port 80)
 EXPOSE 80
 
