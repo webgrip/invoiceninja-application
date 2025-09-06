@@ -1,3 +1,10 @@
+## [1.0.27](https://github.com/webgrip/invoiceninja-application/compare/1.0.26...1.0.27) (2025-09-06)
+
+
+### Bug Fixes
+
+* **k8s:** redeploy from scratch after removing public pvc, it's causing problems ([a963fa7](https://github.com/webgrip/invoiceninja-application/commit/a963fa7244199fb30570fe25ef99a7bb113098f2))
+
 ## [1.0.26](https://github.com/webgrip/invoiceninja-application/compare/1.0.25...1.0.26) (2025-09-06)
 
 
