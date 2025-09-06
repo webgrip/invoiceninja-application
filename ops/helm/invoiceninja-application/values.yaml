@@ -186,7 +186,7 @@ application:
             listen 80;
             root /var/www/app/public;
             index index.php index.html;
-            # location /health { return 200 'ok'; add_header Content-Type text/plain; }
+            location /health { return 200 'ok'; add_header Content-Type text/plain; }
             location / {
               try_files $uri /index.php?$query_string;
             }
