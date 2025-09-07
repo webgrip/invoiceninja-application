@@ -26,7 +26,7 @@ application:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
-          command: ["/bin/sh","-lc"]
+          command: ["/bin/sh", "-lc"]
           args:
             - |
               set -euo pipefail
@@ -56,7 +56,7 @@ application:
             allowPrivilegeEscalation: false
           resources:
             requests: { cpu: "250m", memory: "512Mi" }
-            limits:   { cpu: "1000m", memory: "1Gi" }
+            limits: { cpu: "1000m", memory: "1Gi" }
           probes:
             readiness:
               enabled: true
@@ -64,7 +64,11 @@ application:
               spec:
                 exec:
                   command:
-                    ["sh","-c","php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379"]
+                    [
+                      "sh",
+                      "-c",
+                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379",
+                    ]
                 initialDelaySeconds: 10
                 periodSeconds: 10
           env:
@@ -72,7 +76,11 @@ application:
             - { name: APP_DEBUG, value: "false" }
             - { name: APP_URL, value: *url }
             - name: APP_KEY
-              valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: app-key } }
+              valueFrom:
+                {
+                  secretKeyRef:
+                    { name: invoiceninja-application-secrets, key: app-key },
+                }
             - { name: APP_LOCALE, value: en }
             - { name: APP_FALLBACK_LOCALE, value: en }
             - { name: APP_TIMEZONE, value: Europe/Amsterdam }
@@ -86,16 +94,41 @@ application:
             - { name: DB_DATABASE, value: invoiceninja-application }
             - { name: DB_USERNAME, value: invoiceninja-application }
             - name: DB_PASSWORD
-              valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: mariadb-password } }
+              valueFrom:
+                {
+                  secretKeyRef:
+                    {
+                      name: invoiceninja-application-secrets,
+                      key: mariadb-password,
+                    },
+                }
 
             - name: API_SECRET
-              valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: api-secret } }
+              valueFrom:
+                {
+                  secretKeyRef:
+                    { name: invoiceninja-application-secrets, key: api-secret },
+                }
             - name: UPDATE_SECRET
-              valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: update-secret } }
+              valueFrom:
+                {
+                  secretKeyRef:
+                    {
+                      name: invoiceninja-application-secrets,
+                      key: update-secret,
+                    },
+                }
 
             - { name: REDIS_HOST, value: invoiceninja-application-redis-master }
             - name: REDIS_PASSWORD
-              valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: redis-password } }
+              valueFrom:
+                {
+                  secretKeyRef:
+                    {
+                      name: invoiceninja-application-secrets,
+                      key: redis-password,
+                    },
+                }
             - { name: REDIS_PORT, value: "6379" }
             - { name: REDIS_PREFIX, value: invoiceninja-application_ }
             - { name: REDIS_CLIENT, value: phpredis }
@@ -104,7 +137,7 @@ application:
             - { name: FORCE_HTTPS, value: "true" }
 
             - { name: SESSION_DRIVER, value: redis }
-            - { name: CACHE_DRIVER,  value: redis }
+            - { name: CACHE_DRIVER, value: redis }
             - { name: QUEUE_CONNECTION, value: redis }
 
             - { name: MAIL_MAILER, value: log }
@@ -123,7 +156,7 @@ application:
             allowPrivilegeEscalation: false
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
-            limits:   { cpu: "300m", memory: "256Mi" }
+            limits: { cpu: "300m", memory: "256Mi" }
           ports:
             - name: http
               containerPort: 8080
@@ -291,8 +324,8 @@ redis:
       size: 1Gi
     disableCommands: [FLUSHDB, FLUSHALL, CONFIG, KEYS]
   resources:
-    requests: { cpu: "50m",  memory: "128Mi" }
-    limits:   { cpu: "150m", memory: "256Mi" }
+    requests: { cpu: "50m", memory: "128Mi" }
+    limits: { cpu: "150m", memory: "256Mi" }
 
 mariadb:
   enabled: true
@@ -312,4 +345,4 @@ mariadb:
       storageClass: do-block-storage
     resources:
       requests: { cpu: "100m", memory: "256Mi" }
-      limits:   { cpu: "300m", memory: "512Mi" }
+      limits: { cpu: "300m", memory: "512Mi" }
