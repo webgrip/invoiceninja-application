@@ -1,3 +1,10 @@
+## [1.0.39](https://github.com/webgrip/invoiceninja-application/compare/1.0.38...1.0.39) (2025-09-07)
+
+
+### Bug Fixes
+
+* set tmp emptydir ([65285b5](https://github.com/webgrip/invoiceninja-application/commit/65285b57084b0c62022ecdb295254c2c21f44f47))
+
 ## [1.0.38](https://github.com/webgrip/invoiceninja-application/compare/1.0.37...1.0.38) (2025-09-07)
 
 
