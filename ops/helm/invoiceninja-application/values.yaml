@@ -26,9 +26,10 @@ application:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
-        command: ["/bin/sh", "-lc"]
-        args:
-          - |
+          command:
+            - sh
+            - -c
+          args: |
             set -euo pipefail
 
             echo "bootstrap >> waiting for DB and Redis..."
