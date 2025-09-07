@@ -1,3 +1,10 @@
+## [1.0.35](https://github.com/webgrip/invoiceninja-application/compare/1.0.34...1.0.35) (2025-09-07)
+
+
+### Bug Fixes
+
+* **k8s:** run nginx with pid in tmp ([87a8506](https://github.com/webgrip/invoiceninja-application/commit/87a850626e833812b798b7316141547640124146))
+
 ## [1.0.34](https://github.com/webgrip/invoiceninja-application/compare/1.0.33...1.0.34) (2025-09-07)
 
 
