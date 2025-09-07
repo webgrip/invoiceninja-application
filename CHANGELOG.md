@@ -1,3 +1,10 @@
+## [1.0.31](https://github.com/webgrip/invoiceninja-application/compare/1.0.30...1.0.31) (2025-09-07)
+
+
+### Bug Fixes
+
+* get nginx user to use /tmp ([3c2595a](https://github.com/webgrip/invoiceninja-application/commit/3c2595adee03ee7ef0a2bb88ea67f230ade3abec))
+
 ## [1.0.30](https://github.com/webgrip/invoiceninja-application/compare/1.0.29...1.0.30) (2025-09-07)
 
 
