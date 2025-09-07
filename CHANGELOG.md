@@ -1,3 +1,10 @@
+## [1.0.33](https://github.com/webgrip/invoiceninja-application/compare/1.0.32...1.0.33) (2025-09-07)
+
+
+### Bug Fixes
+
+* run nginx on port 8080 ([21a9d56](https://github.com/webgrip/invoiceninja-application/commit/21a9d56de7c2c770299c61501d147e0d575a92f7))
+
 ## [1.0.32](https://github.com/webgrip/invoiceninja-application/compare/1.0.31...1.0.32) (2025-09-07)
 
 
