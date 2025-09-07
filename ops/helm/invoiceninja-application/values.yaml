@@ -11,9 +11,8 @@ application:
     main:
       pod:
         securityContext:
-          runAsNonRoot: true
-          fsGroup: 1500
-          fsGroupChangePolicy: OnRootMismatch
+          seccompProfile: { type: RuntimeDefault }
+          automountServiceAccountToken: false
       containers:
         app:
           securityContext:
@@ -37,7 +36,7 @@ application:
                     [
                       "sh",
                       "-c",
-                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306",
+                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379",
                     ]
                 initialDelaySeconds: 10
                 periodSeconds: 10
@@ -96,6 +95,8 @@ application:
               value: "6379"
             - name: REDIS_PREFIX
               value: invoiceninja-application_
+            - name: REDIS_CLIENT
+              value: predis
             - name: TRUSTED_PROXIES
               value: "**"
             - name: FORCE_HTTPS
@@ -120,6 +121,7 @@ application:
             runAsUser: 101
             runAsGroup: 101
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           image:
             repository: nginx
             tag: 1.29.1-alpine
@@ -128,8 +130,8 @@ application:
             - name: http
               containerPort: 8080
           args:
-          - "-g"
-          - "daemon off; pid /tmp/nginx.pid;"
+            - "-g"
+            - "daemon off; pid /tmp/nginx.pid;"
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits: { cpu: "300m", memory: "256Mi" }
@@ -162,7 +164,8 @@ application:
       className: ingress-traefik
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-traefik
-        # traefik.ingress.kubernetes.io/router.middlewares: "ingress-traefik-ryan-basic-auth@kubernetescrd"
+        traefik.ingress.kubernetes.io/router.middlewares: |
+          ingress-traefik-ryan-home-ip-allow-list@kubernetescrd
       hosts:
         - host: *hostname
           paths:
