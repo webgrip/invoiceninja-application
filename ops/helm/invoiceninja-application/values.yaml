@@ -129,6 +129,7 @@ application:
           ports:
             - name: http
               containerPort: 8080
+          command: ["nginx"]
           args:
             - "-g"
             - "daemon off; pid /tmp/nginx.pid;"
