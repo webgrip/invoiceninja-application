@@ -12,12 +12,14 @@ application:
       pod:
         securityContext:
           runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          fsGroup: 1000
+          fsGroup: 1500
           fsGroupChangePolicy: OnRootMismatch
       containers:
         app:
+          securityContext:
+            runAsUser: 1500
+            runAsGroup: 1500
+            allowPrivilegeEscalation: false
           image:
             repository: docker.io/webgrip/invoiceninja-application
             tag: "latest"
@@ -114,6 +116,10 @@ application:
               value: info
 
         web:
+          securityContext:
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
           image:
             repository: nginx
             tag: 1.29.1-alpine
