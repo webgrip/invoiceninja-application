@@ -1,3 +1,11 @@
+## [1.0.42](https://github.com/webgrip/invoiceninja-application/compare/1.0.41...1.0.42) (2025-09-07)
+
+
+### Bug Fixes
+
+* set phpredis ([9a2c0d6](https://github.com/webgrip/invoiceninja-application/commit/9a2c0d6d20ba05a67d5edf14b6126f65ec733fb6))
+* style ([5d3b56d](https://github.com/webgrip/invoiceninja-application/commit/5d3b56d88d862384360e14a0ec480cf9f6838dbf))
+
 ## [1.0.41](https://github.com/webgrip/invoiceninja-application/compare/1.0.40...1.0.41) (2025-09-07)
 
 
