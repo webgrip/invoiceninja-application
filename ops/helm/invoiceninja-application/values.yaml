@@ -26,23 +26,37 @@ application:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -euo pipefail
-              echo ">> waiting for DB and Redis..."
-              for i in $(seq 1 90); do nc -z invoiceninja-application-mariadb 3306 && break || sleep 2; done
-              for i in $(seq 1 60); do nc -z invoiceninja-application-redis-master 6379 && break || sleep 2; done
+        command: ["/bin/sh", "-lc"]
+        args:
+          - |
+            set -euo pipefail
 
-              echo ">> sync /public from image -> shared volume"
-              rsync -a --delete /var/www/app/public/ /mnt/public/
+            echo "bootstrap >> waiting for DB and Redis..."
+            for i in $(seq 1 90); do nc -z invoiceninja-application-mariadb 3306 && break || sleep 2; done
+            for i in $(seq 1 60); do nc -z invoiceninja-application-redis-master 6379 && break || sleep 2; done
 
-              echo ">> one-time Laravel/Ninja bootstrap (idempotent)"
-              php artisan migrate --force || true
-              php artisan storage:link   || true
-              php artisan ninja:translations || true
-              php artisan ninja:post-update  || true
-              php artisan optimize:clear     || true
+            echo "bootstrap >> sync /public from image -> shared volume"
+            mkdir -p /mnt/public
+
+            if command -v rsync >/dev/null 2>&1; then
+              # no owner/group/perms, and don't try to set directory mtimes
+              rsync -rltD --delete --omit-dir-times --no-owner --no-group --no-perms \
+                    /var/www/app/public/ /mnt/public/ \
+              || { echo "rsync failed, trying cp..."; false; }
+            fi
+
+            if [ $? -ne 0 ]; then
+              cp -R /var/www/app/public/. /mnt/public/ 2>/dev/null \
+              || { echo "cp failed, trying tar..."; \
+                    ( cd /var/www/app/public && tar cf - . ) | ( cd /mnt/public && tar xpf - ); }
+            fi
+
+            echo "bootstrap >> one-time Laravel/Ninja bootstrap (idempotent)"
+            php artisan migrate --force || true
+            php artisan storage:link   || true
+            php artisan ninja:translations || true
+            php artisan ninja:post-update  || true
+            php artisan optimize:clear     || true
 
       containers:
         app:
