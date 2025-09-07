@@ -11,7 +11,10 @@ application:
     main:
       pod:
         securityContext:
+          runAsNonRoot: true
           seccompProfile: { type: RuntimeDefault }
+          fsGroup: 1500
+          fsGroupChangePolicy: OnRootMismatch
       containers:
         app:
           securityContext:
@@ -104,10 +107,8 @@ application:
               value: redis
             - name: CACHE_DRIVER
               value: redis
-            - name: QUEUE_DRIVER
-              value: redis
             - name: QUEUE_CONNECTION
-              value: sync
+              value: redis
             - name: MAIL_MAILER
               value: log
             - name: LOG_CHANNEL
@@ -116,22 +117,17 @@ application:
               value: info
 
         web:
+          image:
+            repository: nginxinc/nginx-unprivileged
+            tag: 1.29.1-alpine3.22-perl
           securityContext:
             runAsUser: 101
             runAsGroup: 101
-            allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-          image:
-            repository: nginx
-            tag: 1.29.1-alpine
-            pullPolicy: IfNotPresent
+            allowPrivilegeEscalation: false
           ports:
             - name: http
               containerPort: 8080
-          command: ["nginx"]
-          args:
-            - "-g"
-            - "daemon off; pid /tmp/nginx.pid;"
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits: { cpu: "300m", memory: "256Mi" }
@@ -201,11 +197,6 @@ application:
       enabled: true
       data:
         default.conf: |
-          client_body_temp_path /tmp/client_temp;
-          proxy_temp_path       /tmp/proxy_temp;
-          fastcgi_temp_path     /tmp/fastcgi_temp;
-          uwsgi_temp_path       /tmp/uwsgi_temp;
-          scgi_temp_path        /tmp/scgi_temp;
           map $http_x_forwarded_proto $fastcgi_https { default ''; https on; }
           server {
             listen 8080;
