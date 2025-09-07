@@ -158,6 +158,7 @@ application:
       ports:
         http:
           port: 80
+          targetPort: http
 
   ingress:
     main:
