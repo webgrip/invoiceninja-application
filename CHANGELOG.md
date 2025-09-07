@@ -1,3 +1,10 @@
+## [1.0.30](https://github.com/webgrip/invoiceninja-application/compare/1.0.29...1.0.30) (2025-09-07)
+
+
+### Bug Fixes
+
+* try to set proper UIDs for k8s images ([93cf50c](https://github.com/webgrip/invoiceninja-application/commit/93cf50cf84faa36fcca43d417b67966557fc6261))
+
 ## [1.0.29](https://github.com/webgrip/invoiceninja-application/compare/1.0.28...1.0.29) (2025-09-07)
 
 
