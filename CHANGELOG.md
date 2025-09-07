@@ -1,3 +1,10 @@
+## [1.0.43](https://github.com/webgrip/invoiceninja-application/compare/1.0.42...1.0.43) (2025-09-07)
+
+
+### Bug Fixes
+
+* don't preserve owner/group/perms ([4aabd3d](https://github.com/webgrip/invoiceninja-application/commit/4aabd3d7a0dcb56a189968d6b5e63007324d2e1d))
+
 ## [1.0.42](https://github.com/webgrip/invoiceninja-application/compare/1.0.41...1.0.42) (2025-09-07)
 
 
