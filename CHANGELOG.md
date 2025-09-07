@@ -1,3 +1,10 @@
+## [1.0.32](https://github.com/webgrip/invoiceninja-application/compare/1.0.31...1.0.32) (2025-09-07)
+
+
+### Bug Fixes
+
+* add privileged port binding capability for nginx ([23207f7](https://github.com/webgrip/invoiceninja-application/commit/23207f7978009ebf24672a61ecf008212cf77747))
+
 ## [1.0.31](https://github.com/webgrip/invoiceninja-application/compare/1.0.30...1.0.31) (2025-09-07)
 
 
