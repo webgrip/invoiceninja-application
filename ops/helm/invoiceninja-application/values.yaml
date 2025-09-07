@@ -37,18 +37,8 @@ application:
 
             echo "bootstrap >> sync /public from image -> shared volume"
             mkdir -p /mnt/public
-
-            if command -v rsync >/dev/null 2>&1; then
-              # no owner/group/perms, and don't try to set directory mtimes
-              rsync -rltD --delete --omit-dir-times --no-owner --no-group --no-perms \
-                    /var/www/app/public/ /mnt/public/ \
-              || { echo "rsync failed, trying cp..."; false; }
-            fi
-
-            if [ $? -ne 0 ]; then
-              cp -R /var/www/app/public/. /mnt/public/ 2>/dev/null \
-              || { echo "cp failed, trying tar..."; \
-                    ( cd /var/www/app/public && tar cf - . ) | ( cd /mnt/public && tar xpf - ); }
+            if ! cp -R /var/www/app/public/. /mnt/public/ ; then
+              ( cd /var/www/app/public && tar cf - . ) | ( cd /mnt/public && tar xpf - )
             fi
 
             echo "bootstrap >> one-time Laravel/Ninja bootstrap (idempotent)"
