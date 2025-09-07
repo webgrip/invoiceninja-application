@@ -98,7 +98,7 @@ application:
               valueFrom: { secretKeyRef: { name: invoiceninja-application-secrets, key: redis-password } }
             - { name: REDIS_PORT, value: "6379" }
             - { name: REDIS_PREFIX, value: invoiceninja-application_ }
-            - { name: REDIS_CLIENT, value: predis }
+            - { name: REDIS_CLIENT, value: phpredis }
 
             - { name: TRUSTED_PROXIES, value: "**" }
             - { name: FORCE_HTTPS, value: "true" }
