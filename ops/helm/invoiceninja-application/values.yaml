@@ -20,8 +20,6 @@ application:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
-            capabilities:
-              add: ["NET_BIND_SERVICE"]
           image:
             repository: docker.io/webgrip/invoiceninja-application
             tag: "latest"
@@ -128,7 +126,7 @@ application:
             pullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits: { cpu: "300m", memory: "256Mi" }
@@ -203,7 +201,7 @@ application:
           scgi_temp_path        /tmp/scgi_temp;
           map $http_x_forwarded_proto $fastcgi_https { default ''; https on; }
           server {
-            listen 80;
+            listen 8080;
             root /var/www/app/public;
             index index.php index.html;
             location = /health { return 200 'ok'; add_header Content-Type text/plain; }
