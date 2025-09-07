@@ -1,3 +1,12 @@
+## [1.0.36](https://github.com/webgrip/invoiceninja-application/compare/1.0.35...1.0.36) (2025-09-07)
+
+
+### Bug Fixes
+
+* **k8s:** harden and make multiple small changes ([3ab6673](https://github.com/webgrip/invoiceninja-application/commit/3ab66738b47fbca7dcdd5bc546d59a809ad634f8))
+* **k8s:** target port http ([d872575](https://github.com/webgrip/invoiceninja-application/commit/d872575b08060ac9253261f412fa23539c060792))
+* run nginx ([0d47926](https://github.com/webgrip/invoiceninja-application/commit/0d479260106a3c4416b322db22cb6d2b9749a920))
+
 ## [1.0.35](https://github.com/webgrip/invoiceninja-application/compare/1.0.34...1.0.35) (2025-09-07)
 
 
