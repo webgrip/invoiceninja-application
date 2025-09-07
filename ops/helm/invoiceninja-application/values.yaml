@@ -20,6 +20,8 @@ application:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
+            capabilities:
+              add: ["NET_BIND_SERVICE"]
           image:
             repository: docker.io/webgrip/invoiceninja-application
             tag: "latest"
@@ -194,28 +196,22 @@ application:
       enabled: true
       data:
         default.conf: |
-          # use /tmp for non-root writable temp dirs
           client_body_temp_path /tmp/client_temp;
           proxy_temp_path       /tmp/proxy_temp;
           fastcgi_temp_path     /tmp/fastcgi_temp;
           uwsgi_temp_path       /tmp/uwsgi_temp;
           scgi_temp_path        /tmp/scgi_temp;
-          map $http_x_forwarded_proto $fastcgi_https {
-            default '';
-            https on;
-          }
+          map $http_x_forwarded_proto $fastcgi_https { default ''; https on; }
           server {
             listen 80;
             root /var/www/app/public;
             index index.php index.html;
+            location = /health { return 200 'ok'; add_header Content-Type text/plain; }
             client_max_body_size 25m;
             fastcgi_connect_timeout 5s;
             fastcgi_send_timeout 120s;
             fastcgi_read_timeout 120s;
-            location /health { return 200 'ok'; add_header Content-Type text/plain; }
-            location / {
-              try_files $uri /index.php?$query_string;
-            }
+            location / { try_files $uri /index.php?$query_string; }
             location ~ \.php$ {
               include fastcgi_params;
               fastcgi_pass 127.0.0.1:9000;
