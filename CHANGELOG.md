@@ -1,3 +1,10 @@
+## [1.0.44](https://github.com/webgrip/invoiceninja-application/compare/1.0.43...1.0.44) (2025-09-07)
+
+
+### Bug Fixes
+
+* stop using rsync ([6395f2a](https://github.com/webgrip/invoiceninja-application/commit/6395f2a92ca261b1a53ff2af32571609ea1ca9ec))
+
 ## [1.0.43](https://github.com/webgrip/invoiceninja-application/compare/1.0.42...1.0.43) (2025-09-07)
 
 
