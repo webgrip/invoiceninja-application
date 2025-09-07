@@ -108,7 +108,7 @@ application:
             - name: CACHE_DRIVER
               value: redis
             - name: QUEUE_CONNECTION
-              value: redis
+              value: sync
             - name: MAIL_MAILER
               value: log
             - name: LOG_CHANNEL
@@ -191,6 +191,11 @@ application:
       globalMounts:
         - path: /etc/nginx/conf.d
           readOnly: true
+    nginx-tmp:
+      type: emptyDir
+      enabled: true
+      globalMounts:
+        - path: /tmp
 
   configMaps:
     nginx:
