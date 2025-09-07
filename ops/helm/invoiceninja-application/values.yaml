@@ -12,7 +12,6 @@ application:
       pod:
         securityContext:
           seccompProfile: { type: RuntimeDefault }
-          automountServiceAccountToken: false
       containers:
         app:
           securityContext:
