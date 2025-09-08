@@ -1,3 +1,10 @@
+## [1.0.46](https://github.com/webgrip/invoiceninja-application/compare/1.0.45...1.0.46) (2025-09-08)
+
+
+### Bug Fixes
+
+* make public and storage pvcs again ([abaa66a](https://github.com/webgrip/invoiceninja-application/commit/abaa66ac58c81619c25ace06c5bcbe88b10746d7))
+
 ## [1.0.45](https://github.com/webgrip/invoiceninja-application/compare/1.0.44...1.0.45) (2025-09-07)
 
 
