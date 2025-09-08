@@ -139,6 +139,7 @@ application:
       className: ingress-traefik
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-traefik
+        traefik.ingress.kubernetes.io/router.middlewares: "ingress-traefik-ryan-home-ip-allow-list@kubernetescrd"
       hosts:
         - host: *hostname
           paths:
