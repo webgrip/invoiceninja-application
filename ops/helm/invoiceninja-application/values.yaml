@@ -16,97 +16,50 @@ application:
           fsGroup: 1500
           fsGroupChangePolicy: OnRootMismatch
 
-      initContainers:
-        bootstrap:
-          image:
-            repository: docker.io/webgrip/invoiceninja-application
-            tag: "latest"
-            pullPolicy: Always
-          securityContext:
-            runAsUser: 1500
-            runAsGroup: 1500
-            allowPrivilegeEscalation: false
-          command:
-            - sh
-            - -c
-          args: |
-            set -euo pipefail
-
-            echo "bootstrap >> waiting for DB and Redis..."
-            for i in $(seq 1 90); do nc -z invoiceninja-application-mariadb 3306 && break || sleep 2; done
-            for i in $(seq 1 60); do nc -z invoiceninja-application-redis-master 6379 && break || sleep 2; done
-
-            echo "bootstrap >> sync /public from image -> shared volume"
-            mkdir -p /mnt/public
-            if ! cp -R /var/www/app/public/. /mnt/public/ ; then
-              ( cd /var/www/app/public && tar cf - . ) | ( cd /mnt/public && tar xpf - )
-            fi
-
-            echo "bootstrap >> one-time Laravel/Ninja bootstrap (idempotent)"
-            php artisan migrate --force || true
-            php artisan storage:link   || true
-            php artisan ninja:translations || true
-            php artisan ninja:post-update  || true
-            php artisan optimize:clear     || true
-
       containers:
         app:
-          image:
-            repository: docker.io/webgrip/invoiceninja-application
-            tag: "latest"
-            pullPolicy: Always
           securityContext:
             runAsUser: 1500
             runAsGroup: 1500
             allowPrivilegeEscalation: false
-          resources:
-            requests: { cpu: "250m", memory: "512Mi" }
-            limits: { cpu: "1000m", memory: "1Gi" }
-          probes:
-            readiness:
-              enabled: true
-              custom: true
-              spec:
-                exec:
-                  command:
-                    [
-                      "sh",
-                      "-c",
-                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379",
-                    ]
-                initialDelaySeconds: 10
-                periodSeconds: 10
+          image:
+            repository: docker.io/webgrip/invoiceninja-application
+            tag: "latest"
+            pullPolicy: Always
           env:
             - { name: APP_ENV, value: production }
             - { name: APP_DEBUG, value: "false" }
             - { name: APP_URL, value: *url }
             - name: APP_KEY
               valueFrom:
-                {
-                  secretKeyRef:
-                    { name: invoiceninja-application-secrets, key: app-key },
-                }
+                secretKeyRef:
+                  { name: invoiceninja-application-secrets, key: app-key }
             - { name: APP_LOCALE, value: en }
             - { name: APP_FALLBACK_LOCALE, value: en }
             - { name: APP_TIMEZONE, value: Europe/Amsterdam }
             - { name: APP_NAME, value: "invoiceninja-application" }
-
-            - { name: DB_TYPE, value: mysql }
-            - { name: DB_CONNECTION, value: mysql }
             - { name: DB_STRICT, value: "false" }
+            - { name: DB_CONNECTION, value: mysql }
             - { name: DB_HOST, value: invoiceninja-application-mariadb }
             - { name: DB_PORT, value: "3306" }
             - { name: DB_DATABASE, value: invoiceninja-application }
             - { name: DB_USERNAME, value: invoiceninja-application }
             - name: DB_PASSWORD
               valueFrom:
-                {
-                  secretKeyRef:
-                    {
-                      name: invoiceninja-application-secrets,
-                      key: mariadb-password,
-                    },
-                }
+                secretKeyRef:
+                  {
+                    name: invoiceninja-application-secrets,
+                    key: mariadb-password,
+                  }
+            - { name: TRUSTED_PROXIES, value: "**" }
+            - { name: REQUIRE_HTTPS, value: "true" }
+
+            - { name: SESSION_DRIVER, value: redis }
+            - { name: CACHE_DRIVER, value: redis }
+            - { name: QUEUE_CONNECTION, value: redis }
+
+            - { name: LOG_CHANNEL, value: stderr }
+            - { name: LOG_LEVEL, value: info }
 
             - name: API_SECRET
               valueFrom:
@@ -137,19 +90,27 @@ application:
             - { name: REDIS_PORT, value: "6379" }
             - { name: REDIS_PREFIX, value: invoiceninja-application_ }
             - { name: REDIS_CLIENT, value: phpredis }
+          resources:
+            requests: { cpu: "250m", memory: "512Mi" }
+            limits: { cpu: "1000m", memory: "1Gi" }
+          probes:
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                exec:
+                  command:
+                    [
+                      "sh",
+                      "-lc",
+                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379",
+                    ]
+                initialDelaySeconds: 10
+                periodSeconds: 10
+          volumeMounts:
+            - { name: storage, mountPath: /var/www/app/storage }
+            - { name: public, mountPath: /var/www/app/public }
 
-            - { name: TRUSTED_PROXIES, value: "**" }
-            - { name: FORCE_HTTPS, value: "true" }
-
-            - { name: SESSION_DRIVER, value: redis }
-            - { name: CACHE_DRIVER, value: redis }
-            - { name: QUEUE_CONNECTION, value: redis }
-
-            - { name: MAIL_MAILER, value: log }
-            - { name: LOG_CHANNEL, value: stderr }
-            - { name: LOG_LEVEL, value: info }
-
-        # NGINX (unprivileged)
         web:
           image:
             repository: nginxinc/nginx-unprivileged
@@ -159,12 +120,11 @@ application:
             runAsGroup: 101
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
+          ports:
+            - { name: http, containerPort: 8080 }
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits: { cpu: "300m", memory: "256Mi" }
-          ports:
-            - name: http
-              containerPort: 8080
           probes:
             liveness:
               enabled: true
@@ -180,6 +140,11 @@ application:
                 httpGet: { path: /health, port: http }
                 initialDelaySeconds: 2
                 periodSeconds: 5
+          volumeMounts:
+            - { name: public, mountPath: /var/www/app/public, readOnly: true }
+            - { name: storage, mountPath: /var/www/app/storage, readOnly: true }
+            - { name: nginx-conf, mountPath: /etc/nginx/conf.d, readOnly: true }
+            - { name: nginx-tmp, mountPath: /tmp }
 
   service:
     main:
@@ -195,18 +160,31 @@ application:
       className: ingress-traefik
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-traefik
-        traefik.ingress.kubernetes.io/router.middlewares: |
-          ingress-traefik-ryan-home-ip-allow-list@kubernetescrd
       hosts:
         - host: *hostname
           paths:
-            - path: /
-              service: { identifier: main, port: http }
+            - { path: "/", service: { identifier: main, port: http } }
       tls:
-        - hosts: [*hostname]
-          secretName: letsencrypt-invoiceninja-application
+        - {
+            hosts: [*hostname],
+            secretName: letsencrypt-invoiceninja-application,
+          }
 
   persistence:
+    public:
+      type: persistentVolumeClaim
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      storageClass: do-block-storage
+      advancedMounts:
+        main:
+          app:
+            - path: /var/www/app/public
+          web:
+            - path: /var/www/app/public
+              readOnly: true
+
     storage:
       type: persistentVolumeClaim
       enabled: true
@@ -217,21 +195,16 @@ application:
         main:
           app:
             - path: /var/www/app/storage
-          bootstrap:
-            - path: /var/www/app/storage
-
-    public:
-      type: emptyDir
-      enabled: true
-      advancedMounts:
-        main:
           web:
-            - path: /var/www/app/public
+            - path: /var/www/app/storage
               readOnly: true
-          app:
-            - path: /var/www/app/public
-          bootstrap:
-            - path: /mnt/public
+
+    nginx-conf:
+      type: configMap
+      enabled: true
+      name: invoiceninja-application
+      globalMounts:
+        - { path: /etc/nginx/conf.d, readOnly: true }
 
     nginx-tmp:
       type: emptyDir
@@ -239,34 +212,19 @@ application:
       advancedMounts:
         main:
           web:
-            - path: /tmp
-
-    nginx-conf:
-      type: configMap
-      enabled: true
-      name: invoiceninja-application
-      globalMounts:
-        - path: /etc/nginx/conf.d
-          readOnly: true
+            - { path: /tmp }
 
   configMaps:
     nginx:
       enabled: true
       data:
         default.conf: |
-          # temp paths must be writable; we mount /tmp
-          client_body_temp_path /tmp/client_temp;
-          proxy_temp_path       /tmp/proxy_temp;
-          fastcgi_temp_path     /tmp/fastcgi_temp;
-          uwsgi_temp_path       /tmp/uwsgi_temp;
-          scgi_temp_path        /tmp/scgi_temp;
+          map $http_x_forwarded_proto $fastcgi_https { default off; https on; }
 
           gzip on;
           gzip_types application/javascript text/javascript application/json text/css text/plain application/xml;
           gzip_proxied any;
           gzip_min_length 1024;
-
-          map $http_x_forwarded_proto $fastcgi_https { default ''; https on; }
 
           server {
             listen 8080;
@@ -275,7 +233,6 @@ application:
 
             location = /health { return 200 'ok'; add_header Content-Type text/plain; }
 
-            # real static assets (fix module/MIME issues)
             location ~* \.(?:css|js|mjs|map|png|jpg|jpeg|gif|ico|svg|json|webmanifest|woff|woff2|ttf|eot)$ {
               try_files $uri =404;
               access_log off;
@@ -283,32 +240,29 @@ application:
               add_header Cache-Control "public, immutable";
             }
 
-            # uploaded files symlink target
             location ^~ /storage/ {
               alias /var/www/app/storage/app/public/;
               try_files $uri =404;
             }
 
-            # Laravel front controller
-            location / {
-              try_files $uri $uri/ /index.php?$query_string;
-            }
+            location / { try_files $uri $uri/ /index.php?$query_string; }
 
-            # Only index.php should go to FPM
             location = /index.php {
               include fastcgi_params;
               fastcgi_pass 127.0.0.1:9000;
-              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-              fastcgi_param HTTPS $fastcgi_https;
+              fastcgi_param SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+              fastcgi_param HTTP_HOST          $host;
+              fastcgi_param SERVER_NAME        $host;
+              fastcgi_param SERVER_PORT        $server_port;
+              fastcgi_param HTTPS              $fastcgi_https;
               fastcgi_param HTTP_X_FORWARDED_PROTO $http_x_forwarded_proto;
               fastcgi_param HTTP_X_FORWARDED_HOST  $http_x_forwarded_host;
-              fastcgi_param HTTP_X_FORWARDED_FOR   $http_x_forwarded_for;
+              fastcgi_param HTTP_X_FORWARDED_FOR   $proxy_add_x_forwarded_for;
               fastcgi_read_timeout 600;
               fastcgi_send_timeout 600;
               fastcgi_connect_timeout 60;
             }
 
-            # Never route arbitrary *.php
             location ~ \.php$ { return 403; }
           }
 
