@@ -53,40 +53,27 @@ application:
                   }
             - { name: TRUSTED_PROXIES, value: "**" }
             - { name: REQUIRE_HTTPS, value: "true" }
-
             - { name: SESSION_DRIVER, value: redis }
             - { name: CACHE_DRIVER, value: redis }
             - { name: QUEUE_CONNECTION, value: redis }
-
             - { name: LOG_CHANNEL, value: stderr }
             - { name: LOG_LEVEL, value: info }
-
             - name: API_SECRET
               valueFrom:
-                {
-                  secretKeyRef:
-                    { name: invoiceninja-application-secrets, key: api-secret },
-                }
+                secretKeyRef:
+                  { name: invoiceninja-application-secrets, key: api-secret }
             - name: UPDATE_SECRET
               valueFrom:
-                {
-                  secretKeyRef:
-                    {
-                      name: invoiceninja-application-secrets,
-                      key: update-secret,
-                    },
-                }
-
+                secretKeyRef:
+                  { name: invoiceninja-application-secrets, key: update-secret }
             - { name: REDIS_HOST, value: invoiceninja-application-redis-master }
             - name: REDIS_PASSWORD
               valueFrom:
-                {
-                  secretKeyRef:
-                    {
-                      name: invoiceninja-application-secrets,
-                      key: redis-password,
-                    },
-                }
+                secretKeyRef:
+                  {
+                    name: invoiceninja-application-secrets,
+                    key: redis-password,
+                  }
             - { name: REDIS_PORT, value: "6379" }
             - { name: REDIS_PREFIX, value: invoiceninja-application_ }
             - { name: REDIS_CLIENT, value: phpredis }
@@ -107,9 +94,6 @@ application:
                     ]
                 initialDelaySeconds: 10
                 periodSeconds: 10
-          volumeMounts:
-            - { name: storage, mountPath: /var/www/app/storage }
-            - { name: public, mountPath: /var/www/app/public }
 
         web:
           image:
@@ -140,11 +124,6 @@ application:
                 httpGet: { path: /health, port: http }
                 initialDelaySeconds: 2
                 periodSeconds: 5
-          volumeMounts:
-            - { name: public, mountPath: /var/www/app/public, readOnly: true }
-            - { name: storage, mountPath: /var/www/app/storage, readOnly: true }
-            - { name: nginx-conf, mountPath: /etc/nginx/conf.d, readOnly: true }
-            - { name: nginx-tmp, mountPath: /tmp }
 
   service:
     main:
@@ -203,8 +182,10 @@ application:
       type: configMap
       enabled: true
       name: invoiceninja-application
-      globalMounts:
-        - { path: /etc/nginx/conf.d, readOnly: true }
+      advancedMounts:
+        main:
+          web:
+            - { path: /etc/nginx/conf.d, readOnly: true }
 
     nginx-tmp:
       type: emptyDir
