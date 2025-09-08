@@ -12,74 +12,108 @@ application:
       pod:
         securityContext:
           runAsNonRoot: true
-          seccompProfile: { type: RuntimeDefault }
+          seccompProfile:
+            type: RuntimeDefault
           fsGroup: 1500
           fsGroupChangePolicy: OnRootMismatch
 
       containers:
         app:
-          securityContext:
-            runAsUser: 1500
-            runAsGroup: 1500
-            allowPrivilegeEscalation: false
           image:
             repository: docker.io/webgrip/invoiceninja-application
             tag: "latest"
             pullPolicy: Always
+          securityContext:
+            runAsUser: 1500
+            runAsGroup: 1500
+            allowPrivilegeEscalation: false
           env:
-            - { name: APP_ENV, value: production }
-            - { name: APP_DEBUG, value: "false" }
-            - { name: APP_URL, value: *url }
+            # App
+            - name: APP_NAME
+              value: invoiceninja-application
+            - name: APP_ENV
+              value: production
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_URL
+              value: *url
+            - name: APP_LOCALE
+              value: en
+            - name: APP_FALLBACK_LOCALE
+              value: en
+            - name: APP_TIMEZONE
+              value: Europe/Amsterdam
             - name: APP_KEY
               valueFrom:
                 secretKeyRef:
-                  { name: invoiceninja-application-secrets, key: app-key }
-            - { name: APP_LOCALE, value: en }
-            - { name: APP_FALLBACK_LOCALE, value: en }
-            - { name: APP_TIMEZONE, value: Europe/Amsterdam }
-            - { name: APP_NAME, value: "invoiceninja-application" }
-            - { name: DB_STRICT, value: "false" }
-            - { name: DB_CONNECTION, value: mysql }
-            - { name: DB_HOST, value: invoiceninja-application-mariadb }
-            - { name: DB_PORT, value: "3306" }
-            - { name: DB_DATABASE, value: invoiceninja-application }
-            - { name: DB_USERNAME, value: invoiceninja-application }
+                  name: invoiceninja-application-secrets
+                  key: app-key
+
+            - name: DB_STRICT
+              value: "false"
+            - name: REQUIRE_HTTPS
+              value: "true"
+            - name: TRUSTED_PROXIES
+              value: "**"
+
+            - name: LOG_CHANNEL
+              value: stderr
+            - name: LOG_LEVEL
+              value: info
+
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: invoiceninja-application-mariadb
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_DATABASE
+              value: invoiceninja-application
+            - name: DB_USERNAME
+              value: invoiceninja-application
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {
-                    name: invoiceninja-application-secrets,
-                    key: mariadb-password,
-                  }
-            - { name: TRUSTED_PROXIES, value: "**" }
-            - { name: REQUIRE_HTTPS, value: "true" }
-            - { name: SESSION_DRIVER, value: redis }
-            - { name: CACHE_DRIVER, value: redis }
-            - { name: QUEUE_CONNECTION, value: redis }
-            - { name: LOG_CHANNEL, value: stderr }
-            - { name: LOG_LEVEL, value: info }
-            - name: API_SECRET
-              valueFrom:
-                secretKeyRef:
-                  { name: invoiceninja-application-secrets, key: api-secret }
-            - name: UPDATE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  { name: invoiceninja-application-secrets, key: update-secret }
-            - { name: REDIS_HOST, value: invoiceninja-application-redis-master }
+                  name: invoiceninja-application-secrets
+                  key: mariadb-password
+
+            - name: SESSION_DRIVER
+              value: redis
+            - name: CACHE_DRIVER
+              value: redis
+            - name: QUEUE_CONNECTION
+              value: redis
+            - name: REDIS_CLIENT
+              value: phpredis
+            - name: REDIS_PREFIX
+              value: invoiceninja-application_
+            - name: REDIS_HOST
+              value: invoiceninja-application-redis-master
+            - name: REDIS_PORT
+              value: "6379"
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {
-                    name: invoiceninja-application-secrets,
-                    key: redis-password,
-                  }
-            - { name: REDIS_PORT, value: "6379" }
-            - { name: REDIS_PREFIX, value: invoiceninja-application_ }
-            - { name: REDIS_CLIENT, value: phpredis }
+                  name: invoiceninja-application-secrets
+                  key: redis-password
+
+            - name: API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: invoiceninja-application-secrets
+                  key: api-secret
+            - name: UPDATE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: invoiceninja-application-secrets
+                  key: update-secret
           resources:
-            requests: { cpu: "250m", memory: "512Mi" }
-            limits: { cpu: "1000m", memory: "1Gi" }
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
           probes:
             readiness:
               enabled: true
@@ -87,11 +121,13 @@ application:
               spec:
                 exec:
                   command:
-                    [
-                      "sh",
-                      "-lc",
-                      "php -v >/dev/null && nc -z 127.0.0.1 9000 && nc -z invoiceninja-application-mariadb 3306 && nc -z invoiceninja-application-redis-master 6379",
-                    ]
+                    - sh
+                    - -lc
+                    - >
+                      php -v >/dev/null &&
+                      nc -z 127.0.0.1 9000 &&
+                      nc -z invoiceninja-application-mariadb 3306 &&
+                      nc -z invoiceninja-application-redis-master 6379
                 initialDelaySeconds: 10
                 periodSeconds: 10
 
@@ -105,23 +141,32 @@ application:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
           ports:
-            - { name: http, containerPort: 8080 }
+            - name: http
+              containerPort: 8080
           resources:
-            requests: { cpu: "100m", memory: "128Mi" }
-            limits: { cpu: "300m", memory: "256Mi" }
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
           probes:
             liveness:
               enabled: true
               custom: true
               spec:
-                httpGet: { path: /health, port: http }
+                httpGet:
+                  path: /health
+                  port: http
                 initialDelaySeconds: 5
                 periodSeconds: 10
             readiness:
               enabled: true
               custom: true
               spec:
-                httpGet: { path: /health, port: http }
+                httpGet:
+                  path: /health
+                  port: http
                 initialDelaySeconds: 2
                 periodSeconds: 5
 
@@ -139,16 +184,18 @@ application:
       className: ingress-traefik
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-traefik
-        traefik.ingress.kubernetes.io/router.middlewares: "ingress-traefik-ryan-home-ip-allow-list@kubernetescrd"
+        traefik.ingress.kubernetes.io/router.middlewares: ingress-traefik-ryan-home-ip-allow-list@kubernetescrd
       hosts:
         - host: *hostname
           paths:
-            - { path: "/", service: { identifier: main, port: http } }
+            - path: /
+              service:
+                identifier: main
+                port: http
       tls:
-        - {
-            hosts: [*hostname],
-            secretName: letsencrypt-invoiceninja-application,
-          }
+        - secretName: letsencrypt-invoiceninja-application
+          hosts:
+            - *hostname
 
   persistence:
     public:
@@ -186,7 +233,8 @@ application:
       advancedMounts:
         main:
           web:
-            - { path: /etc/nginx/conf.d, readOnly: true }
+            - path: /etc/nginx/conf.d
+              readOnly: true
 
     nginx-tmp:
       type: emptyDir
@@ -194,7 +242,7 @@ application:
       advancedMounts:
         main:
           web:
-            - { path: /tmp }
+            - path: /tmp
 
   configMaps:
     nginx:
@@ -227,19 +275,21 @@ application:
               try_files $uri =404;
             }
 
-            location / { try_files $uri $uri/ /index.php?$query_string; }
+            location / {
+              try_files $uri $uri/ /index.php?$query_string;
+            }
 
             location = /index.php {
               include fastcgi_params;
               fastcgi_pass 127.0.0.1:9000;
-              fastcgi_param SCRIPT_FILENAME    $document_root$fastcgi_script_name;
-              fastcgi_param HTTP_HOST          $host;
-              fastcgi_param SERVER_NAME        $host;
-              fastcgi_param SERVER_PORT        $server_port;
-              fastcgi_param HTTPS              $fastcgi_https;
-              fastcgi_param HTTP_X_FORWARDED_PROTO $http_x_forwarded_proto;
-              fastcgi_param HTTP_X_FORWARDED_HOST  $http_x_forwarded_host;
-              fastcgi_param HTTP_X_FORWARDED_FOR   $proxy_add_x_forwarded_for;
+              fastcgi_param SCRIPT_FILENAME           $document_root$fastcgi_script_name;
+              fastcgi_param HTTP_HOST                 $host;
+              fastcgi_param SERVER_NAME               $host;
+              fastcgi_param SERVER_PORT               $server_port;
+              fastcgi_param HTTPS                     $fastcgi_https;
+              fastcgi_param HTTP_X_FORWARDED_PROTO    $http_x_forwarded_proto;
+              fastcgi_param HTTP_X_FORWARDED_HOST     $http_x_forwarded_host;
+              fastcgi_param HTTP_X_FORWARDED_FOR      $proxy_add_x_forwarded_for;
               fastcgi_read_timeout 600;
               fastcgi_send_timeout 600;
               fastcgi_connect_timeout 60;
@@ -265,8 +315,12 @@ redis:
       size: 1Gi
     disableCommands: [FLUSHALL, CONFIG, KEYS]
   resources:
-    requests: { cpu: "50m", memory: "128Mi" }
-    limits: { cpu: "150m", memory: "256Mi" }
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "150m"
+      memory: "256Mi"
 
 mariadb:
   enabled: true
@@ -285,5 +339,9 @@ mariadb:
       size: 2Gi
       storageClass: do-block-storage
     resources:
-      requests: { cpu: "100m", memory: "256Mi" }
-      limits: { cpu: "300m", memory: "512Mi" }
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "300m"
+        memory: "512Mi"
