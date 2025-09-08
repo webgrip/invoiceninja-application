@@ -1,3 +1,10 @@
+## [1.0.49](https://github.com/webgrip/invoiceninja-application/compare/1.0.48...1.0.49) (2025-09-08)
+
+
+### Bug Fixes
+
+* allow redis FLUSHDB ([05ccdb3](https://github.com/webgrip/invoiceninja-application/commit/05ccdb30bfb50c3d4737365ba1c94b995343dca6))
+
 ## [1.0.48](https://github.com/webgrip/invoiceninja-application/compare/1.0.47...1.0.48) (2025-09-08)
 
 
