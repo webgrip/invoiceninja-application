@@ -262,7 +262,7 @@ redis:
     persistence:
       enabled: true
       size: 1Gi
-    disableCommands: [FLUSHDB, FLUSHALL, CONFIG, KEYS]
+    disableCommands: [FLUSHALL, CONFIG, KEYS]
   resources:
     requests: { cpu: "50m", memory: "128Mi" }
     limits: { cpu: "150m", memory: "256Mi" }
