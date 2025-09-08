@@ -1,3 +1,10 @@
+## [1.0.50](https://github.com/webgrip/invoiceninja-application/compare/1.0.49...1.0.50) (2025-09-08)
+
+
+### Bug Fixes
+
+* only allow my IP ([09c018d](https://github.com/webgrip/invoiceninja-application/commit/09c018d07a77f5d1864793d93057a3c8e350c64c))
+
 ## [1.0.49](https://github.com/webgrip/invoiceninja-application/compare/1.0.48...1.0.49) (2025-09-08)
 
 
