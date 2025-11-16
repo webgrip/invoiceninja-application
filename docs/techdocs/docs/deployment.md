@@ -507,6 +507,6 @@ aws s3 sync backups/ s3://your-backup-bucket/invoiceninja-backups/
 
 Deployment procedures are based on Docker Compose best practices and Invoice Ninja installation guidelines:
 
-- **Docker Compose Production Guide**, https://docs.docker.com/compose/production/, Retrieved 2025-01-09
-- **Invoice Ninja Installation Documentation**, https://invoiceninja.github.io/en/self-host-installation/, Retrieved 2025-01-09
-- **Laravel Deployment Best Practices**, https://laravel.com/docs/10.x/deployment, Retrieved 2025-01-09
+- **Docker Compose Production Guide**, https://docs.docker.com/compose/production/, Retrieved 2025-01-16
+- **Invoice Ninja Self-Hosting Guide**, https://invoiceninja.github.io/en/self-host/, Retrieved 2025-01-16
+- **Laravel Deployment Best Practices**, https://laravel.com/docs/10.x/deployment, Retrieved 2025-01-16

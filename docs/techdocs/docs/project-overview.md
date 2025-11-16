@@ -88,8 +88,8 @@ All images are built and maintained by webgrip organization:
 
 ## Sources
 
-All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-09:
+All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-16:
 
-- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-09
-- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-09
-- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-01-09
+- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-16
+- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-16
+- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-01-16
