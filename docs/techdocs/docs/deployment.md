@@ -503,6 +503,99 @@ echo "0 2 * * * /path/to/invoiceninja-application/backup.sh" | crontab -
 aws s3 sync backups/ s3://your-backup-bucket/invoiceninja-backups/
 ```
 
+## Production Hardening Checklist
+
+Before deploying Invoice Ninja to production, complete the following security and reliability checklist:
+
+### Pre-Deployment Security
+
+- [ ] **Environment Variables**
+  - [ ] `APP_KEY` is generated and securely stored
+  - [ ] All passwords use strong, unique values (min 16 characters)
+  - [ ] `APP_DEBUG` is set to `false`
+  - [ ] `APP_ENV` is set to `production`
+  - [ ] Database credentials are rotated from defaults
+  - [ ] No secrets are hardcoded in configuration files
+
+- [ ] **Network Security**
+  - [ ] Firewall rules restrict access to necessary ports only
+  - [ ] SSL/TLS certificates are valid and properly configured
+  - [ ] HTTPS is enforced for all external traffic
+  - [ ] Internal services are not exposed to the public internet
+  - [ ] Rate limiting is configured on the reverse proxy
+
+- [ ] **Container Security**
+  - [ ] All containers run as non-root users
+  - [ ] Read-only root filesystems are enabled where possible
+  - [ ] Unnecessary capabilities are dropped
+  - [ ] Security options (`no-new-privileges:true`) are set
+  - [ ] Base images are from trusted sources and regularly updated
+
+### Database Security
+
+- [ ] **MariaDB Configuration**
+  - [ ] Root password is strong and securely stored
+  - [ ] Remote root access is disabled
+  - [ ] Database is not exposed to the public internet
+  - [ ] Only necessary users have database access
+  - [ ] Regular security updates are applied
+
+### Backup & Recovery
+
+- [ ] **Backup Strategy**
+  - [ ] Automated daily backups are configured
+  - [ ] Backup restoration has been tested successfully
+  - [ ] Backups are stored offsite or in cloud storage
+  - [ ] Backup retention policy is defined (e.g., 30 days)
+  - [ ] Backup encryption is enabled for sensitive data
+
+### Monitoring & Alerting
+
+- [ ] **Health Monitoring**
+  - [ ] Health check endpoints are monitored
+  - [ ] Alerts are configured for service failures
+  - [ ] Resource usage (CPU, memory, disk) is monitored
+  - [ ] Database connection pool is monitored
+  - [ ] Application logs are centralized and searchable
+
+### Performance Optimization
+
+- [ ] **Resource Limits**
+  - [ ] CPU and memory limits are set for all containers
+  - [ ] Resource reservations ensure minimum availability
+  - [ ] Connection pools are sized appropriately
+  - [ ] Cache hit ratios are monitored and optimized
+
+### Compliance & Documentation
+
+- [ ] **Documentation**
+  - [ ] Deployment procedures are documented
+  - [ ] Disaster recovery plan is documented and tested
+  - [ ] Contact information for on-call personnel is current
+  - [ ] Change management procedures are established
+  - [ ] Security incident response plan is in place
+
+### Post-Deployment Verification
+
+- [ ] **Functional Testing**
+  - [ ] Application loads and login works
+  - [ ] Database connectivity is verified
+  - [ ] Email functionality is working
+  - [ ] Backup and restore procedures tested
+  - [ ] SSL/TLS certificates are valid
+  - [ ] Health check endpoints return 200 OK
+  - [ ] All critical features are tested
+
+### Regular Maintenance
+
+- [ ] **Ongoing Tasks**
+  - [ ] Security updates are applied monthly
+  - [ ] Database is optimized quarterly
+  - [ ] Logs are rotated and archived
+  - [ ] Backup integrity is verified monthly
+  - [ ] SSL certificates are renewed before expiration
+  - [ ] Access reviews are conducted quarterly
+
 ## Sources
 
 Deployment procedures are based on Docker Compose best practices and Invoice Ninja installation guidelines:
