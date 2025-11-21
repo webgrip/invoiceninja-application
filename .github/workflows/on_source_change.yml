@@ -39,12 +39,6 @@ jobs:
     steps:
       - name: 'Prepare Release'
         uses: webgrip/prepare-release-action@v1
-        # with:
-        #   github-token: ${{ secrets.GITHUB_TOKEN }}
-        #   release-branch: 'main'
-        #   source-branch: 'development'
-        #   versioning-strategy: 'semantic-release'
-        #   commit-message: 'chore(release): prepare release {{version}} [skip ci]'
 
   release:
     name: 'Release'
