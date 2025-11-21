@@ -1,3 +1,9 @@
+## [1.0.52](https://github.com/webgrip/invoiceninja-application/compare/1.0.51...1.0.52) (2025-11-21)
+
+* checkout and added perms ([9aa8e5d](https://github.com/webgrip/invoiceninja-application/commit/9aa8e5daff1a038a056da7649564fd93f0124388))
+* removed comment ([1778dc9](https://github.com/webgrip/invoiceninja-application/commit/1778dc98c43f77fd33f9a69cbf1edd3879142834))
+* send GH token to step, so that it can call graphql ([d3a2e7b](https://github.com/webgrip/invoiceninja-application/commit/d3a2e7b1ad28e58eca5ae913d381423588eca499))
+
 ## [1.0.52] - 2025-11-21
 
 ## [1.0.51](https://github.com/webgrip/invoiceninja-application/compare/1.0.50...1.0.51) (2025-11-21)
@@ -381,4 +387,3 @@
 ### Features
 
 * Initial release ([3f47f8d](https://github.com/webgrip/invoiceninja-application/commit/3f47f8d4facafca67dea6e2cc13f3ed32c24c9a9))
-
