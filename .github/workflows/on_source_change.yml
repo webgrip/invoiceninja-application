@@ -32,6 +32,7 @@ jobs:
     needs: [ static-analysis, test ]
     if: >
       always()
+      && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development')
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-release.yml@main
