@@ -36,8 +36,17 @@ jobs:
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
     runs-on: arc-runner-set
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - name: 'Prepare Release'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run prepare-release-action
         uses: webgrip/prepare-release-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
