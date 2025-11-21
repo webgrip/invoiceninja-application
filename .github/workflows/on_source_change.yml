@@ -26,7 +26,6 @@ jobs:
       && needs.static-analysis.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-test.yml@main
     
-
   prepare-release-from-development:
     name: 'Prepare/Update Release From Development'
     needs: [ static-analysis, test ]
