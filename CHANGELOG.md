@@ -1,3 +1,12 @@
+## [1.0.51](https://github.com/webgrip/invoiceninja-application/compare/1.0.50...1.0.51) (2025-11-21)
+
+* actually use the github action prepare-release-action ([e5694a7](https://github.com/webgrip/invoiceninja-application/commit/e5694a7a1b3b18ab91c759b430e3314bdf66f675))
+* made sure required env vars exist for the copilot workloads ([e760154](https://github.com/webgrip/invoiceninja-application/commit/e7601542eafeb816a6557f8bcd4b713c89990a50))
+* only do release and deploy stuff on main, but add development for the other steps ([f055a74](https://github.com/webgrip/invoiceninja-application/commit/f055a7424de038db0878e98d3553d11e9e9deaf8))
+* rerun ([c449722](https://github.com/webgrip/invoiceninja-application/commit/c4497221c6b5116d1973ee2148d0ba74e0b64fd4))
+* run again ([157d6fa](https://github.com/webgrip/invoiceninja-application/commit/157d6fa2045198d06115681c8a2e86d60025d40d))
+* use run on arc set and steps for prepare-release ([e2b0235](https://github.com/webgrip/invoiceninja-application/commit/e2b0235eb8f75e2588326f2cafcf8238cc17ae95))
+
 ## [1.0.50](https://github.com/webgrip/invoiceninja-application/compare/1.0.49...1.0.50) (2025-09-08)
 
 
