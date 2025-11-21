@@ -1,3 +1,8 @@
+## [1.0.53-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.52...1.0.53-dev.1) (2025-11-21)
+
+* added development release channel for prereleases ([ddc3a84](https://github.com/webgrip/invoiceninja-application/commit/ddc3a84e9660befd6ce275ed9378661d31193bef))
+* try running semantic release on the prerelease channe ([141ecf3](https://github.com/webgrip/invoiceninja-application/commit/141ecf354f4891d1c0743d2caeb35529ce5ff763))
+
 ## [1.0.52](https://github.com/webgrip/invoiceninja-application/compare/1.0.51...1.0.52) (2025-11-21)
 
 * checkout and added perms ([9aa8e5d](https://github.com/webgrip/invoiceninja-application/commit/9aa8e5daff1a038a056da7649564fd93f0124388))
