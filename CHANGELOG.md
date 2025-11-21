@@ -1,3 +1,7 @@
+## [1.0.54](https://github.com/webgrip/invoiceninja-application/compare/1.0.53...1.0.54) (2025-11-21)
+
+* test ([c56ade8](https://github.com/webgrip/invoiceninja-application/commit/c56ade839f20416aba885e675b94202af13730e3))
+
 ## [1.0.54-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.53...1.0.54-dev.1) (2025-11-21)
 
 * remove commented-out prepare-release-from-development job ([dd6f138](https://github.com/webgrip/invoiceninja-application/commit/dd6f138e34e354139bfbc2abb4e017df4b502b0b))
