@@ -1,3 +1,5 @@
+## [1.0.52] - 2025-11-21
+
 ## [1.0.51](https://github.com/webgrip/invoiceninja-application/compare/1.0.50...1.0.51) (2025-11-21)
 
 * actually use the github action prepare-release-action ([e5694a7](https://github.com/webgrip/invoiceninja-application/commit/e5694a7a1b3b18ab91c759b430e3314bdf66f675))
@@ -379,3 +381,4 @@
 ### Features
 
 * Initial release ([3f47f8d](https://github.com/webgrip/invoiceninja-application/commit/3f47f8d4facafca67dea6e2cc13f3ed32c24c9a9))
+
