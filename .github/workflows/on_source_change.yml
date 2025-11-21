@@ -27,30 +27,6 @@ jobs:
       && needs.static-analysis.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-test.yml@main
 
-  # prepare-release-from-development:
-  #   name: 'Prepare/Update Release From Development'
-  #   needs: [ static-analysis, test ]
-  #   if: >
-  #     always()
-  #     && github.ref == 'refs/heads/development'
-  #     && needs.static-analysis.result == 'success'
-  #     && needs.test.result == 'success'
-  #   runs-on: arc-runner-set
-  #   permissions:
-  #     contents: write
-  #     pull-requests: write
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-
-  #     - name: Run prepare-release-action
-  #       uses: webgrip/prepare-release-action@v1
-  #       with:
-  #         github-token: ${{ secrets.GITHUB_TOKEN }}
-
   release:
     name: 'Release'
     needs: [ static-analysis, test ]
