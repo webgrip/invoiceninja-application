@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'development'
     paths:
       - 'ops/**'
       - 'src/**'
@@ -25,7 +26,7 @@ jobs:
       always()
       && needs.static-analysis.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-test.yml@main
-    
+
   prepare-release-from-development:
     name: 'Prepare/Update Release From Development'
     needs: [ static-analysis, test ]
@@ -43,6 +44,7 @@ jobs:
     needs: [ static-analysis, test ]
     if: >
       always()
+      && github.ref == 'refs/heads/main'
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-release.yml@main
@@ -58,6 +60,7 @@ jobs:
     needs: [ static-analysis, test, release ]
     if: >
       always()
+      && github.ref == 'refs/heads/main'
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
       && needs.release.result == 'success'
@@ -73,6 +76,9 @@ jobs:
   deploy-secrets:
     name: 'Deploy Secrets'
     uses: webgrip/workflows/.github/workflows/application-deploy-secrets.yml@main
+    if: >
+      always()
+      && github.ref == 'refs/heads/main'
     secrets:
       DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
