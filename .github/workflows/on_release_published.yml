@@ -1,4 +1,4 @@
-name: '[Workflow] On Source Change'
+name: '[Workflow] On Release Published'
 
 concurrency:
   group: release-${{ github.ref }}
