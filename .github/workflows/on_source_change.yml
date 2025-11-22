@@ -21,8 +21,6 @@ on:
     types:
       - closed
 
-
-
 jobs:
   static-analysis:
     name: 'Static Analysis'
