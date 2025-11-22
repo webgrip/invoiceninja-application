@@ -1,3 +1,9 @@
+## [1.0.68](https://github.com/webgrip/invoiceninja-application/compare/1.0.67...1.0.68) (2025-11-22)
+
+### Fixed
+
+* split up on release and on source change. Far from all pushes will need a release ([7c767da](https://github.com/webgrip/invoiceninja-application/commit/7c767da67a140461827ee30322c03dea4ccbff88))
+
 ## [1.0.67](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67) (2025-11-22)
 
 ### Fixed
