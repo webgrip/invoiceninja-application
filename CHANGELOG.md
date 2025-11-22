@@ -1,3 +1,12 @@
+## [1.0.56](https://github.com/webgrip/invoiceninja-application/compare/1.0.55...1.0.56) (2025-11-22)
+
+* Make a change([#19](https://github.com/webgrip/invoiceninja-application/issues/19)) ([108b7d9](https://github.com/webgrip/invoiceninja-application/commit/108b7d97a92c66f7f9562bf8c733e9575ba44689))
+* wtf ([a64eb9a](https://github.com/webgrip/invoiceninja-application/commit/a64eb9aa4755002f126cd7be5bd1e6edf459f543))
+
+### workflows
+
+* **workflows:** run workflow on PR merge to main, fixing gh action bug ([38f047e](https://github.com/webgrip/invoiceninja-application/commit/38f047e6378978a4fbec807f1e5ce32e84b6b323))
+
 ## [1.0.56-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.55...1.0.56-dev.1) (2025-11-22)
 
 * Make a change ([5bfbd3c](https://github.com/webgrip/invoiceninja-application/commit/5bfbd3c32232e97050593f80fa8fabdff749ef41))
