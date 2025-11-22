@@ -1,3 +1,9 @@
+## [1.0.67](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67) (2025-11-22)
+
+### Fixed
+
+* always run on_source_change, for every branch ([e91c53e](https://github.com/webgrip/invoiceninja-application/commit/e91c53e110497fc201a96a50c59ab31044301884))
+
 ## [1.0.67-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67-dev.1) (2025-11-22)
 
 ### Fixed
