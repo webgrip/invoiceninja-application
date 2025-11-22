@@ -15,6 +15,7 @@ RUN apk add --no-cache \
 
 USER invoiceninja
 
+
 COPY ops/docker/application/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
 
 EXPOSE 9000
