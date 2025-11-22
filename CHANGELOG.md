@@ -1,3 +1,7 @@
+## [1.0.60](https://github.com/webgrip/invoiceninja-application/compare/1.0.59...1.0.60) (2025-11-22)
+
+* release state ([12a8b99](https://github.com/webgrip/invoiceninja-application/commit/12a8b99a5b1239c446a074a4c04cb2876daed7a3))
+
 ## [1.0.59](https://github.com/webgrip/invoiceninja-application/compare/1.0.58...1.0.59) (2025-11-22)
 
 * test ([d8c7140](https://github.com/webgrip/invoiceninja-application/commit/d8c7140facd44954c0b215199d662babc9f681b4))
