@@ -14,6 +14,7 @@ on:
       - '.releaserc.json'
       - '.github/workflows/on_source_change.yml'
 
+      
 jobs:
   static-analysis:
     name: 'Static Analysis'
