@@ -27,17 +27,16 @@ jobs:
       && needs.static-analysis.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-test.yml@main
 
-  release:
+  release-publish:
     name: 'Release'
     needs: [static-analysis, test]
     if: >
       always()
-      && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development')
+      && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release'))
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
-    uses: webgrip/workflows/.github/workflows/application-release.yml@main
+    uses: webgrip/workflows/.github/workflows/application-release-publish.yml@main
     secrets:
       WEBGRIP_CI_APP_ID: ${{ secrets.WEBGRIP_CI_APP_ID }}
       WEBGRIP_CI_APP_PRIVATE_KEY: ${{ secrets.WEBGRIP_CI_APP_PRIVATE_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+
