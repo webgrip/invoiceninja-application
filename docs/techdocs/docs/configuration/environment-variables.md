@@ -90,5 +90,5 @@ All configuration follows Laravel convention with `.env` file or environment var
 
 ## Sources
 
-- **Invoice Ninja Environment Configuration**, https://invoiceninja.github.io/en/self-host-installation/#environment-variables, Retrieved 2025-01-09
-- **Laravel Configuration Documentation**, https://laravel.com/docs/10.x/configuration, Retrieved 2025-01-09
+- **Invoice Ninja Self-Hosting Guide**, https://invoiceninja.github.io/en/self-host/, Retrieved 2025-01-16
+- **Laravel Configuration Documentation**, https://laravel.com/docs/10.x/configuration, Retrieved 2025-01-16

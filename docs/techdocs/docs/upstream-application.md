@@ -214,11 +214,10 @@ Official Helm charts are available with configurable values:
 
 ## Sources
 
-All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-09:
+All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-16:
 
-- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-09
-- **Invoice Ninja Installation Guide**, https://invoiceninja.github.io/en/self-host-installation/, Retrieved 2025-01-09
-- **Invoice Ninja Docker Documentation**, https://invoiceninja.github.io/en/self-host-installation/#docker, Retrieved 2025-01-09
-- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-09
-- **Invoice Ninja System Requirements**, https://invoiceninja.github.io/en/requirements/, Retrieved 2025-01-09
-- **Laravel 10.x Documentation**, https://laravel.com/docs/10.x, Retrieved 2025-01-09
+- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-16
+- **Invoice Ninja Self-Hosting Guide**, https://invoiceninja.github.io/en/self-host/, Retrieved 2025-01-16
+- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-16
+- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-01-16
+- **Laravel 10.x Documentation**, https://laravel.com/docs/10.x, Retrieved 2025-01-16

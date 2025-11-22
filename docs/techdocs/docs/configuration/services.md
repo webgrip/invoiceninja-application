@@ -82,7 +82,7 @@ Collation: en_US.utf8
 
 ## Sources
 
-- **Docker Compose File Reference**, https://docs.docker.com/compose/compose-file/, Retrieved 2025-01-09
-- **MariaDB Docker Documentation**, https://hub.docker.com/_/mariadb, Retrieved 2025-01-09
-- **PostgreSQL Docker Documentation**, https://hub.docker.com/_/postgres, Retrieved 2025-01-09
-- **Redis Configuration Reference**, https://redis.io/topics/config, Retrieved 2025-01-09
+- **Docker Compose File Reference**, https://docs.docker.com/compose/compose-file/, Retrieved 2025-01-16
+- **MariaDB Docker Documentation**, https://hub.docker.com/_/mariadb, Retrieved 2025-01-16
+- **PostgreSQL Docker Documentation**, https://hub.docker.com/_/postgres, Retrieved 2025-01-16
+- **Redis Configuration Reference**, https://redis.io/docs/latest/operate/oss_and_stack/management/config/, Retrieved 2025-01-16
