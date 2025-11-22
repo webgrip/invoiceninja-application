@@ -1,3 +1,7 @@
+## [1.0.63](https://github.com/webgrip/invoiceninja-application/compare/1.0.62...1.0.63) (2025-11-22)
+
+* double newline so that it looks pretty :D ([e1a1924](https://github.com/webgrip/invoiceninja-application/commit/e1a1924822bb9ce231ff480610f4c6cac9b6332b))
+
 ## [1.0.62](https://github.com/webgrip/invoiceninja-application/compare/1.0.61...1.0.62) (2025-11-22)
 
 * no longer use the words that shall not be spoken in commit messages ([c763c44](https://github.com/webgrip/invoiceninja-application/commit/c763c44049268c52de63ddd400b3d8db6ab5f43d))
