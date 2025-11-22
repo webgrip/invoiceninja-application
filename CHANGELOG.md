@@ -1,3 +1,9 @@
+## [1.0.64](https://github.com/webgrip/invoiceninja-application/compare/1.0.63...1.0.64) (2025-11-22)
+
+### Fixed
+
+* removed unused workflow file and write notes based on type instead of scope ([bdd715d](https://github.com/webgrip/invoiceninja-application/commit/bdd715db54c52b496cf142c2c6e47bb308ab60e1))
+
 ## [1.0.63](https://github.com/webgrip/invoiceninja-application/compare/1.0.62...1.0.63) (2025-11-22)
 
 * double newline so that it looks pretty :D ([e1a1924](https://github.com/webgrip/invoiceninja-application/commit/e1a1924822bb9ce231ff480610f4c6cac9b6332b))
