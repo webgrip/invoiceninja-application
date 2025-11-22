@@ -6,7 +6,7 @@ concurrency:
 on:
   push:
     branches:
-      - '*'
+      - '**'
     paths:
       - 'ops/**'
       - 'src/**'
