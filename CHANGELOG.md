@@ -1,3 +1,9 @@
+## [1.0.65-dev.2](https://github.com/webgrip/invoiceninja-application/compare/1.0.65-dev.1...1.0.65-dev.2) (2025-11-22)
+
+### Fixed
+
+* huge fixes on releaserc. No clue how I got away with these blatant misconfigurations... Also removed the on pull_request in the on source change because the problem was really something else. ([94cf108](https://github.com/webgrip/invoiceninja-application/commit/94cf108d6f1cc047d5bc3d5c920d41bf2be61b19))
+
 ## [1.0.65-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.64...1.0.65-dev.1) (2025-11-22)
 
 ### Fixed
