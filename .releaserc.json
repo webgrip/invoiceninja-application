@@ -8,7 +8,20 @@
   ],
   "tagFormat": "${version}",
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "feature", "release": "minor" },
+          { "type": "bugfix", "release": "patch" },
+          { "type": "hotfix", "release": "patch" }
+        ],
+        "parserOpts": {
+          "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+        }
+      }
+    ],
     [
       "@semantic-release/release-notes-generator",
       {
@@ -16,7 +29,10 @@
         "presetConfig": {
           "types": [
             { "type": "feat", "section": "Added" },
+            { "type": "feature", "section": "Added" },
             { "type": "fix", "section": "Fixed" },
+            { "type": "bugfix", "section": "Fixed" },
+            { "type": "hotfix", "section": "Fixed" },
             { "type": "perf", "section": "Performance" },
             { "type": "refactor", "section": "Changed" },
             { "type": "chore", "section": "Internal", "hidden": true },
