@@ -1,3 +1,9 @@
+## [1.0.67-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67-dev.1) (2025-11-22)
+
+### Fixed
+
+* **docker:** dockerfile whitespace ([ed96488](https://github.com/webgrip/invoiceninja-application/commit/ed96488d7eb9394c7f831f297aef3f56dee7c578))
+
 ## [1.0.66](https://github.com/webgrip/invoiceninja-application/compare/1.0.65...1.0.66) (2025-11-22)
 
 ### Fixed

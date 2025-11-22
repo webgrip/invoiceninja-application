@@ -2,7 +2,6 @@ FROM invoiceninja/invoiceninja:5.12.33
 
 USER root
 
-
 RUN apk add --no-cache \
     rsync \
     autoconf \
@@ -15,9 +14,7 @@ RUN apk add --no-cache \
 
 USER invoiceninja
 
-
 COPY ops/docker/application/php.ini /usr/local/etc/php/conf.d/zz-custom.ini
-
 
 
 EXPOSE 9000
