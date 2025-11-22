@@ -1,3 +1,9 @@
+## [1.0.66](https://github.com/webgrip/invoiceninja-application/compare/1.0.65...1.0.66) (2025-11-22)
+
+### Fixed
+
+* just do this manually then ([c00893c](https://github.com/webgrip/invoiceninja-application/commit/c00893c42628234f89b018f5927eaf867b9c7c41))
+
 ## [1.0.65](https://github.com/webgrip/invoiceninja-application/compare/1.0.64...1.0.65) (2025-11-22)
 
 ### Fixed
