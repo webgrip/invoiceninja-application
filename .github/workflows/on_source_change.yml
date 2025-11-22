@@ -6,23 +6,31 @@ concurrency:
 on:
   push:
     branches:
-      - 'main'
       - 'development'
     paths:
       - 'ops/**'
       - 'src/**'
       - '.releaserc.json'
       - '.github/workflows/on_source_change.yml'
-
+  # We need this due to a bug in GitHub Actions where a merge to main does not trigger push on path filter
+  # See: https://github.com/orgs/community/discussions/179965
+  pull_request:
+    branches:
+      - 'main'
+    types:
+      - closed
 
 jobs:
   static-analysis:
     name: 'Static Analysis'
+    if: >
+      always()
+      && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true))
     uses: webgrip/workflows/.github/workflows/application-static-analysis.yml@main
 
   test:
     name: 'Test'
-    needs: [ static-analysis ]
+    needs: [static-analysis]
     if: >
       always()
       && needs.static-analysis.result == 'success'
@@ -30,7 +38,7 @@ jobs:
 
   release:
     name: 'Release'
-    needs: [ static-analysis, test ]
+    needs: [static-analysis, test]
     if: >
       always()
       && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development')
@@ -46,7 +54,7 @@ jobs:
   deploy:
     name: 'Deploy'
     uses: webgrip/workflows/.github/workflows/application-deploy.yml@main
-    needs: [ static-analysis, test, release ]
+    needs: [static-analysis, test, release]
     if: >
       always()
       && github.ref == 'refs/heads/main'
@@ -67,7 +75,7 @@ jobs:
     uses: webgrip/workflows/.github/workflows/application-deploy-secrets.yml@main
     if: >
       always()
-      && github.ref == 'refs/heads/main'
+      && (github.event_name == 'push' && github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true))
     secrets:
       DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
