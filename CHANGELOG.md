@@ -1,3 +1,8 @@
+## [1.0.62](https://github.com/webgrip/invoiceninja-application/compare/1.0.61...1.0.62) (2025-11-22)
+
+* no longer use the words that shall not be spoken in commit messages ([c763c44](https://github.com/webgrip/invoiceninja-application/commit/c763c44049268c52de63ddd400b3d8db6ab5f43d))
+* removed whitespace ([0964ff3](https://github.com/webgrip/invoiceninja-application/commit/0964ff380ccf793d62668a1d1d2bd3fcc641a719))
+
 ## [1.0.62-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.61...1.0.62-dev.1) (2025-11-22)
 
 * removed whitespace ([ec94580](https://github.com/webgrip/invoiceninja-application/commit/ec94580eedd364add46527358b3e0b8484401555))
