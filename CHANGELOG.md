@@ -1,3 +1,9 @@
+## [1.0.71](https://github.com/webgrip/invoiceninja-application/compare/1.0.70...1.0.71) (2025-11-22)
+
+### Fixed
+
+* added release branch for rc ([209171b](https://github.com/webgrip/invoiceninja-application/commit/209171b72a57b99c5d049fa4e0abbc3b80217451))
+
 ## [1.0.70](https://github.com/webgrip/invoiceninja-application/compare/1.0.69...1.0.70) (2025-11-22)
 
 ### Fixed
