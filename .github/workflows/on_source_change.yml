@@ -12,6 +12,7 @@ on:
       - 'src/**'
       - '.releaserc.json'
       - '.github/workflows/on_source_change.yml'
+      - '.github/workflows/on_release_published.yml'
 
 jobs:
   static-analysis:
