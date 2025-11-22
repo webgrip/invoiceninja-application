@@ -40,34 +40,3 @@ jobs:
       WEBGRIP_CI_APP_PRIVATE_KEY: ${{ secrets.WEBGRIP_CI_APP_PRIVATE_KEY }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-
-  deploy:
-    name: 'Deploy'
-    needs: [static-analysis, test, release]
-    if: >
-      always()
-      && github.ref == 'refs/heads/main'
-      && needs.static-analysis.result == 'success'
-      && needs.test.result == 'success'
-      && needs.release.result == 'success'
-      && needs.release.outputs.version != ''
-    uses: webgrip/workflows/.github/workflows/application-deploy.yml@main
-    secrets:
-      DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-    with:
-      version: ${{ needs.release.outputs.version }}
-      environment: 'staging'
-
-  deploy-secrets:
-    name: 'Deploy Secrets'
-    if: >
-      always()
-      && github.ref == 'refs/heads/main'
-    uses: webgrip/workflows/.github/workflows/application-deploy-secrets.yml@main
-    secrets:
-      DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
