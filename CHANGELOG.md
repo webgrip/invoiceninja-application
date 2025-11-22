@@ -1,3 +1,13 @@
+## [1.0.69](https://github.com/webgrip/invoiceninja-application/compare/1.0.68...1.0.69) (2025-11-22)
+
+### Changed
+
+* fixed typo ([0f2dfc1](https://github.com/webgrip/invoiceninja-application/commit/0f2dfc1474083baa214f4d2df83a3be65f6968fa))
+
+### Fixed
+
+* added on_release_published to the on_source_change.yml ([2cd7523](https://github.com/webgrip/invoiceninja-application/commit/2cd7523146b41a78f820ea2e1172ddfc92d6983e))
+
 ## [1.0.68](https://github.com/webgrip/invoiceninja-application/compare/1.0.67...1.0.68) (2025-11-22)
 
 ### Fixed
