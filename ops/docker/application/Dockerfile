@@ -2,6 +2,7 @@ FROM invoiceninja/invoiceninja:5.12.27
 
 USER root
 
+
 RUN apk add --no-cache \
     rsync \
     autoconf \
