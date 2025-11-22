@@ -1,3 +1,7 @@
+## [1.0.55-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.54...1.0.55-dev.1) (2025-11-22)
+
+* whitespace removed ([0a0e878](https://github.com/webgrip/invoiceninja-application/commit/0a0e8786c0c0a9f6c31603eebca69b6392f020b9))
+
 ## [1.0.54](https://github.com/webgrip/invoiceninja-application/compare/1.0.53...1.0.54) (2025-11-21)
 
 * test ([c56ade8](https://github.com/webgrip/invoiceninja-application/commit/c56ade839f20416aba885e675b94202af13730e3))
