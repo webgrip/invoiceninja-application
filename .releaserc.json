@@ -28,7 +28,7 @@
           "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
         },
         "writerOpts": {
-          "groupBy": "scope",
+          "groupBy": "type",
           "commitGroupsSort": "title",
           "commitsSort": ["type", "subject"]
         }
