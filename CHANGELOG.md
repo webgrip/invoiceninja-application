@@ -1,3 +1,7 @@
+## [1.0.59-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.58...1.0.59-dev.1) (2025-11-22)
+
+* updated upstream invoiceninja from 5.12.27 to 5.12.33 ([#22](https://github.com/webgrip/invoiceninja-application/issues/22)) ([753ee8f](https://github.com/webgrip/invoiceninja-application/commit/753ee8fefdcdc060470e71aea70ced042c3dcf00))
+
 ## [1.0.58](https://github.com/webgrip/invoiceninja-application/compare/1.0.57...1.0.58) (2025-11-22)
 
 * added whitespace in Dockerfile to try and trigger the pipeline on merge from development to main ([#21](https://github.com/webgrip/invoiceninja-application/issues/21)) ([702568b](https://github.com/webgrip/invoiceninja-application/commit/702568bea80c378d232d62930c9886b708223043))
