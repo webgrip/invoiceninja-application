@@ -54,6 +54,7 @@ const releaseNotesGeneratorConfig = [
   },
 ];
 
+// Keep this commented out as you wanted
 // const npmConfig = [
 //   '@semantic-release/npm',
 //   {
@@ -83,22 +84,23 @@ const execConfig = [
   },
 ];
 
-module.exports = (context = {}) => {
-  const branchName = context.branch?.name ?? '';
-  const isMainBranch = branchName === 'main';
+const branchName =
+  process.env.GITHUB_REF_NAME ||
+  process.env.BRANCH_NAME ||
+  '';
+const isMainBranch = branchName === 'main';
 
-  const plugins = [
-    commitAnalyzerConfig,
-    releaseNotesGeneratorConfig,
-    // npmConfig,
-    ...(isMainBranch ? [changelogConfig, gitConfig] : []),
-    execConfig,
-    '@semantic-release/github',
-  ];
+const plugins = [
+  commitAnalyzerConfig,
+  releaseNotesGeneratorConfig,
+  // npmConfig,
+  ...(isMainBranch ? [changelogConfig, gitConfig] : []),
+  execConfig,
+  '@semantic-release/github',
+];
 
-  return {
-    branches,
-    tagFormat: '${version}',
-    plugins,
-  };
+module.exports = {
+  branches,
+  tagFormat: '${version}',
+  plugins,
 };
