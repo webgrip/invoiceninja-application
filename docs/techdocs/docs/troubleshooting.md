@@ -762,11 +762,19 @@ scp -r backups/latest/ user@newserver:/path/to/invoiceninja-application/backups/
 # 4. Restore database
 docker-compose up -d invoiceninja-application.mariadb
 sleep 15
+# Restore database securely: avoid passing the password on the command line.
+# Option 1: Prompt for password interactively (recommended)
 gunzip -c backups/latest/database.sql.gz | \
   docker-compose exec -T invoiceninja-application.mariadb \
   mariadb --socket=/var/run/mysqld/mysqld.sock \
-  --user=invoiceninja --password=<password> invoiceninja
+  --user=invoiceninja --password invoiceninja
 
+# Option 2: Use the MARIADB_PWD environment variable for non-interactive use (less secure)
+# export MARIADB_PWD='<password>'
+# gunzip -c backups/latest/database.sql.gz | \
+#   docker-compose exec -e MARIADB_PWD -T invoiceninja-application.mariadb \
+#   mariadb --socket=/var/run/mysqld/mysqld.sock \
+#   --user=invoiceninja invoiceninja
 # 5. Restore application data
 docker volume rm invoiceninja-application-application-public-data
 docker volume create invoiceninja-application-application-public-data
