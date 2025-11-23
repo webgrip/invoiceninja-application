@@ -54,12 +54,12 @@ const releaseNotesGeneratorConfig = [
   },
 ];
 
-const npmConfig = [
-  '@semantic-release/npm',
-  {
-    npmPublish: false,
-  },
-];
+// const npmConfig = [
+//   '@semantic-release/npm',
+//   {
+//     npmPublish: false,
+//   },
+// ];
 
 const changelogConfig = [
   '@semantic-release/changelog',
@@ -90,7 +90,7 @@ module.exports = (context = {}) => {
   const plugins = [
     commitAnalyzerConfig,
     releaseNotesGeneratorConfig,
-    npmConfig,
+    // npmConfig,
     ...(isMainBranch ? [changelogConfig, gitConfig] : []),
     execConfig,
     '@semantic-release/github',
