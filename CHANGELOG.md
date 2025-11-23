@@ -1,3 +1,20 @@
+## [1.0.72](https://github.com/webgrip/invoiceninja-application/compare/1.0.71...1.0.72) (2025-11-23)
+
+### docs
+
+* **Misc:** .releaserc.js instead of json ([](https://github.com/webgrip/invoiceninja-application/commit/9d1b2740bc4e169558c85389eb656dbe737c4c68))
+
+### fix
+
+* **Misc:**  split up release publish and distribute and replaced .releaserc.json with .releaserc.js ([](https://github.com/webgrip/invoiceninja-application/commit/a0ea3a76ac776f44d35c8b08fbd0717826d92ba9))
+* **Misc:** also run new releases on .releaserc.js changes ([](https://github.com/webgrip/invoiceninja-application/commit/f50c6e16b79845f9de81d35a8e9fc835e84ca451))
+* **Misc:** deploy ([](https://github.com/webgrip/invoiceninja-application/commit/2b86f92141bd0f10d71ff5c8a3a3877e6dd5d386))
+* **Misc:** deploy ([](https://github.com/webgrip/invoiceninja-application/commit/1a6bbcccba4dd489ac2936da586ab631c0680464))
+* **Misc:** don't change immutable commit object ([](https://github.com/webgrip/invoiceninja-application/commit/497ee9ff4a798403cc1a8d907475b2dad9e719dd))
+* **Misc:** don't publish on NPM when not necessary ([](https://github.com/webgrip/invoiceninja-application/commit/617d1de929a08d92cb868e9aedb993cd8ed5bc7c))
+* **Misc:** no longer use npmConfig ([](https://github.com/webgrip/invoiceninja-application/commit/df36869a3f50b99ec995ed4ad24b3383a94d690c))
+* **Misc:** use cjs ([](https://github.com/webgrip/invoiceninja-application/commit/fced698fe1943c7a3af0bc7293637d41f31acd97))
+
 ## [1.0.71](https://github.com/webgrip/invoiceninja-application/compare/1.0.70...1.0.71) (2025-11-22)
 
 ### Fixed
