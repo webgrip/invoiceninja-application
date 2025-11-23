@@ -1,9 +1,11 @@
+const noteKeywords = ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'];
+
 const branches = [
   'main',
   {
     name: 'release/*',
-    prerelease: 'rc'
-  }
+    prerelease: 'rc',
+  },
 ];
 
 const commitAnalyzerConfig = [
@@ -13,12 +15,10 @@ const commitAnalyzerConfig = [
     releaseRules: [
       { type: 'feature', release: 'minor' },
       { type: 'bugfix', release: 'patch' },
-      { type: 'hotfix', release: 'patch' }
+      { type: 'hotfix', release: 'patch' },
     ],
-    parserOpts: {
-      noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING']
-    }
-  }
+    parserOpts: { noteKeywords },
+  },
 ];
 
 const releaseNotesGeneratorConfig = [
@@ -36,12 +36,10 @@ const releaseNotesGeneratorConfig = [
         { type: 'refactor', section: 'Changed' },
         { type: 'chore', section: 'Internal', hidden: true },
         { type: 'docs', section: 'Docs', hidden: true },
-        { type: 'test', section: 'Tests', hidden: true }
-      ]
+        { type: 'test', section: 'Tests', hidden: true },
+      ],
     },
-    parserOpts: {
-      noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING']
-    },
+    parserOpts: { noteKeywords },
     writerOpts: {
       groupBy: 'type',
       commitGroupsSort: 'title',
@@ -50,36 +48,40 @@ const releaseNotesGeneratorConfig = [
         if (!commit.scope || !commit.scope.trim()) {
           commit.scope = 'Misc';
         }
-
         return commit;
-      }
-    }
-  }
+      },
+    },
+  },
+];
+
+const npmConfig = [
+  '@semantic-release/npm',
+  {
+    npmPublish: false,
+  },
 ];
 
 const changelogConfig = [
   '@semantic-release/changelog',
   {
-    changelogFile: 'CHANGELOG.md'
-  }
+    changelogFile: 'CHANGELOG.md',
+  },
 ];
 
 const gitConfig = [
   '@semantic-release/git',
   {
-    assets: ['CHANGELOG.md'],
-    message: 'chore(release): ${nextRelease.version}\n\n${nextRelease.notes}'
-  }
+    assets: ['CHANGELOG.md', 'package.json', 'package-lock.json'],
+    message: 'chore(release): ${nextRelease.version}\n\n${nextRelease.notes}',
+  },
 ];
 
 const execConfig = [
   '@semantic-release/exec',
   {
-    successCmd: 'echo "version=${nextRelease.version}" >> $GITHUB_OUTPUT'
-  }
+    successCmd: 'echo "version=${nextRelease.version}" >> $GITHUB_OUTPUT',
+  },
 ];
-
-const mainOnlyPlugins = [changelogConfig, gitConfig];
 
 module.exports = (context = {}) => {
   const branchName = context.branch?.name ?? '';
@@ -88,14 +90,15 @@ module.exports = (context = {}) => {
   const plugins = [
     commitAnalyzerConfig,
     releaseNotesGeneratorConfig,
-    ...(isMainBranch ? mainOnlyPlugins : []),
+    npmConfig,
+    ...(isMainBranch ? [changelogConfig, gitConfig] : []),
     execConfig,
-    '@semantic-release/github'
+    '@semantic-release/github',
   ];
 
   return {
     branches,
     tagFormat: '${version}',
-    plugins
+    plugins,
   };
 };
