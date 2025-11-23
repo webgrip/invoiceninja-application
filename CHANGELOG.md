@@ -3,6 +3,9 @@
 ### Fixed
 
 * added release branch for rc ([209171b](https://github.com/webgrip/invoiceninja-application/commit/209171b72a57b99c5d049fa4e0abbc3b80217451))
+* making sure it triggers release/ ([26a248e](https://github.com/webgrip/invoiceninja-application/commit/26a248e123ce1d4ae94d67835070a3284f19d3a0))
+* split up release publish and distribute ([40c59b3](https://github.com/webgrip/invoiceninja-application/commit/40c59b3ceb251d2c55078e7b52bd4f2b05b4b6fa))
+* test ([7bfd906](https://github.com/webgrip/invoiceninja-application/commit/7bfd906e9fc5e391f5470e895ed06e11a8056123))
 
 ## [1.0.70](https://github.com/webgrip/invoiceninja-application/compare/1.0.69...1.0.70) (2025-11-22)
 
