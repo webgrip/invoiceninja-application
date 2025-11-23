@@ -1,3 +1,13 @@
+## [1.0.73](https://github.com/webgrip/invoiceninja-application/compare/1.0.72...1.0.73) (2025-11-23)
+
+### refactor
+
+* **Misc:** removed unnecessary comments ([](https://github.com/webgrip/invoiceninja-application/commit/7028ca52dcfef37c74a79979d53e74031ca9bfae))
+
+### fix
+
+* **Misc:** less noisy release notes ([](https://github.com/webgrip/invoiceninja-application/commit/9d6c3c2723f8403d668befbaa1edcd46da82b4f9))
+
 ## [1.0.72](https://github.com/webgrip/invoiceninja-application/compare/1.0.71...1.0.72) (2025-11-23)
 
 ### docs
