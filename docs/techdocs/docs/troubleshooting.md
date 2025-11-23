@@ -701,6 +701,222 @@ cat .dockerignore
 ls -la ops/docker/application/
 ```
 
+## Common Deployment Scenarios
+
+### Scenario 1: Fresh Installation on New Server
+
+**Situation:** Installing Invoice Ninja on a new server for the first time.
+
+**Step-by-Step Solution:**
+
+```bash
+# 1. Install prerequisites
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+# Log out and back in for group changes to take effect
+
+# 2. Clone repository
+git clone https://github.com/webgrip/invoiceninja-application.git
+cd invoiceninja-application
+
+# 3. Configure environment
+cp .env.example .env
+nano .env  # Edit with your settings
+
+# 4. Set required variables
+# - DB_PASSWORD=<strong-password>
+# - DB_ROOT_PASSWORD=<strong-root-password>
+# - SUBDOMAIN=invoiceninja
+# - DOMAIN_NAME=yourcompany.com
+
+# 5. Generate application key
+make run CMD="php artisan key:generate"
+
+# 6. Start services
+make start
+
+# 7. Wait for services to be ready
+make wait-ready URL=http://localhost:8080/health
+
+# 8. Complete web-based setup
+# Navigate to http://localhost:8080/setup
+```
+
+### Scenario 2: Migrating from Another Server
+
+**Situation:** Moving existing Invoice Ninja installation to new server.
+
+**Step-by-Step Solution:**
+
+```bash
+# On old server:
+# 1. Create backup
+./backup.sh
+
+# 2. Transfer backup to new server
+scp -r backups/latest/ user@newserver:/path/to/invoiceninja-application/backups/
+
+# On new server:
+# 3. Install and configure (steps 1-4 from Scenario 1)
+
+# 4. Restore database
+docker-compose up -d invoiceninja-application.mariadb
+sleep 15
+# Restore database securely: avoid passing the password on the command line.
+# Option 1: Prompt for password interactively (recommended)
+gunzip -c backups/latest/database.sql.gz | \
+  docker-compose exec -T invoiceninja-application.mariadb \
+  mariadb --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password invoiceninja
+
+# Option 2: Use the MARIADB_PWD environment variable for non-interactive use (less secure)
+# export MARIADB_PWD='<password>'
+# gunzip -c backups/latest/database.sql.gz | \
+#   docker-compose exec -e MARIADB_PWD -T invoiceninja-application.mariadb \
+#   mariadb --socket=/var/run/mysqld/mysqld.sock \
+#   --user=invoiceninja invoiceninja
+# 5. Restore application data
+docker volume rm invoiceninja-application-application-public-data
+docker volume create invoiceninja-application-application-public-data
+docker run --rm -v invoiceninja-application-application-public-data:/data \
+  -v $(pwd)/backups/latest:/backup \
+  busybox tar xzf /backup/application-data.tar.gz -C /data
+
+# 6. Start all services
+make start
+
+# 7. Verify migration
+curl -f http://localhost:8080/health
+```
+
+### Scenario 3: Upgrading Invoice Ninja Version
+
+**Situation:** Updating to a newer version of Invoice Ninja.
+
+**Step-by-Step Solution:**
+
+```bash
+# 1. Create backup before upgrade
+./backup.sh
+
+# 2. Stop services
+make stop
+
+# 3. Update base image version in Dockerfile
+nano ops/docker/application/Dockerfile
+# Change: FROM invoiceninja/invoiceninja:5.12.27
+# To: FROM invoiceninja/invoiceninja:5.13.0  # (example new version)
+
+# 4. Rebuild images
+docker-compose build --no-cache invoiceninja-application.application
+
+# 5. Start services
+make start
+
+# 6. Run database migrations
+make run CMD="php artisan migrate --force"
+
+# 7. Clear caches
+make run CMD="php artisan config:clear"
+make run CMD="php artisan cache:clear"
+make run CMD="php artisan view:clear"
+
+# 8. Verify upgrade
+curl -f http://localhost:8080/health
+make logs SERVICE=invoiceninja-application.application | grep -i version
+
+# 9. If issues occur, rollback
+# git checkout HEAD~1 -- ops/docker/application/Dockerfile
+# docker-compose build --no-cache
+# make start
+```
+
+### Scenario 4: Switching from MariaDB to PostgreSQL
+
+**Situation:** Changing database backend from MariaDB to PostgreSQL.
+
+**Step-by-Step Solution:**
+
+```bash
+# 1. Export data from MariaDB
+docker-compose exec invoiceninja-application.mariadb mariadb-dump \
+  --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=<password> \
+  invoiceninja > migration-backup.sql
+
+# 2. Stop services
+make stop
+
+# 3. Enable PostgreSQL in docker-compose.yml
+# Uncomment the postgres service section
+
+# 4. Update .env
+nano .env
+# Change:
+# DB_CONNECTION=mysql  →  DB_CONNECTION=pgsql
+# DB_HOST=invoiceninja-application.mariadb  →  DB_HOST=invoiceninja-application.postgres
+# DB_PORT=3306  →  DB_PORT=5432
+
+# 5. Start PostgreSQL
+docker-compose up -d invoiceninja-application.postgres
+
+# 6. Convert and import data (requires pgloader)
+# Note: This is complex - consider using migration tools or starting fresh
+
+# 7. Start application
+make start
+
+# 8. Verify database connection
+make run CMD="php artisan migrate:status"
+```
+
+### Scenario 5: Recovering from Failed Update
+
+**Situation:** Update failed and application is not working.
+
+**Step-by-Step Solution:**
+
+```bash
+# 1. Stop all services
+make stop
+
+# 2. Check Docker logs for errors
+docker-compose logs --tail=100
+
+# 3. Restore from last known good backup
+LATEST_BACKUP=$(ls -1d backups/backup_* | tail -2 | head -1)
+echo "Restoring from: $LATEST_BACKUP"
+
+# 4. Restore database
+docker volume rm invoiceninja-application-mariadb-data
+docker volume create invoiceninja-application-mariadb-data
+docker-compose up -d invoiceninja-application.mariadb
+sleep 15
+
+gunzip -c "$LATEST_BACKUP/database.sql.gz" | \
+  docker-compose exec -T invoiceninja-application.mariadb \
+  mariadb --socket=/var/run/mysqld/mysqld.sock \
+  --user=invoiceninja --password=<password> invoiceninja
+
+# 5. Restore application data
+docker volume rm invoiceninja-application-application-public-data
+docker volume create invoiceninja-application-application-public-data
+docker run --rm -v invoiceninja-application-application-public-data:/data \
+  -v $(pwd)/$LATEST_BACKUP:/backup \
+  busybox tar xzf /backup/application-data.tar.gz -C /data
+
+# 6. Revert code changes
+git log --oneline -10  # Find last good commit
+git reset --hard <commit-hash>
+
+# 7. Rebuild and start
+docker-compose build
+make start
+
+# 8. Verify recovery
+make wait-ready URL=http://localhost:8080/health
+```
+
 ## Configuration Issues
 
 ### Environment Variables Not Applied
@@ -845,8 +1061,8 @@ make start
 
 Troubleshooting procedures are based on common issues and solutions from Invoice Ninja community and Docker best practices:
 
-- **Invoice Ninja Troubleshooting Guide**, https://invoiceninja.github.io/en/troubleshooting/, Retrieved 2025-01-09
-- **Laravel Debugging Documentation**, https://laravel.com/docs/10.x/errors, Retrieved 2025-01-09
-- **Docker Troubleshooting Guide**, https://docs.docker.com/config/containers/troubleshoot/, Retrieved 2025-01-09
-- **PostgreSQL Common Problems**, https://www.postgresql.org/docs/13/problems.html, Retrieved 2025-01-09
-- **MariaDB Troubleshooting Guide**, https://mariadb.com/kb/en/troubleshooting/, Retrieved 2025-01-09
+- **Invoice Ninja Community Support**, https://invoiceninja.github.io/, Retrieved 2025-11-23
+- **Laravel Debugging Documentation**, https://laravel.com/docs/10.x/errors, Retrieved 2025-11-23
+- **Docker Troubleshooting Guide**, https://docs.docker.com/config/containers/, Retrieved 2025-11-23
+- **PostgreSQL Common Problems**, https://www.postgresql.org/docs/current/appendixes.html, Retrieved 2025-11-23
+- **MariaDB Knowledge Base**, https://mariadb.com/kb/en/, Retrieved 2025-11-23

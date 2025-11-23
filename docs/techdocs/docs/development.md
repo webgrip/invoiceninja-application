@@ -736,7 +736,7 @@ ENV_FILE=.env.production make start
 
 Development guidelines are based on Laravel best practices and Docker development workflows:
 
-- **Laravel Development Documentation**, https://laravel.com/docs/10.x, Retrieved 2025-01-09
-- **Docker Development Best Practices**, https://docs.docker.com/develop/dev-best-practices/, Retrieved 2025-01-09
-- **Invoice Ninja Developer Documentation**, https://invoiceninja.github.io/en/developer-guide/, Retrieved 2025-01-09
-- **Conventional Commits Specification**, https://www.conventionalcommits.org/, Retrieved 2025-01-09
+- **Laravel Development Documentation**, https://laravel.com/docs/10.x, Retrieved 2025-11-23
+- **Docker Development Best Practices**, https://docs.docker.com/develop/dev-best-practices/, Retrieved 2025-11-23
+- **Invoice Ninja Developer Documentation**, https://invoiceninja.github.io/en/developer-guide/, Retrieved 2025-11-23
+- **Conventional Commits Specification**, https://www.conventionalcommits.org/, Retrieved 2025-11-23

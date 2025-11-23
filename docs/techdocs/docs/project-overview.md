@@ -55,9 +55,34 @@ This deployment consists of the following components:
 All images are built and maintained by webgrip organization:
 
 - `webgrip/invoiceninja-application.application:latest` - Main Invoice Ninja application
+- `webgrip/invoiceninja-application.nginx:latest` - Nginx reverse proxy
 - `webgrip/invoiceninja-application.mariadb:latest` - MariaDB database with optimizations
 - `webgrip/invoiceninja-application.redis:latest` - Redis cache server
 - `webgrip/invoiceninja-application.postgres:latest` - PostgreSQL alternative (optional)
+
+### Version Compatibility Matrix
+
+The following versions are tested and supported in this deployment:
+
+| Component | Version | Base Image | Status | Notes |
+|-----------|---------|------------|--------|-------|
+| Invoice Ninja | 5.12.33 | `invoiceninja/invoiceninja:5.12.33` | ✓ Production | Laravel-based application |
+| Nginx | 1.26.2 | `nginx:1.26.2-alpine` | ✓ Production | Reverse proxy with SSL support |
+| MariaDB | 11.6.2 | `mariadb:11.6.2-noble` | ✓ Production | Primary database (recommended) |
+| Redis | 7.4.2 | `redis:7.4.2-alpine` | ✓ Production | Cache and session storage |
+| PostgreSQL | 17.2 | `postgres:17.2-alpine` | ○ Optional | Alternative database option |
+| PHP | 8.3 | Included in Invoice Ninja | ✓ Production | Required by Invoice Ninja |
+| Laravel | 10.x | Included in Invoice Ninja | ✓ Production | Application framework |
+
+**Legend:**
+- ✓ Production: Fully tested and production-ready
+- ○ Optional: Available but not required
+- ⚠ Development: For development use only
+
+**Update Policy:**
+- Invoice Ninja: Updated monthly or for critical security patches
+- Base images: Updated quarterly for minor versions, immediately for security issues
+- All updates are tested before deployment to production
 
 ## Image Policy
 
@@ -88,8 +113,8 @@ All images are built and maintained by webgrip organization:
 
 ## Sources
 
-All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-09:
+All information in this document is derived from official Invoice Ninja sources and verified on 2025-11-23:
 
-- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-09
-- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-09
-- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-01-09
+- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-11-23
+- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-11-23
+- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-11-23
