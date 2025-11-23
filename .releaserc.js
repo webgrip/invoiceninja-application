@@ -41,15 +41,20 @@ const releaseNotesGeneratorConfig = [
     },
     parserOpts: { noteKeywords },
     writerOpts: {
-      groupBy: 'type',
-      commitGroupsSort: 'title',
-      commitsSort: ['type', 'subject'],
-      transform: (commit) => {
-        if (!commit.scope || !commit.scope.trim()) {
-          commit.scope = 'Misc';
-        }
-        return commit;
-      },
+        groupBy: 'type',
+        commitGroupsSort: 'title',
+        commitsSort: ['type', 'subject'],
+        transform: (commit) => {
+            const scope =
+            !commit.scope || !commit.scope.trim()
+                ? 'Misc'
+                : commit.scope;
+
+            return {
+                ...commit,
+                scope,
+            };
+        },
     },
   },
 ];
