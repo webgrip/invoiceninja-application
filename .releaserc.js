@@ -35,33 +35,22 @@ const releaseNotesGeneratorConfig = [
         { type: 'perf', section: 'Performance' },
         { type: 'refactor', section: 'Changed' },
         { type: 'chore', section: 'Internal', hidden: true },
-        { type: 'docs', section: 'Docs', hidden: true },
-        { type: 'test', section: 'Tests', hidden: true },
+        { type: 'docs', section: 'Docs', hidden: false },
+        { type: 'test', section: 'Tests', hidden: false },
       ],
     },
     parserOpts: { noteKeywords },
-    writerOpts: {
-      transform: (commit) => {
-        const next = { ...commit };
-
-        if (!next.scope || !next.scope.trim()) {
-          next.scope = 'Misc';
-        }
-
-        return next;
-      },
-    },
   },
 ];
 
 
 // Keep this commented out as you wanted
-// const npmConfig = [
-//   '@semantic-release/npm',
-//   {
-//     npmPublish: false,
-//   },
-// ];
+const npmConfig = [
+  '@semantic-release/npm',
+  {
+    npmPublish: false,
+  },
+];
 
 const changelogConfig = [
   '@semantic-release/changelog',
@@ -94,7 +83,7 @@ const isMainBranch = branchName === 'main';
 const plugins = [
   commitAnalyzerConfig,
   releaseNotesGeneratorConfig,
-  // npmConfig,
+  npmConfig,
   ...(isMainBranch ? [changelogConfig, gitConfig] : []),
   execConfig,
   '@semantic-release/github',
