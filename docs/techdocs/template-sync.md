@@ -25,7 +25,7 @@ The following files are automatically synchronized from the template to target r
 ### Configuration Files
 - `.editorconfig` - Editor configuration for consistent code formatting
 - `.gitignore` - Git ignore patterns
-- `.releaserc.json` - Semantic release configuration
+- `.releaserc.js` - Semantic release configuration
 
 ### Development Tools
 - `.vscode/settings.json` - VSCode workspace settings
