@@ -1053,8 +1053,8 @@ make start
 
 Troubleshooting procedures are based on common issues and solutions from Invoice Ninja community and Docker best practices:
 
-- **Invoice Ninja Community Support**, https://invoiceninja.github.io/, Retrieved 2025-01-16
-- **Laravel Debugging Documentation**, https://laravel.com/docs/10.x/errors, Retrieved 2025-01-16
-- **Docker Troubleshooting Guide**, https://docs.docker.com/config/containers/, Retrieved 2025-01-16
-- **PostgreSQL Common Problems**, https://www.postgresql.org/docs/current/appendixes.html, Retrieved 2025-01-16
-- **MariaDB Knowledge Base**, https://mariadb.com/kb/en/, Retrieved 2025-01-16
+- **Invoice Ninja Community Support**, https://invoiceninja.github.io/, Retrieved 2025-11-23
+- **Laravel Debugging Documentation**, https://laravel.com/docs/10.x/errors, Retrieved 2025-11-23
+- **Docker Troubleshooting Guide**, https://docs.docker.com/config/containers/, Retrieved 2025-11-23
+- **PostgreSQL Common Problems**, https://www.postgresql.org/docs/current/appendixes.html, Retrieved 2025-11-23
+- **MariaDB Knowledge Base**, https://mariadb.com/kb/en/, Retrieved 2025-11-23

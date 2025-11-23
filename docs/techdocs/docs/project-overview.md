@@ -66,7 +66,7 @@ The following versions are tested and supported in this deployment:
 
 | Component | Version | Base Image | Status | Notes |
 |-----------|---------|------------|--------|-------|
-| Invoice Ninja | 5.12.27 | `invoiceninja/invoiceninja:5.12.27` | ✓ Production | Laravel-based application |
+| Invoice Ninja | 5.12.33 | `invoiceninja/invoiceninja:5.12.33` | ✓ Production | Laravel-based application |
 | Nginx | 1.26.2 | `nginx:1.26.2-alpine` | ✓ Production | Reverse proxy with SSL support |
 | MariaDB | 11.6.2 | `mariadb:11.6.2-noble` | ✓ Production | Primary database (recommended) |
 | Redis | 7.4.2 | `redis:7.4.2-alpine` | ✓ Production | Cache and session storage |
@@ -113,8 +113,8 @@ The following versions are tested and supported in this deployment:
 
 ## Sources
 
-All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-16:
+All information in this document is derived from official Invoice Ninja sources and verified on 2025-11-23:
 
-- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-01-16
-- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-01-16
-- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-01-16
+- **Invoice Ninja Official Documentation**, https://invoiceninja.github.io/, Retrieved 2025-11-23
+- **Invoice Ninja GitHub Repository**, https://github.com/invoiceninja/invoiceninja, Retrieved 2025-11-23
+- **Invoice Ninja Docker Hub**, https://hub.docker.com/r/invoiceninja/invoiceninja, Retrieved 2025-11-23

@@ -593,8 +593,8 @@ chmod +x emergency-restart.sh emergency-db-fix.sh
 
 Operational procedures are based on Docker best practices and Invoice Ninja maintenance guidelines:
 
-- **Docker Production Operations**, https://docs.docker.com/config/containers/logging/, Retrieved 2025-01-16
-- **PostgreSQL Maintenance Documentation**, https://www.postgresql.org/docs/current/maintenance.html, Retrieved 2025-01-16
-- **MariaDB Administration Guide**, https://mariadb.com/kb/en/, Retrieved 2025-01-16
-- **Laravel Optimization Guide**, https://laravel.com/docs/10.x/deployment#optimization, Retrieved 2025-01-16
-- **Redis Administration Guide**, https://redis.io/docs/latest/operate/oss_and_stack/management/, Retrieved 2025-01-16
+- **Docker Production Operations**, https://docs.docker.com/config/containers/logging/, Retrieved 2025-11-23
+- **PostgreSQL Maintenance Documentation**, https://www.postgresql.org/docs/current/maintenance.html, Retrieved 2025-11-23
+- **MariaDB Administration Guide**, https://mariadb.com/kb/en/, Retrieved 2025-11-23
+- **Laravel Optimization Guide**, https://laravel.com/docs/10.x/deployment#optimization, Retrieved 2025-11-23
+- **Redis Administration Guide**, https://redis.io/docs/latest/operate/oss_and_stack/management/, Retrieved 2025-11-23

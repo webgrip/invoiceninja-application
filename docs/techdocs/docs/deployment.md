@@ -600,6 +600,6 @@ Before deploying Invoice Ninja to production, complete the following security an
 
 Deployment procedures are based on Docker Compose best practices and Invoice Ninja installation guidelines:
 
-- **Docker Compose Production Guide**, https://docs.docker.com/compose/production/, Retrieved 2025-01-16
-- **Invoice Ninja Self-Hosting Guide**, https://invoiceninja.github.io/en/self-host/, Retrieved 2025-01-16
-- **Laravel Deployment Best Practices**, https://laravel.com/docs/10.x/deployment, Retrieved 2025-01-16
+- **Docker Compose Production Guide**, https://docs.docker.com/compose/production/, Retrieved 2025-11-23
+- **Invoice Ninja Self-Hosting Guide**, https://invoiceninja.github.io/en/self-host/, Retrieved 2025-11-23
+- **Laravel Deployment Best Practices**, https://laravel.com/docs/10.x/deployment, Retrieved 2025-11-23
