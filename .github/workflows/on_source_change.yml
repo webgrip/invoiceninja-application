@@ -6,12 +6,14 @@ concurrency:
 on:
   push:
     branches:
-      - 'main'
+      - '**'
     paths:
       - 'ops/**'
       - 'src/**'
       - '.releaserc.json'
+      - '.releaserc.js'
       - '.github/workflows/on_source_change.yml'
+      - '.github/workflows/on_release_published.yml'
 
 jobs:
   static-analysis:
@@ -20,49 +22,22 @@ jobs:
 
   test:
     name: 'Test'
-    needs: [ static-analysis ]
+    needs: [static-analysis]
     if: >
       always()
       && needs.static-analysis.result == 'success'
     uses: webgrip/workflows/.github/workflows/application-test.yml@main
 
-  release:
+  release-publish:
     name: 'Release'
-    needs: [ static-analysis, test ]
+    needs: [static-analysis, test]
     if: >
       always()
+      && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release'))
       && needs.static-analysis.result == 'success'
       && needs.test.result == 'success'
-    uses: webgrip/workflows/.github/workflows/application-release.yml@main
+    uses: webgrip/workflows/.github/workflows/application-release-publish.yml@main
     secrets:
       WEBGRIP_CI_APP_ID: ${{ secrets.WEBGRIP_CI_APP_ID }}
       WEBGRIP_CI_APP_PRIVATE_KEY: ${{ secrets.WEBGRIP_CI_APP_PRIVATE_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
-  deploy:
-    name: 'Deploy'
-    uses: webgrip/workflows/.github/workflows/application-deploy.yml@main
-    needs: [ static-analysis, test, release ]
-    if: >
-      always()
-      && needs.static-analysis.result == 'success'
-      && needs.test.result == 'success'
-      && needs.release.result == 'success'
-      && needs.release.outputs.version != ''
-    secrets:
-      DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-    with:
-      version: ${{ needs.release.outputs.version }}
-      environment: 'staging'
-
-  deploy-secrets:
-    name: 'Deploy Secrets'
-    uses: webgrip/workflows/.github/workflows/application-deploy-secrets.yml@main
-    secrets:
-      DIGITAL_OCEAN_API_KEY: ${{ secrets.DIGITAL_OCEAN_API_KEY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}

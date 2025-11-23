@@ -27,7 +27,7 @@
 ## Features
 
 - Automated template file synchronization (opt‑in per repo by GitHub topic)
-- Semantic release readiness (`.releaserc.json` included)
+- Semantic release readiness (`.releaserc.js` included)
 - Encrypted secrets workflow (age / SOPS)
 - Curated GitHub workflow set (docs changes, source changes)
 - Opinionated baseline configs: EditorConfig, VSCode settings, .gitignore
@@ -46,7 +46,7 @@ This repository serves as a template that can automatically sync certain files t
 | Category | Files |
 | -------- | ----- |
 | Workflows | `.github/workflows/*.yml` (selected core automation) |
-| Config | `.editorconfig`, `.gitignore`, `.releaserc.json` |
+| Config | `.editorconfig`, `.gitignore`, `.releaserc.js` |
 | Dev UX | `.vscode/settings.json` |
 
 These represent the "source of truth"; local divergent changes in target repos will be overwritten (review PRs carefully).

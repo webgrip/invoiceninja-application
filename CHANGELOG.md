@@ -1,3 +1,217 @@
+## [1.0.74](https://github.com/webgrip/invoiceninja-application/compare/1.0.73...1.0.74) (2025-11-23)
+
+### Fixed
+
+* put back in the npm stuff and removed writerOpts ([c8d5c7b](https://github.com/webgrip/invoiceninja-application/commit/c8d5c7beb1fc81c1dc77b87b269cf2ea242e0cdd))
+
+## [1.0.73](https://github.com/webgrip/invoiceninja-application/compare/1.0.72...1.0.73) (2025-11-23)
+
+### refactor
+
+* **Misc:** removed unnecessary comments ([](https://github.com/webgrip/invoiceninja-application/commit/7028ca52dcfef37c74a79979d53e74031ca9bfae))
+
+### fix
+
+* **Misc:** less noisy release notes ([](https://github.com/webgrip/invoiceninja-application/commit/9d6c3c2723f8403d668befbaa1edcd46da82b4f9))
+
+## [1.0.72](https://github.com/webgrip/invoiceninja-application/compare/1.0.71...1.0.72) (2025-11-23)
+
+### docs
+
+* **Misc:** .releaserc.js instead of json ([](https://github.com/webgrip/invoiceninja-application/commit/9d1b2740bc4e169558c85389eb656dbe737c4c68))
+
+### fix
+
+* **Misc:**  split up release publish and distribute and replaced .releaserc.json with .releaserc.js ([](https://github.com/webgrip/invoiceninja-application/commit/a0ea3a76ac776f44d35c8b08fbd0717826d92ba9))
+* **Misc:** also run new releases on .releaserc.js changes ([](https://github.com/webgrip/invoiceninja-application/commit/f50c6e16b79845f9de81d35a8e9fc835e84ca451))
+* **Misc:** deploy ([](https://github.com/webgrip/invoiceninja-application/commit/2b86f92141bd0f10d71ff5c8a3a3877e6dd5d386))
+* **Misc:** deploy ([](https://github.com/webgrip/invoiceninja-application/commit/1a6bbcccba4dd489ac2936da586ab631c0680464))
+* **Misc:** don't change immutable commit object ([](https://github.com/webgrip/invoiceninja-application/commit/497ee9ff4a798403cc1a8d907475b2dad9e719dd))
+* **Misc:** don't publish on NPM when not necessary ([](https://github.com/webgrip/invoiceninja-application/commit/617d1de929a08d92cb868e9aedb993cd8ed5bc7c))
+* **Misc:** no longer use npmConfig ([](https://github.com/webgrip/invoiceninja-application/commit/df36869a3f50b99ec995ed4ad24b3383a94d690c))
+* **Misc:** use cjs ([](https://github.com/webgrip/invoiceninja-application/commit/fced698fe1943c7a3af0bc7293637d41f31acd97))
+
+## [1.0.71](https://github.com/webgrip/invoiceninja-application/compare/1.0.70...1.0.71) (2025-11-22)
+
+### Fixed
+
+* added release branch for rc ([209171b](https://github.com/webgrip/invoiceninja-application/commit/209171b72a57b99c5d049fa4e0abbc3b80217451))
+* making sure it triggers release/ ([26a248e](https://github.com/webgrip/invoiceninja-application/commit/26a248e123ce1d4ae94d67835070a3284f19d3a0))
+* split up release publish and distribute ([40c59b3](https://github.com/webgrip/invoiceninja-application/commit/40c59b3ceb251d2c55078e7b52bd4f2b05b4b6fa))
+* test ([7bfd906](https://github.com/webgrip/invoiceninja-application/commit/7bfd906e9fc5e391f5470e895ed06e11a8056123))
+
+## [1.0.70](https://github.com/webgrip/invoiceninja-application/compare/1.0.69...1.0.70) (2025-11-22)
+
+### Fixed
+
+* deploy ([91778b6](https://github.com/webgrip/invoiceninja-application/commit/91778b6c2097cf1ccde941fea53e4425847ed925))
+
+## [1.0.70-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.69...1.0.70-dev.1) (2025-11-22)
+
+### Fixed
+
+* removed whitespace, checking dev release channel ([bd03b35](https://github.com/webgrip/invoiceninja-application/commit/bd03b35b8064a53f42fd81be5931b559040bebb1))
+
+## [1.0.69](https://github.com/webgrip/invoiceninja-application/compare/1.0.68...1.0.69) (2025-11-22)
+
+### Changed
+
+* fixed typo ([0f2dfc1](https://github.com/webgrip/invoiceninja-application/commit/0f2dfc1474083baa214f4d2df83a3be65f6968fa))
+
+### Fixed
+
+* added on_release_published to the on_source_change.yml ([2cd7523](https://github.com/webgrip/invoiceninja-application/commit/2cd7523146b41a78f820ea2e1172ddfc92d6983e))
+
+## [1.0.68](https://github.com/webgrip/invoiceninja-application/compare/1.0.67...1.0.68) (2025-11-22)
+
+### Fixed
+
+* split up on release and on source change. Far from all pushes will need a release ([7c767da](https://github.com/webgrip/invoiceninja-application/commit/7c767da67a140461827ee30322c03dea4ccbff88))
+
+## [1.0.67](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67) (2025-11-22)
+
+### Fixed
+
+* always run on_source_change, for every branch ([e91c53e](https://github.com/webgrip/invoiceninja-application/commit/e91c53e110497fc201a96a50c59ab31044301884))
+
+## [1.0.67-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.66...1.0.67-dev.1) (2025-11-22)
+
+### Fixed
+
+* **docker:** dockerfile whitespace ([ed96488](https://github.com/webgrip/invoiceninja-application/commit/ed96488d7eb9394c7f831f297aef3f56dee7c578))
+
+## [1.0.66](https://github.com/webgrip/invoiceninja-application/compare/1.0.65...1.0.66) (2025-11-22)
+
+### Fixed
+
+* just do this manually then ([c00893c](https://github.com/webgrip/invoiceninja-application/commit/c00893c42628234f89b018f5927eaf867b9c7c41))
+
+## [1.0.65](https://github.com/webgrip/invoiceninja-application/compare/1.0.64...1.0.65) (2025-11-22)
+
+### Fixed
+
+* Release ([c4d923f](https://github.com/webgrip/invoiceninja-application/commit/c4d923fd7c37f4a4076cad38cfe8a78dc094e3d4))
+
+## [1.0.65-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.64...1.0.65-dev.1) (2025-11-22)
+
+### Fixed
+
+* change one ([145c30a](https://github.com/webgrip/invoiceninja-application/commit/145c30a4f15973547c365b7c92a99cc3b1859c52))
+
+## [1.0.64](https://github.com/webgrip/invoiceninja-application/compare/1.0.63...1.0.64) (2025-11-22)
+
+### Fixed
+
+* removed unused workflow file and write notes based on type instead of scope ([bdd715d](https://github.com/webgrip/invoiceninja-application/commit/bdd715db54c52b496cf142c2c6e47bb308ab60e1))
+
+## [1.0.63](https://github.com/webgrip/invoiceninja-application/compare/1.0.62...1.0.63) (2025-11-22)
+
+* double newline so that it looks pretty :D ([e1a1924](https://github.com/webgrip/invoiceninja-application/commit/e1a1924822bb9ce231ff480610f4c6cac9b6332b))
+
+## [1.0.62](https://github.com/webgrip/invoiceninja-application/compare/1.0.61...1.0.62) (2025-11-22)
+
+* no longer use the words that shall not be spoken in commit messages ([c763c44](https://github.com/webgrip/invoiceninja-application/commit/c763c44049268c52de63ddd400b3d8db6ab5f43d))
+* removed whitespace ([0964ff3](https://github.com/webgrip/invoiceninja-application/commit/0964ff380ccf793d62668a1d1d2bd3fcc641a719))
+
+## [1.0.62-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.61...1.0.62-dev.1) (2025-11-22)
+
+* removed whitespace ([ec94580](https://github.com/webgrip/invoiceninja-application/commit/ec94580eedd364add46527358b3e0b8484401555))
+
+## [1.0.61](https://github.com/webgrip/invoiceninja-application/compare/1.0.60...1.0.61) (2025-11-22)
+
+* test ([#24](https://github.com/webgrip/invoiceninja-application/issues/24)) ([69c6b5e](https://github.com/webgrip/invoiceninja-application/commit/69c6b5e42584bbad91f6146c9f338644a766efa3))
+
+## [1.0.61-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.60...1.0.61-dev.1) (2025-11-22)
+
+* test ([e0ba6f4](https://github.com/webgrip/invoiceninja-application/commit/e0ba6f437b58fa6f6a240189ccf16b9e98c613cb))
+
+## [1.0.60](https://github.com/webgrip/invoiceninja-application/compare/1.0.59...1.0.60) (2025-11-22)
+
+* release state ([12a8b99](https://github.com/webgrip/invoiceninja-application/commit/12a8b99a5b1239c446a074a4c04cb2876daed7a3))
+
+## [1.0.59](https://github.com/webgrip/invoiceninja-application/compare/1.0.58...1.0.59) (2025-11-22)
+
+* test ([d8c7140](https://github.com/webgrip/invoiceninja-application/commit/d8c7140facd44954c0b215199d662babc9f681b4))
+* updated upstream invoiceninja from 5.12.27 to 5.12.33 ([#23](https://github.com/webgrip/invoiceninja-application/issues/23)) ([e5ed81c](https://github.com/webgrip/invoiceninja-application/commit/e5ed81c9184e13abaf072e40f4d8988b4da17b1e)), closes [#22](https://github.com/webgrip/invoiceninja-application/issues/22)
+
+## [1.0.59-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.58...1.0.59-dev.1) (2025-11-22)
+
+* updated upstream invoiceninja from 5.12.27 to 5.12.33 ([#22](https://github.com/webgrip/invoiceninja-application/issues/22)) ([753ee8f](https://github.com/webgrip/invoiceninja-application/commit/753ee8fefdcdc060470e71aea70ced042c3dcf00))
+
+## [1.0.58](https://github.com/webgrip/invoiceninja-application/compare/1.0.57...1.0.58) (2025-11-22)
+
+* added whitespace in Dockerfile to try and trigger the pipeline on merge from development to main ([#21](https://github.com/webgrip/invoiceninja-application/issues/21)) ([702568b](https://github.com/webgrip/invoiceninja-application/commit/702568bea80c378d232d62930c9886b708223043))
+
+## [1.0.57](https://github.com/webgrip/invoiceninja-application/compare/1.0.56...1.0.57) (2025-11-22)
+
+* change([#20](https://github.com/webgrip/invoiceninja-application/issues/20)) ([5707792](https://github.com/webgrip/invoiceninja-application/commit/57077923b866960d8d08b1a96fd95be44015a136))
+* release state again ([8e36f75](https://github.com/webgrip/invoiceninja-application/commit/8e36f7567c22edac1cc0fce91094c3eb91bca56a))
+
+## [1.0.57-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.56...1.0.57-dev.1) (2025-11-22)
+
+* change ([895df39](https://github.com/webgrip/invoiceninja-application/commit/895df39cbc779d53e0fea3d6b3e9565c16e1e555))
+
+## [1.0.56](https://github.com/webgrip/invoiceninja-application/compare/1.0.55...1.0.56) (2025-11-22)
+
+* Make a change([#19](https://github.com/webgrip/invoiceninja-application/issues/19)) ([108b7d9](https://github.com/webgrip/invoiceninja-application/commit/108b7d97a92c66f7f9562bf8c733e9575ba44689))
+* wtf ([a64eb9a](https://github.com/webgrip/invoiceninja-application/commit/a64eb9aa4755002f126cd7be5bd1e6edf459f543))
+
+### workflows
+
+* **workflows:** run workflow on PR merge to main, fixing gh action bug ([38f047e](https://github.com/webgrip/invoiceninja-application/commit/38f047e6378978a4fbec807f1e5ce32e84b6b323))
+
+## [1.0.56-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.55...1.0.56-dev.1) (2025-11-22)
+
+* Make a change ([5bfbd3c](https://github.com/webgrip/invoiceninja-application/commit/5bfbd3c32232e97050593f80fa8fabdff749ef41))
+
+## [1.0.55](https://github.com/webgrip/invoiceninja-application/compare/1.0.54...1.0.55) (2025-11-22)
+
+* please ([92569bd](https://github.com/webgrip/invoiceninja-application/commit/92569bd44628808043caf741b94d7f16f6fa522e))
+* whitespace added back in ([e3f377b](https://github.com/webgrip/invoiceninja-application/commit/e3f377bc124faa68a33cac030cfa1c426aa92a10))
+* whitespace added back in ([#18](https://github.com/webgrip/invoiceninja-application/issues/18)) ([27f4896](https://github.com/webgrip/invoiceninja-application/commit/27f4896dff5ec83a913eed7fe031968beebec261))
+* whitespace removed ([#17](https://github.com/webgrip/invoiceninja-application/issues/17)) ([89541fd](https://github.com/webgrip/invoiceninja-application/commit/89541fdf5be7e8726f81bdf2bf7a736ae3a1f82c))
+
+## [1.0.55-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.54...1.0.55-dev.1) (2025-11-22)
+
+* whitespace added back in ([e3f377b](https://github.com/webgrip/invoiceninja-application/commit/e3f377bc124faa68a33cac030cfa1c426aa92a10))
+* whitespace removed ([#17](https://github.com/webgrip/invoiceninja-application/issues/17)) ([89541fd](https://github.com/webgrip/invoiceninja-application/commit/89541fdf5be7e8726f81bdf2bf7a736ae3a1f82c))
+
+## [1.0.55-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.54...1.0.55-dev.1) (2025-11-22)
+
+* whitespace removed ([0a0e878](https://github.com/webgrip/invoiceninja-application/commit/0a0e8786c0c0a9f6c31603eebca69b6392f020b9))
+
+## [1.0.54](https://github.com/webgrip/invoiceninja-application/compare/1.0.53...1.0.54) (2025-11-21)
+
+* test ([c56ade8](https://github.com/webgrip/invoiceninja-application/commit/c56ade839f20416aba885e675b94202af13730e3))
+
+## [1.0.54-dev.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.53...1.0.54-dev.1) (2025-11-21)
+
+* remove commented-out prepare-release-from-development job ([dd6f138](https://github.com/webgrip/invoiceninja-application/commit/dd6f138e34e354139bfbc2abb4e017df4b502b0b))
+* restrict release job to main and development branches ([9ac9abe](https://github.com/webgrip/invoiceninja-application/commit/9ac9abef8c4de126cbeb9e1db758e2a1abe5e4e4))
+* try running semantic release on the prerelease channe ([141ecf3](https://github.com/webgrip/invoiceninja-application/commit/141ecf354f4891d1c0743d2caeb35529ce5ff763))
+
+## [1.0.53](https://github.com/webgrip/invoiceninja-application/compare/1.0.52...1.0.53) (2025-11-21)
+
+* added development release channel for prereleases ([ddc3a84](https://github.com/webgrip/invoiceninja-application/commit/ddc3a84e9660befd6ce275ed9378661d31193bef))
+* try running semantic release on the prerelease channe ([141ecf3](https://github.com/webgrip/invoiceninja-application/commit/141ecf354f4891d1c0743d2caeb35529ce5ff763))
+
+## [1.0.52](https://github.com/webgrip/invoiceninja-application/compare/1.0.51...1.0.52) (2025-11-21)
+
+* checkout and added perms ([9aa8e5d](https://github.com/webgrip/invoiceninja-application/commit/9aa8e5daff1a038a056da7649564fd93f0124388))
+* removed comment ([1778dc9](https://github.com/webgrip/invoiceninja-application/commit/1778dc98c43f77fd33f9a69cbf1edd3879142834))
+* send GH token to step, so that it can call graphql ([d3a2e7b](https://github.com/webgrip/invoiceninja-application/commit/d3a2e7b1ad28e58eca5ae913d381423588eca499))
+
+## [1.0.52] - 2025-11-21
+
+## [1.0.51](https://github.com/webgrip/invoiceninja-application/compare/1.0.50...1.0.51) (2025-11-21)
+
+* actually use the github action prepare-release-action ([e5694a7](https://github.com/webgrip/invoiceninja-application/commit/e5694a7a1b3b18ab91c759b430e3314bdf66f675))
+* made sure required env vars exist for the copilot workloads ([e760154](https://github.com/webgrip/invoiceninja-application/commit/e7601542eafeb816a6557f8bcd4b713c89990a50))
+* only do release and deploy stuff on main, but add development for the other steps ([f055a74](https://github.com/webgrip/invoiceninja-application/commit/f055a7424de038db0878e98d3553d11e9e9deaf8))
+* rerun ([c449722](https://github.com/webgrip/invoiceninja-application/commit/c4497221c6b5116d1973ee2148d0ba74e0b64fd4))
+* run again ([157d6fa](https://github.com/webgrip/invoiceninja-application/commit/157d6fa2045198d06115681c8a2e86d60025d40d))
+* use run on arc set and steps for prepare-release ([e2b0235](https://github.com/webgrip/invoiceninja-application/commit/e2b0235eb8f75e2588326f2cafcf8238cc17ae95))
+
 ## [1.0.50](https://github.com/webgrip/invoiceninja-application/compare/1.0.49...1.0.50) (2025-09-08)
 
 
