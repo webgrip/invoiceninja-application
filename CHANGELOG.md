@@ -1,3 +1,9 @@
+## [1.0.74](https://github.com/webgrip/invoiceninja-application/compare/1.0.73...1.0.74) (2025-11-23)
+
+### Fixed
+
+* put back in the npm stuff and removed writerOpts ([c8d5c7b](https://github.com/webgrip/invoiceninja-application/commit/c8d5c7beb1fc81c1dc77b87b269cf2ea242e0cdd))
+
 ## [1.0.73](https://github.com/webgrip/invoiceninja-application/compare/1.0.72...1.0.73) (2025-11-23)
 
 ### refactor

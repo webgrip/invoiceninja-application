@@ -1,6 +1,6 @@
 {
   "name": "invoiceninja-application",
-  "version": "1.0.0",
+  "version": "1.0.74",
   "description": "Containerized deployment solution for Invoice Ninja invoicing and billing application",
   "directories": {
     "doc": "docs",
