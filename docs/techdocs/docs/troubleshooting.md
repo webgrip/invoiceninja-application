@@ -833,7 +833,7 @@ make logs SERVICE=invoiceninja-application.application | grep -i version
 # 1. Export data from MariaDB
 docker-compose exec invoiceninja-application.mariadb mariadb-dump \
   --socket=/var/run/mysqld/mysqld.sock \
-  --user=invoiceninja --password=invoiceninja \
+  --user=invoiceninja --password=<password> \
   invoiceninja > migration-backup.sql
 
 # 2. Stop services
