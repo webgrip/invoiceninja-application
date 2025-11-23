@@ -283,6 +283,13 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#version-compatibility-matrix">
+<span class="md-ellipsis">
+      Version Compatibility Matrix
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -418,10 +425,83 @@
 <p>All images are built and maintained by webgrip organization:</p>
 <ul>
 <li><code>webgrip/invoiceninja-application.application:latest</code> - Main Invoice Ninja application</li>
+<li><code>webgrip/invoiceninja-application.nginx:latest</code> - Nginx reverse proxy</li>
 <li><code>webgrip/invoiceninja-application.mariadb:latest</code> - MariaDB database with optimizations</li>
 <li><code>webgrip/invoiceninja-application.redis:latest</code> - Redis cache server</li>
 <li><code>webgrip/invoiceninja-application.postgres:latest</code> - PostgreSQL alternative (optional)</li>
 </ul>
+<h3 id="version-compatibility-matrix">Version Compatibility Matrix<a class="headerlink" href="#version-compatibility-matrix" title="Permanent link">¶</a></h3>
+<p>The following versions are tested and supported in this deployment:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version</th>
+<th>Base Image</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invoice Ninja</td>
+<td>5.12.33</td>
+<td><code>invoiceninja/invoiceninja:5.12.33</code></td>
+<td>✓ Production</td>
+<td>Laravel-based application</td>
+</tr>
+<tr>
+<td>Nginx</td>
+<td>1.26.2</td>
+<td><code>nginx:1.26.2-alpine</code></td>
+<td>✓ Production</td>
+<td>Reverse proxy with SSL support</td>
+</tr>
+<tr>
+<td>MariaDB</td>
+<td>11.6.2</td>
+<td><code>mariadb:11.6.2-noble</code></td>
+<td>✓ Production</td>
+<td>Primary database (recommended)</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>7.4.2</td>
+<td><code>redis:7.4.2-alpine</code></td>
+<td>✓ Production</td>
+<td>Cache and session storage</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>17.2</td>
+<td><code>postgres:17.2-alpine</code></td>
+<td>○ Optional</td>
+<td>Alternative database option</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>8.3</td>
+<td>Included in Invoice Ninja</td>
+<td>✓ Production</td>
+<td>Required by Invoice Ninja</td>
+</tr>
+<tr>
+<td>Laravel</td>
+<td>10.x</td>
+<td>Included in Invoice Ninja</td>
+<td>✓ Production</td>
+<td>Application framework</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Legend:</strong>
+- ✓ Production: Fully tested and production-ready
+- ○ Optional: Available but not required
+- ⚠ Development: For development use only</p>
+<p><strong>Update Policy:</strong>
+- Invoice Ninja: Updated monthly or for critical security patches
+- Base images: Updated quarterly for minor versions, immediately for security issues
+- All updates are tested before deployment to production</p>
 <h2 id="image-policy">Image Policy<a class="headerlink" href="#image-policy" title="Permanent link">¶</a></h2>
 <p><strong>Organizational Policy:</strong> All production deployments use organization-built images to ensure:</p>
 <ul>
@@ -455,11 +535,11 @@
 └── Makefile               # Operational commands
 </code></pre></div></td></tr></table></div>
 <h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">¶</a></h2>
-<p>All information in this document is derived from official Invoice Ninja sources and verified on 2025-01-09:</p>
+<p>All information in this document is derived from official Invoice Ninja sources and verified on 2025-11-23:</p>
 <ul>
-<li><strong>Invoice Ninja Official Documentation</strong>, <a href="https://invoiceninja.github.io/">https://invoiceninja.github.io/</a>, Retrieved 2025-01-09</li>
-<li><strong>Invoice Ninja GitHub Repository</strong>, <a href="https://github.com/invoiceninja/invoiceninja">https://github.com/invoiceninja/invoiceninja</a>, Retrieved 2025-01-09</li>
-<li><strong>Invoice Ninja Docker Hub</strong>, <a href="https://hub.docker.com/r/invoiceninja/invoiceninja">https://hub.docker.com/r/invoiceninja/invoiceninja</a>, Retrieved 2025-01-09</li>
+<li><strong>Invoice Ninja Official Documentation</strong>, <a href="https://invoiceninja.github.io/">https://invoiceninja.github.io/</a>, Retrieved 2025-11-23</li>
+<li><strong>Invoice Ninja GitHub Repository</strong>, <a href="https://github.com/invoiceninja/invoiceninja">https://github.com/invoiceninja/invoiceninja</a>, Retrieved 2025-11-23</li>
+<li><strong>Invoice Ninja Docker Hub</strong>, <a href="https://hub.docker.com/r/invoiceninja/invoiceninja">https://hub.docker.com/r/invoiceninja/invoiceninja</a>, Retrieved 2025-11-23</li>
 </ul>
 </article>
 </div>

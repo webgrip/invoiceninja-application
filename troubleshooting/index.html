@@ -440,6 +440,52 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#common-deployment-scenarios">
+<span class="md-ellipsis">
+      Common Deployment Scenarios
+    </span>
+</a>
+<nav aria-label="Common Deployment Scenarios" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scenario-1-fresh-installation-on-new-server">
+<span class="md-ellipsis">
+      Scenario 1: Fresh Installation on New Server
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scenario-2-migrating-from-another-server">
+<span class="md-ellipsis">
+      Scenario 2: Migrating from Another Server
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scenario-3-upgrading-invoice-ninja-version">
+<span class="md-ellipsis">
+      Scenario 3: Upgrading Invoice Ninja Version
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scenario-4-switching-from-mariadb-to-postgresql">
+<span class="md-ellipsis">
+      Scenario 4: Switching from MariaDB to PostgreSQL
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scenario-5-recovering-from-failed-update">
+<span class="md-ellipsis">
+      Scenario 5: Recovering from Failed Update
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#configuration-issues">
 <span class="md-ellipsis">
       Configuration Issues
@@ -1376,6 +1422,360 @@ cat<span class="w"> </span>.dockerignore
 <span class="c1"># Verify required files are present</span>
 ls<span class="w"> </span>-la<span class="w"> </span>ops/docker/application/
 </code></pre></div></td></tr></table></div>
+<h2 id="common-deployment-scenarios">Common Deployment Scenarios<a class="headerlink" href="#common-deployment-scenarios" title="Permanent link">¶</a></h2>
+<h3 id="scenario-1-fresh-installation-on-new-server">Scenario 1: Fresh Installation on New Server<a class="headerlink" href="#scenario-1-fresh-installation-on-new-server" title="Permanent link">¶</a></h3>
+<p><strong>Situation:</strong> Installing Invoice Ninja on a new server for the first time.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># 1. Install prerequisites</span>
+curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+<span class="c1"># Log out and back in for group changes to take effect</span>
+
+<span class="c1"># 2. Clone repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/webgrip/invoiceninja-application.git
+<span class="nb">cd</span><span class="w"> </span>invoiceninja-application
+
+<span class="c1"># 3. Configure environment</span>
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+nano<span class="w"> </span>.env<span class="w">  </span><span class="c1"># Edit with your settings</span>
+
+<span class="c1"># 4. Set required variables</span>
+<span class="c1"># - DB_PASSWORD=&lt;strong-password&gt;</span>
+<span class="c1"># - DB_ROOT_PASSWORD=&lt;strong-root-password&gt;</span>
+<span class="c1"># - SUBDOMAIN=invoiceninja</span>
+<span class="c1"># - DOMAIN_NAME=yourcompany.com</span>
+
+<span class="c1"># 5. Generate application key</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan key:generate"</span>
+
+<span class="c1"># 6. Start services</span>
+make<span class="w"> </span>start
+
+<span class="c1"># 7. Wait for services to be ready</span>
+make<span class="w"> </span>wait-ready<span class="w"> </span><span class="nv">URL</span><span class="o">=</span>http://localhost:8080/health
+
+<span class="c1"># 8. Complete web-based setup</span>
+<span class="c1"># Navigate to http://localhost:8080/setup</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="scenario-2-migrating-from-another-server">Scenario 2: Migrating from Another Server<a class="headerlink" href="#scenario-2-migrating-from-another-server" title="Permanent link">¶</a></h3>
+<p><strong>Situation:</strong> Moving existing Invoice Ninja installation to new server.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># On old server:</span>
+<span class="c1"># 1. Create backup</span>
+./backup.sh
+
+<span class="c1"># 2. Transfer backup to new server</span>
+scp<span class="w"> </span>-r<span class="w"> </span>backups/latest/<span class="w"> </span>user@newserver:/path/to/invoiceninja-application/backups/
+
+<span class="c1"># On new server:</span>
+<span class="c1"># 3. Install and configure (steps 1-4 from Scenario 1)</span>
+
+<span class="c1"># 4. Restore database</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>invoiceninja-application.mariadb
+sleep<span class="w"> </span><span class="m">15</span>
+<span class="c1"># Restore database securely: avoid passing the password on the command line.</span>
+<span class="c1"># Option 1: Prompt for password interactively (recommended)</span>
+gunzip<span class="w"> </span>-c<span class="w"> </span>backups/latest/database.sql.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>invoiceninja-application.mariadb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>mariadb<span class="w"> </span>--socket<span class="o">=</span>/var/run/mysqld/mysqld.sock<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--user<span class="o">=</span>invoiceninja<span class="w"> </span>--password<span class="w"> </span>invoiceninja
+
+<span class="c1"># Option 2: Use the MARIADB_PWD environment variable for non-interactive use (less secure)</span>
+<span class="c1"># export MARIADB_PWD='&lt;password&gt;'</span>
+<span class="c1"># gunzip -c backups/latest/database.sql.gz | \</span>
+<span class="c1">#   docker-compose exec -e MARIADB_PWD -T invoiceninja-application.mariadb \</span>
+<span class="c1">#   mariadb --socket=/var/run/mysqld/mysqld.sock \</span>
+<span class="c1">#   --user=invoiceninja invoiceninja</span>
+<span class="c1"># 5. Restore application data</span>
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>invoiceninja-application-application-public-data
+docker<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>invoiceninja-application-application-public-data
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span>invoiceninja-application-application-public-data:/data<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/backups/latest:/backup<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>busybox<span class="w"> </span>tar<span class="w"> </span>xzf<span class="w"> </span>/backup/application-data.tar.gz<span class="w"> </span>-C<span class="w"> </span>/data
+
+<span class="c1"># 6. Start all services</span>
+make<span class="w"> </span>start
+
+<span class="c1"># 7. Verify migration</span>
+curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8080/health
+</code></pre></div></td></tr></table></div>
+<h3 id="scenario-3-upgrading-invoice-ninja-version">Scenario 3: Upgrading Invoice Ninja Version<a class="headerlink" href="#scenario-3-upgrading-invoice-ninja-version" title="Permanent link">¶</a></h3>
+<p><strong>Situation:</strong> Updating to a newer version of Invoice Ninja.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># 1. Create backup before upgrade</span>
+./backup.sh
+
+<span class="c1"># 2. Stop services</span>
+make<span class="w"> </span>stop
+
+<span class="c1"># 3. Update base image version in Dockerfile</span>
+nano<span class="w"> </span>ops/docker/application/Dockerfile
+<span class="c1"># Change: FROM invoiceninja/invoiceninja:5.12.27</span>
+<span class="c1"># To: FROM invoiceninja/invoiceninja:5.13.0  # (example new version)</span>
+
+<span class="c1"># 4. Rebuild images</span>
+docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache<span class="w"> </span>invoiceninja-application.application
+
+<span class="c1"># 5. Start services</span>
+make<span class="w"> </span>start
+
+<span class="c1"># 6. Run database migrations</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan migrate --force"</span>
+
+<span class="c1"># 7. Clear caches</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan config:clear"</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan cache:clear"</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan view:clear"</span>
+
+<span class="c1"># 8. Verify upgrade</span>
+curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8080/health
+make<span class="w"> </span>logs<span class="w"> </span><span class="nv">SERVICE</span><span class="o">=</span>invoiceninja-application.application<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>version
+
+<span class="c1"># 9. If issues occur, rollback</span>
+<span class="c1"># git checkout HEAD~1 -- ops/docker/application/Dockerfile</span>
+<span class="c1"># docker-compose build --no-cache</span>
+<span class="c1"># make start</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="scenario-4-switching-from-mariadb-to-postgresql">Scenario 4: Switching from MariaDB to PostgreSQL<a class="headerlink" href="#scenario-4-switching-from-mariadb-to-postgresql" title="Permanent link">¶</a></h3>
+<p><strong>Situation:</strong> Changing database backend from MariaDB to PostgreSQL.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># 1. Export data from MariaDB</span>
+docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>invoiceninja-application.mariadb<span class="w"> </span>mariadb-dump<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--socket<span class="o">=</span>/var/run/mysqld/mysqld.sock<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--user<span class="o">=</span>invoiceninja<span class="w"> </span>--password<span class="o">=</span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>invoiceninja<span class="w"> </span>&gt;<span class="w"> </span>migration-backup.sql
+
+<span class="c1"># 2. Stop services</span>
+make<span class="w"> </span>stop
+
+<span class="c1"># 3. Enable PostgreSQL in docker-compose.yml</span>
+<span class="c1"># Uncomment the postgres service section</span>
+
+<span class="c1"># 4. Update .env</span>
+nano<span class="w"> </span>.env
+<span class="c1"># Change:</span>
+<span class="c1"># DB_CONNECTION=mysql  →  DB_CONNECTION=pgsql</span>
+<span class="c1"># DB_HOST=invoiceninja-application.mariadb  →  DB_HOST=invoiceninja-application.postgres</span>
+<span class="c1"># DB_PORT=3306  →  DB_PORT=5432</span>
+
+<span class="c1"># 5. Start PostgreSQL</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>invoiceninja-application.postgres
+
+<span class="c1"># 6. Convert and import data (requires pgloader)</span>
+<span class="c1"># Note: This is complex - consider using migration tools or starting fresh</span>
+
+<span class="c1"># 7. Start application</span>
+make<span class="w"> </span>start
+
+<span class="c1"># 8. Verify database connection</span>
+make<span class="w"> </span>run<span class="w"> </span><span class="nv">CMD</span><span class="o">=</span><span class="s2">"php artisan migrate:status"</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="scenario-5-recovering-from-failed-update">Scenario 5: Recovering from Failed Update<a class="headerlink" href="#scenario-5-recovering-from-failed-update" title="Permanent link">¶</a></h3>
+<p><strong>Situation:</strong> Update failed and application is not working.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># 1. Stop all services</span>
+make<span class="w"> </span>stop
+
+<span class="c1"># 2. Check Docker logs for errors</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+
+<span class="c1"># 3. Restore from last known good backup</span>
+<span class="nv">LATEST_BACKUP</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>-1d<span class="w"> </span>backups/backup_*<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-2<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Restoring from: </span><span class="nv">$LATEST_BACKUP</span><span class="s2">"</span>
+
+<span class="c1"># 4. Restore database</span>
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>invoiceninja-application-mariadb-data
+docker<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>invoiceninja-application-mariadb-data
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>invoiceninja-application.mariadb
+sleep<span class="w"> </span><span class="m">15</span>
+
+gunzip<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span><span class="nv">$LATEST_BACKUP</span><span class="s2">/database.sql.gz"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>invoiceninja-application.mariadb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>mariadb<span class="w"> </span>--socket<span class="o">=</span>/var/run/mysqld/mysqld.sock<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--user<span class="o">=</span>invoiceninja<span class="w"> </span>--password<span class="o">=</span>&lt;password&gt;<span class="w"> </span>invoiceninja
+
+<span class="c1"># 5. Restore application data</span>
+docker<span class="w"> </span>volume<span class="w"> </span>rm<span class="w"> </span>invoiceninja-application-application-public-data
+docker<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>invoiceninja-application-application-public-data
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span>invoiceninja-application-application-public-data:/data<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/<span class="nv">$LATEST_BACKUP</span>:/backup<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>busybox<span class="w"> </span>tar<span class="w"> </span>xzf<span class="w"> </span>/backup/application-data.tar.gz<span class="w"> </span>-C<span class="w"> </span>/data
+
+<span class="c1"># 6. Revert code changes</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10<span class="w">  </span><span class="c1"># Find last good commit</span>
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>&lt;commit-hash&gt;
+
+<span class="c1"># 7. Rebuild and start</span>
+docker-compose<span class="w"> </span>build
+make<span class="w"> </span>start
+
+<span class="c1"># 8. Verify recovery</span>
+make<span class="w"> </span>wait-ready<span class="w"> </span><span class="nv">URL</span><span class="o">=</span>http://localhost:8080/health
+</code></pre></div></td></tr></table></div>
 <h2 id="configuration-issues">Configuration Issues<a class="headerlink" href="#configuration-issues" title="Permanent link">¶</a></h2>
 <h3 id="environment-variables-not-applied">Environment Variables Not Applied<a class="headerlink" href="#environment-variables-not-applied" title="Permanent link">¶</a></h3>
 <p><strong>Symptoms:</strong>
@@ -1564,11 +1964,11 @@ make<span class="w"> </span>start
 <h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">¶</a></h2>
 <p>Troubleshooting procedures are based on common issues and solutions from Invoice Ninja community and Docker best practices:</p>
 <ul>
-<li><strong>Invoice Ninja Troubleshooting Guide</strong>, <a href="https://invoiceninja.github.io/en/troubleshooting/">https://invoiceninja.github.io/en/troubleshooting/</a>, Retrieved 2025-01-09</li>
-<li><strong>Laravel Debugging Documentation</strong>, <a href="https://laravel.com/docs/10.x/errors">https://laravel.com/docs/10.x/errors</a>, Retrieved 2025-01-09</li>
-<li><strong>Docker Troubleshooting Guide</strong>, <a href="https://docs.docker.com/config/containers/troubleshoot/">https://docs.docker.com/config/containers/troubleshoot/</a>, Retrieved 2025-01-09</li>
-<li><strong>PostgreSQL Common Problems</strong>, <a href="https://www.postgresql.org/docs/13/problems.html">https://www.postgresql.org/docs/13/problems.html</a>, Retrieved 2025-01-09</li>
-<li><strong>MariaDB Troubleshooting Guide</strong>, <a href="https://mariadb.com/kb/en/troubleshooting/">https://mariadb.com/kb/en/troubleshooting/</a>, Retrieved 2025-01-09</li>
+<li><strong>Invoice Ninja Community Support</strong>, <a href="https://invoiceninja.github.io/">https://invoiceninja.github.io/</a>, Retrieved 2025-11-23</li>
+<li><strong>Laravel Debugging Documentation</strong>, <a href="https://laravel.com/docs/10.x/errors">https://laravel.com/docs/10.x/errors</a>, Retrieved 2025-11-23</li>
+<li><strong>Docker Troubleshooting Guide</strong>, <a href="https://docs.docker.com/config/containers/">https://docs.docker.com/config/containers/</a>, Retrieved 2025-11-23</li>
+<li><strong>PostgreSQL Common Problems</strong>, <a href="https://www.postgresql.org/docs/current/appendixes.html">https://www.postgresql.org/docs/current/appendixes.html</a>, Retrieved 2025-11-23</li>
+<li><strong>MariaDB Knowledge Base</strong>, <a href="https://mariadb.com/kb/en/">https://mariadb.com/kb/en/</a>, Retrieved 2025-11-23</li>
 </ul>
 </article>
 </div>
