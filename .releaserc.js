@@ -41,23 +41,21 @@ const releaseNotesGeneratorConfig = [
     },
     parserOpts: { noteKeywords },
     writerOpts: {
-        groupBy: 'type',
-        commitGroupsSort: 'title',
-        commitsSort: ['type', 'subject'],
-        transform: (commit) => {
-            const scope =
-            !commit.scope || !commit.scope.trim()
-                ? 'Misc'
-                : commit.scope;
+      // Only touch what you *actually* need
+      transform: (commit) => {
+        const next = { ...commit };
 
-            return {
-                ...commit,
-                scope,
-            };
-        },
+        // Default scope if empty
+        if (!next.scope || !next.scope.trim()) {
+          next.scope = 'Misc';
+        }
+
+        return next;
+      },
     },
   },
 ];
+
 
 // Keep this commented out as you wanted
 // const npmConfig = [
