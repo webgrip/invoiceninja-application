@@ -41,11 +41,9 @@ const releaseNotesGeneratorConfig = [
     },
     parserOpts: { noteKeywords },
     writerOpts: {
-      // Only touch what you *actually* need
       transform: (commit) => {
         const next = { ...commit };
 
-        // Default scope if empty
         if (!next.scope || !next.scope.trim()) {
           next.scope = 'Misc';
         }
