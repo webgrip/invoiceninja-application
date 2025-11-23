@@ -1,4 +1,4 @@
-## [1.0.71-rc.1](https://github.com/webgrip/invoiceninja-application/compare/1.0.70...1.0.71-rc.1) (2025-11-22)
+## [1.0.71](https://github.com/webgrip/invoiceninja-application/compare/1.0.70...1.0.71) (2025-11-22)
 
 ### Fixed
 
