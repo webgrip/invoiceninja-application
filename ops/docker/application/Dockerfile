@@ -1,4 +1,4 @@
-FROM invoiceninja/invoiceninja:5.12.33
+FROM invoiceninja/invoiceninja:5.13.22@sha256:219b0f2092aa4df1d2c6d428aa9c6ed1d772165ee604b5c6e4735fb9e59f805c
 
 USER root
 
