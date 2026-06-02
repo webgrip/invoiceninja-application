@@ -2,4 +2,4 @@
 # Minimal overlay on official Redis upstream
 
 # Use latest stable minor version of Redis Alpine
-FROM redis:7.4.2-alpine
+FROM redis:7.4.9-alpine
