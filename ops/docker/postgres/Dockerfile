@@ -2,5 +2,5 @@
 # Minimal overlay on official PostgreSQL upstream
 
 # Use latest minor version of PostgreSQL Alpine
-FROM postgres:17.2-alpine
+FROM postgres:18.4-alpine
 
