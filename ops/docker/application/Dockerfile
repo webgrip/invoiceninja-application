@@ -1,4 +1,4 @@
-FROM invoiceninja/invoiceninja:5.12.33
+FROM invoiceninja/invoiceninja:5.13.26
 
 USER root
 
