@@ -2,7 +2,7 @@
 # Minimal overlay on official Nginx upstream
 
 # Use latest stable minor version of Nginx Alpine  
-FROM nginx:1.26.2-alpine
+FROM nginx:1.31.3-alpine
 
 # Install curl for health checks
 RUN apk add --no-cache curl
